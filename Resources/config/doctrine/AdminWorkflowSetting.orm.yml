@@ -1,0 +1,12 @@
+Dergipark\WorkflowBundle\Entity\AdminWorkflowSetting:
+  type: entity
+  table: wf_admin_wf_setting
+  repositoryClass: Dergipark\WorkflowBundle\Entity\AdminWorkflowSettingRepository
+  cache:
+    usage: NONSTRICT_READ_WRITE
+  id:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
