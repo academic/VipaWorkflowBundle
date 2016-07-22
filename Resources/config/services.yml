@@ -1,0 +1,14 @@
+services:
+  dergipark.workflow_extension:
+    class: Dergipark\WorkflowBundle\Twig\DPWorkflowExtension
+    arguments:
+      - "@doctrine.orm.entity_manager"
+      - "@router"
+      - "@translator"
+      - "@ojs.journal_service"
+      - "@security.token_storage"
+      - "@session"
+      - "@request_stack"
+      - "@event_dispatcher"
+    tags:
+      - { name: twig.extension }
