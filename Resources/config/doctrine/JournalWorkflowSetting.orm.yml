@@ -1,0 +1,18 @@
+Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting:
+  type: entity
+  table: wf_journal_wf_setting
+  repositoryClass: Dergipark\WorkflowBundle\Entity\JournalWorkflowSettingRepository
+  cache:
+    usage: NONSTRICT_READ_WRITE
+  id:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+  manyToOne:
+    journal:
+      targetEntity: Ojs\JournalBundle\Entity\Journal
+      joinColumn:
+        name: journal_id
+        referencedColumnName: id

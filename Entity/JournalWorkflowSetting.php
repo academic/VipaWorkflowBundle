@@ -2,11 +2,15 @@
 
 namespace Dergipark\WorkflowBundle\Entity;
 
+use Ojs\JournalBundle\Entity\JournalTrait;
+
 /**
- * AdminWorkflowSetting
+ * JournalWorkflowSetting
  */
-class AdminWorkflowSetting
+class JournalWorkflowSetting
 {
+    use JournalTrait;
+
     /**
      * @var integer
      */
