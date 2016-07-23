@@ -1,0 +1,27 @@
+Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog:
+  type: entity
+  table: wf_history_log
+  repositoryClass: Dergipark\WorkflowBundle\Entity\WorkflowHistoryLogRepository
+  cache:
+    usage: NONSTRICT_READ_WRITE
+  id:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+  fields:
+    logType:
+      type: string
+      column: log_type
+      nullable: true
+    logText:
+      column: log_text
+      type: text
+      nullable: string
+    time:
+      type: datetime
+      nullable: true
+    permission:
+      type: text
+      nullable: true
