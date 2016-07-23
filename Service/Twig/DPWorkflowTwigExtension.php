@@ -1,6 +1,6 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\Twig;
+namespace Dergipark\WorkflowBundle\Service\Twig;
 
 use Doctrine\ORM\EntityManager;
 use Ojs\JournalBundle\Service\JournalService;
@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class DPWorkflowExtension extends \Twig_Extension
+class DPWorkflowTwigExtension extends \Twig_Extension
 {
     /**
      * @var EntityManager

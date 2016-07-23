@@ -1,6 +1,6 @@
 services:
   dergipark.workflow_extension:
-    class: Dergipark\WorkflowBundle\Twig\DPWorkflowExtension
+    class: Dergipark\WorkflowBundle\Service\Twig\DPWorkflowTwigExtension
     arguments:
       - "@doctrine.orm.entity_manager"
       - "@router"
