@@ -1,6 +1,6 @@
 Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog:
   type: entity
-  table: wf_history_log
+  table: bc_wf_history_log
   repositoryClass: Dergipark\WorkflowBundle\Entity\WorkflowHistoryLogRepository
   cache:
     usage: NONSTRICT_READ_WRITE
