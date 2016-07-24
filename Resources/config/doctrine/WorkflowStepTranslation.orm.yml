@@ -1,0 +1,16 @@
+Dergipark\WorkflowBundle\Entity\WorkflowStepTranslation:
+  type: entity
+  table: bc_wf_step_translation
+  id:
+    id:
+      type: integer
+      id: true
+      generator:
+          strategy: AUTO
+  fields:
+    title:
+      type: string
+      nullable: true
+    description:
+      type: text
+      nullable: true
