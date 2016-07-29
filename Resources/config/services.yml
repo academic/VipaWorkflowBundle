@@ -12,3 +12,10 @@ services:
       - "@event_dispatcher"
     tags:
       - { name: twig.extension }
+
+
+  dp.workflow.left_menu_listener:
+    class: Dergipark\WorkflowBundle\EventListener\LeftMenuListener
+    arguments: ["@security.authorization_checker", "@ojs.journal_service"]
+    tags:
+      - { name: kernel.event_subscriber }
