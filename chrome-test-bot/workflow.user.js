@@ -34,6 +34,7 @@ function loginAsAuthor(){
     console.log('current user: '+ current_user);
     if(current_user == '@demo_author'){
         console.log('Correct author user.');
+        window.location = 'http://ojs.dev/user';
     }else{
         window.location = "http://ojs.dev/logout";
     }
