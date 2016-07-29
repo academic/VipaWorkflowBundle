@@ -1,0 +1,67 @@
+{% extends '::ojsbase.html.twig' %}
+{% block title %}{{ 'title.workflow_settings'|trans }} {{ parent() }}{% endblock %}
+
+{% block breadcrumb %}
+    {% set list = [
+    {'link': path('ojs_journal_dashboard_index', {journalId: selectedJournal().id}), 'title': 'dashboard'|trans},
+    {'title': 'title.workflow_settings'|trans}
+    ] %}
+    {{ breadcrumb(list) }}
+{% endblock %}
+
+{% block body -%}
+    <h2>{{ 'title.workflow_settings'|trans }}</h2>
+    {% include '::flashbag.html.twig' %}
+    <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <i class="fa fa-warning"></i>
+        {{ 'wf.each.change.will.effect.hereafter'|trans }}
+    </div>
+    <button class="btn btn-default btn-sm" onclick="OjsWorkflow.basicSettings(this)">{{ 'workflow.basic_settings' }}</button>
+    <hr>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>{{ 'workflow.step'|trans }}</th>
+                <th>{{ 'workflow.step.order'|trans }}</th>
+                <th>{{ 'workflow.step.actions'|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>{{ 'wf.step.pre.control'|trans }}</th>
+                <th>1</th>
+                <th>
+                    <button class="btn btn-primary btn-sm">
+                        <i class="fa fa-users" data-toggle="tooltip" data-title="{{ 'wf.step.granted.users.setup'|trans }}"></i>
+                    </button>
+                </th>
+            </tr>
+            <tr>
+                <th>{{ 'wf.step.review'|trans }}</th>
+                <th>2</th>
+                <th>
+                    <button class="btn btn-primary btn-sm">
+                        <i class="fa fa-users" data-toggle="tooltip"  data-title="{{ 'wf.step.granted.users.setup'|trans }}"></i>
+                    </button>
+                </th>
+            </tr>
+            <tr>
+                <th>{{ 'wf.step.arrangement'|trans }}</th>
+                <th>3</th>
+                <th>
+                    <button class="btn btn-primary btn-sm">
+                        <i class="fa fa-users" data-toggle="tooltip"  data-title="{{ 'wf.step.granted.users.setup'|trans }}"></i>
+                    </button>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/dergiparkworkflow/js/workflow.js') }}"></script>
+{% endblock %}

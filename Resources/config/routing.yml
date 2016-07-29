@@ -1,3 +1,7 @@
 dergipark_workflow:
     resource: "routing/workflow.yml"
     prefix:   /journal/{journalId}/workflow/
+
+dergipark_workflow_step:
+    resource: "routing/step.yml"
+    prefix:   /journal/{journalId}/workflow/step/
