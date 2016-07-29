@@ -13,6 +13,7 @@
           "tabs"
         ],
   "content_scripts": [ {
+    "run_at": "document_end",
     "js": [ "jquery.min.js", "workflow.user.js" ],
     "matches": [ "http://*/*", "https://*/*"]
   }],
