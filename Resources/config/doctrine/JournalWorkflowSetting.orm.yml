@@ -16,3 +16,16 @@ Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting:
       joinColumn:
         name: journal_id
         referencedColumnName: id
+  fields:
+    doubleBlind:
+      type: boolean
+      column: double_blind
+      options:
+          default: false
+      nullable: true
+    reviewerWaitDay:
+      type: integer
+      column: reviewer_wait_day
+      options:
+        default: 15
+      nullable: false
