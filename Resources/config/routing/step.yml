@@ -1,4 +1,0 @@
-dergipark_workflow_step_index:
-  path:     /
-  defaults: { _controller: "DergiparkWorkflowBundle:Step:index" }
-

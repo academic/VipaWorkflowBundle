@@ -1,0 +1,9 @@
+dergipark_workflow_step_index:
+  path:     /
+  defaults: { _controller: "DergiparkWorkflowBundle:WorkflowSetting:index" }
+
+dergipark_workflow_basic_settings:
+  path:     /basic-setting
+  defaults: { _controller: "DergiparkWorkflowBundle:WorkflowSetting:basicSetting" }
+  condition: "request.isXmlHttpRequest()"
+
