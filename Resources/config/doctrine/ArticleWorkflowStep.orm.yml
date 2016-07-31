@@ -1,0 +1,34 @@
+Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep:
+  type: entity
+  table: bc_article_wf_step
+  repositoryClass: Dergipark\WorkflowBundle\Entity\ArticleWorkflowStepRepository
+  type: entity
+  id:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+  fields:
+    order:
+      column: 'step_order'
+      type: integer
+      nullable: true
+  manyToOne:
+    articleWorkflow:
+      targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflow
+      joinColumn:
+        name: article_workflow_id
+        referencedColumnName: id
+  manyToMany:
+    grantedUsers:
+      targetEntity: Ojs\UserBundle\Entity\User
+      joinTable:
+        name: bc_article_wf_step_user
+        joinColumns:
+          step_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          user_id:
+            referencedColumnName: id
+  lifecycleCallbacks: {}
