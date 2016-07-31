@@ -1,5 +1,6 @@
 var domain = document.domain;
 var url = document.URL;
+var journalId = 1;
 
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
@@ -87,18 +88,18 @@ if(url == "http://ojs.dev/login"){
 
 if(url == 'http://ojs.dev/user'){
     if(getCookie('articleSubmissionStarted') == '1'){
-        window.location = 'http://ojs.dev/journal/2/submission/start#workflow-test';
+        window.location = 'http://ojs.dev/journal/'+journalId+'/submission/start#workflow-test';
     }
 }
 
-if(url == 'http://ojs.dev/journal/2/submission/start#workflow-test'){
+if(url == 'http://ojs.dev/journal/'+journalId+'/submission/start#workflow-test'){
     $('#ojs_article_submission_checks_0').prop( "checked", true );
     $('#ojs_article_submission_checks_1').prop( "checked", true );
     $('#ojs_article_submission_checks_2').prop( "checked", true );
     $('#ojs_article_submission_save').click();
 }
 
-if(url == 'http://ojs.dev/journal/2/submission/new#workflow-test'){
+if(url == 'http://ojs.dev/journal/'+journalId+'/submission/new#workflow-test'){
     $('#ojs_article_submission_articleType').val(5);
     $('#ojs_article_submission_subjects').val([3,4]);
     $('#ojs_article_submission_translations_tr_title').val('hello workflow test tr title');
@@ -115,7 +116,7 @@ if(url == 'http://ojs.dev/journal/2/submission/new#workflow-test'){
     setInterval(function(){ clickArticleSubmitButton(); }, 1000);
 }
 
-if(url.match(/journal\/2\/submission\/preview\//g)){
+if(url.match(new RegExp('journal/'+journalId+'/submission/preview', 'g'))){
     if(getCookie('submitArticleOnPreview') == '1'){
         $('#ojs_article_submission_note').val('Merhaba editör bu ilk makalem lütfen kkabul edin!');
         var myJavaScript = "var confirm = false;";
@@ -125,4 +126,8 @@ if(url.match(/journal\/2\/submission\/preview\//g)){
 
         $('#ojs_article_submission_submit').click();
     }
+}
+
+if(url.match(new RegExp('/journal/'+journalId+'/submission/me', 'g'))){
+    window.location = 'http://ojs.dev/journal/'+journalId+'/workflow/active';
 }
