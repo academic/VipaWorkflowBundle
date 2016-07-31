@@ -14,6 +14,11 @@ Dergipark\WorkflowBundle\Entity\ArticleWorkflow:
       column: 'start_date'
       type: datetime
       nullable: false
+    status:
+      type: integer
+      nullable: false
+      options:
+        default: 1
   manyToOne:
     journal:
       targetEntity: Ojs\JournalBundle\Entity\Journal

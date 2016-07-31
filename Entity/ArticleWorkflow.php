@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Ojs\JournalBundle\Entity\ArticleTrait;
 use Ojs\JournalBundle\Entity\JournalTrait;
 use Ojs\UserBundle\Entity\User;
+use Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus;
 
 /**
  * Class ArticleWorkflow
@@ -30,6 +31,11 @@ class ArticleWorkflow
      * @var ArrayCollection|User[]
      */
     public $relatedUsers;
+
+    /**
+     * @var int
+     */
+    protected $status = ArticleWorkflowStatus::ACTIVE;
 
     /**
      * Step constructor.
@@ -113,6 +119,26 @@ class ArticleWorkflow
     public function setStartDate($startDate)
     {
         $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     *
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
 
         return $this;
     }
