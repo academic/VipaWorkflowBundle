@@ -1,0 +1,67 @@
+{% extends '::ojsbase.html.twig' %}
+{% block title %}{{ 'workflow'|trans }} {{ parent() }}{% endblock %}
+
+{% block breadcrumb %}
+    {% set list = [
+    {'link':  path('ojs_journal_dashboard_index', {journalId: selectedJournal().id}), 'title': 'dashboard'|trans},
+    {'title': 'workflow'|trans}
+    ] %}
+    {{ breadcrumb(list) }}
+{% endblock %}
+
+{% block body -%}
+    <h1>{{ 'workflows'|trans }}</h1>
+    {% include '::flashbag.html.twig' %}
+    <div id="flows">
+        <div class="input-group col-xs-4 pull-right">
+            <span class="input-group-addon"><i class="fa fa-filter"></i></span>
+            <input type="text" class="search form-control" id="basic-url" aria-describedby="basic-addon3">
+            <span class="input-group-addon" id="flow-count">0</span>
+        </div>
+        <table class="table table-bordered table-striped">
+            <tr class="grid-row-titles">
+                <th>ID</th>
+                <th>{{ 'Title'|trans }}</th>
+                <th>{{ 'wf.step'|trans }}</th>
+                <th>{{ 'Author'|trans }}</th>
+            </tr>
+            <tbody class="list" id="flow-list">
+            {% for workflow in workflows %}
+                <tr>
+                    <td>{{ workflow.article.id }}</td>
+                    <td>
+                        <a href="" class="title">
+                            {{ workflow.article.title }}
+                        </a>
+                        <hr>
+                        <span>
+                            {# put workflow stats here #}
+                        </span>
+                        <span>
+                            {# put last post related staff here #}
+                        </span>
+                    </td>
+                    <td class="stepTitle">{# put last active step here title and details #}</td>
+                    <td class="author">
+                        {# expose article username here if user is not granted show not granted message #}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var options = {
+            valueNames: [ 'title' ,'stepTitle', 'author' ]
+        };
+        var flowList = new List('flows', options);
+        $('#flow-list').bind("DOMSubtreeModified",function(){
+            $('#flow-count').html($('#flow-list tr').length);
+        });
+    </script>
+{% endblock %}
