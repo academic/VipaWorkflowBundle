@@ -1,0 +1,13 @@
+<div class="well col-lg-12">
+    {{ include('::flashbag.html.twig') }}
+    {{ form(form) }}
+    <button class="btn btn-success" onclick="OjsWorkflow.updateGrantedUsers(this)">{{ 'update.setting' }}</button>
+</div>
+<style>
+    .select2-dropdown {
+        z-index: 9001;
+    }
+</style>
+<script>
+    $('.select2entity').select2entity();
+</script>

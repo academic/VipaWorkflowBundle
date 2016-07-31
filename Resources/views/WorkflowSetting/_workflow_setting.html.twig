@@ -58,7 +58,7 @@
                 <th>{{ 'wf.step.arrangement'|trans }}</th>
                 <th>3</th>
                 <th>
-                    <button class="btn btn-primary btn-sm" onclick="OjsWorkflow.stepGrantperdeledUsersSetup(this, 3)">
+                    <button class="btn btn-primary btn-sm" onclick="OjsWorkflow.stepGrantedUsersSetup(this, 3)">
                         <i class="fa fa-users" data-toggle="tooltip"  data-title="{{ 'wf.step.granted.users.setup'|trans }}"></i>
                     </button>
                     <button class="btn btn-success btn-sm" onclick="OjsWorkflow.showStepDetail(this, 3)">
@@ -68,10 +68,31 @@
             </tr>
         </tbody>
     </table>
+
+    <div class="hidden">
+        <div id="wf-step-description-1">
+            <p>
+                {{ 'wf.step.pre.control.description'|trans }}
+            </p>
+        </div>
+        <div id="wf-step-description-2">
+            <p>
+                {{ 'wf.step.review.description'|trans }}
+            </p>
+        </div>
+        <div id="wf-step-description-3">
+            <p>
+                {{ 'wf.step.arrangement.description'|trans }}
+            </p>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        var journalId = {{ journal.id }};
+    </script>
     <script src="{{ url('bazinga_jstranslation_js') }}"></script>
     <script src="{{ asset('bundles/dergiparkworkflow/js/workflow.js') }}"></script>
 {% endblock %}
