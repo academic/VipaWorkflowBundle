@@ -1,0 +1,39 @@
+Dergipark\WorkflowBundle\Entity\ArticleWorkflow:
+  type: entity
+  table: bc_wf_article_workflow
+  repositoryClass: Dergipark\WorkflowBundle\Entity\ArticleWorkflowRepository
+  type: entity
+  id:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+  fields:
+    startDate:
+      column: 'start_date'
+      type: datetime
+      nullable: false
+  manyToOne:
+    journal:
+      targetEntity: Ojs\JournalBundle\Entity\Journal
+      joinColumn:
+        name: journal_id
+        referencedColumnName: id
+    article:
+      targetEntity: Ojs\JournalBundle\Entity\Article
+      joinColumn:
+        name: article_id
+        referencedColumnName: id
+  manyToMany:
+    relatedUsers:
+      targetEntity: Ojs\UserBundle\Entity\User
+      joinTable:
+        name: bc_wf_article_workflow_related_users
+        joinColumns:
+          article_workflow_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          user_id:
+            referencedColumnName: id
+  lifecycleCallbacks: {}

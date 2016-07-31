@@ -2,7 +2,6 @@
 
 namespace Dergipark\WorkflowBundle\Entity;
 
-use APY\DataGridBundle\Grid\Mapping as GRID;
 use Doctrine\Common\Collections\ArrayCollection;
 use Ojs\JournalBundle\Entity\JournalTrait;
 use Ojs\UserBundle\Entity\User;
@@ -16,7 +15,6 @@ class JournalWorkflowStep
 
     /**
      * @var integer
-     * @GRID\Column(title="id")
      */
     protected $id;
 
@@ -36,7 +34,6 @@ class JournalWorkflowStep
      */
     public function __construct()
     {
-        $this->translations = new ArrayCollection();
         $this->grantedUsers = new ArrayCollection();
     }
 
@@ -94,7 +91,7 @@ class JournalWorkflowStep
      * @param  User $user
      * @return $this
      */
-    public function removeUser(User $user)
+    public function removeGrantedUser(User $user)
     {
         if ($this->grantedUsers->contains($user)) {
             $this->grantedUsers->removeElement($user);
