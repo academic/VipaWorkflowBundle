@@ -13,9 +13,25 @@ services:
     tags:
       - { name: twig.extension }
 
-
   dp.workflow.left_menu_listener:
     class: Dergipark\WorkflowBundle\EventListener\LeftMenuListener
     arguments: ["@security.authorization_checker", "@ojs.journal_service"]
+    tags:
+      - { name: kernel.event_subscriber }
+
+  dp.workflow_service:
+    class: Dergipark\WorkflowBundle\Service\WorkflowService
+    arguments:
+      - "@doctrine.orm.entity_manager"
+      - "@router"
+      - "@translator"
+      - "@ojs.journal_service"
+      - "@security.token_storage"
+      - "@request_stack"
+      - "@event_dispatcher"
+
+  dp.workflow.article_submit_event_listener:
+    class: Dergipark\WorkflowBundle\EventListener\ArticleSubmitEventListener
+    arguments: ["@dp.workflow_service"]
     tags:
       - { name: kernel.event_subscriber }
