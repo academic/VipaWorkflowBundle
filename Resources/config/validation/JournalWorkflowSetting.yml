@@ -1,0 +1,6 @@
+Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting:
+    properties:
+        reviewerWaitDay:
+            - Range:
+                min: 5
+                max: 30

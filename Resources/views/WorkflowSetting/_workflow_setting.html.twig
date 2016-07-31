@@ -19,7 +19,7 @@
         <i class="fa fa-warning"></i>
         {{ 'wf.each.change.will.effect.hereafter'|trans }}
     </div>
-    <button class="btn btn-default btn-sm" id="basic-setting" href="{{ path('dergipark_workflow_basic_settings', {journalId: selectedJournal().id}) }}">{{ 'workflow.basic_settings' }}</button>
+    <button class="btn btn-default btn-sm" onclick="OjsWorkflow.basicJournalWfSetting(this)" href="{{ path('dergipark_workflow_basic_settings', {journalId: selectedJournal().id}) }}">{{ 'workflow.basic_settings' }}</button>
     <hr>
     <table class="table">
         <thead>
@@ -58,7 +58,7 @@
                 <th>{{ 'wf.step.arrangement'|trans }}</th>
                 <th>3</th>
                 <th>
-                    <button class="btn btn-primary btn-sm" onclick="OjsWorkflow.stepGrantedUsersSetup(this, 3)">
+                    <button class="btn btn-primary btn-sm" onclick="OjsWorkflow.stepGrantperdeledUsersSetup(this, 3)">
                         <i class="fa fa-users" data-toggle="tooltip"  data-title="{{ 'wf.step.granted.users.setup'|trans }}"></i>
                     </button>
                     <button class="btn btn-success btn-sm" onclick="OjsWorkflow.showStepDetail(this, 3)">
@@ -72,5 +72,6 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ url('bazinga_jstranslation_js') }}"></script>
     <script src="{{ asset('bundles/dergiparkworkflow/js/workflow.js') }}"></script>
 {% endblock %}

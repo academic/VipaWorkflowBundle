@@ -2,14 +2,12 @@
 
 namespace Dergipark\WorkflowBundle\Controller;
 
+use Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting;
+use Dergipark\WorkflowBundle\Form\Type\JournalWfSettingType;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
-use Ojs\JournalBundle\Entity\Journal;
-use Ojs\UserBundle\Entity\Role;
-use Ojs\UserBundle\Entity\User;
-use BulutYazilim\WorkflowBundle\Entity\Flow;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class WorkflowSettingController extends Controller
 {
@@ -22,10 +20,38 @@ class WorkflowSettingController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return Response
      */
-    public function basicSettingAction()
+    public function basicSettingAction(Request $request)
     {
-        return new Response('Hello father!');
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $this->throw404IfNotFound($journal);
+        $em = $this->getDoctrine()->getManager();
+        $translator = $this->get('translator');
+
+        $journalWorkflowSetting = $em->getRepository(JournalWorkflowSetting::class)->findOneBy([
+            'journal' => $journal,
+        ]);
+        if(!$journalWorkflowSetting){
+            $journalWorkflowSetting = new JournalWorkflowSetting();
+        }
+        $journalWorkflowSetting->setJournal($journal);
+        $form = $this->createForm(new JournalWfSettingType(), $journalWorkflowSetting, [
+            'action' => $this->generateUrl('dergipark_workflow_basic_settings', [
+                'journalId' => $journal->getId(),
+            ])
+        ]);
+        $form->handleRequest($request);
+
+        if($request->getMethod() == 'POST' && $form->isValid()){
+            $em->persist($journalWorkflowSetting);
+            $em->flush();
+            $this->successFlashBag('successful.update');
+        }
+
+        return $this->render('DergiparkWorkflowBundle:WorkflowSetting:_basic_journal_wf_setting.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
