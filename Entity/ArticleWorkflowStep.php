@@ -78,6 +78,17 @@ class ArticleWorkflowStep
     }
 
     /**
+     * @param User[] $users
+     * @return $this
+     */
+    public function setGrantedUsers($users)
+    {
+        $this->grantedUsers = $users;
+
+        return $this;
+    }
+
+    /**
      * @param  User $user
      * @return $this
      */
