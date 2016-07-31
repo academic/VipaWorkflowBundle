@@ -5,12 +5,17 @@ namespace Dergipark\WorkflowBundle\Service;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
 use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
+use Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus;
 use Doctrine\ORM\EntityManager;
+use JMS\Serializer\Exception\LogicException;
 use Ojs\CoreBundle\Params\ArticleStatuses;
+use Ojs\JournalBundle\Entity\Journal;
 use Ojs\JournalBundle\Service\JournalService;
+use Ojs\UserBundle\Entity\User;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Ojs\JournalBundle\Entity\Article;
@@ -114,5 +119,47 @@ class WorkflowService
     public function currentJournalWorkflowSteps()
     {
         return $this->em->getRepository(JournalWorkflowStep::class)->findAll();
+    }
+
+    public function getUserRelatedActiveWorkflows(User $user = null, Journal $journal = null)
+    {
+        if(!$user){
+            $token = $this->tokenStorage->getToken();
+            if(!$token){
+                throw new LogicException('i can not find current user token :/');
+            }
+            $user = $token->getUser();
+        }
+        if(!$journal){
+            $journal = $this->journalService->getSelectedJournal();
+            if(!$journal){
+                throw new LogicException('i can not find current journal');
+            }
+        }
+
+        $fetchAll = false;
+        $userJournalRoles = $user->getJournalRolesBag($journal);
+        $specialRoles = ['ROLE_EDITOR', 'ROLE_CO_EDITOR'];
+        if(count(array_intersect($specialRoles, $userJournalRoles)) > 0 || $user->isAdmin()){
+            $fetchAll = true;
+        }
+
+        if($fetchAll){
+            $userRelatedWorkflows = $this->em->getRepository(ArticleWorkflow::class)->findBy([
+                'status'    => ArticleWorkflowStatus::ACTIVE,
+                'journal'   => $journal,
+            ]);
+        }else{
+            $userRelatedWorkflows = $this->em->getRepository(ArticleWorkflow::class)
+                ->createQueryBuilder('aw')
+                ->andWhere('aw.status = '.ArticleWorkflowStatus::ACTIVE)
+                ->andWhere(':user MEMBER OF aw.relatedUsers')
+                ->setParameter(':user', $user)
+                ->getQuery()
+                ->getResult()
+            ;
+        }
+
+        return $userRelatedWorkflows;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Dergipark\WorkflowBundle\Controller;
 
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\JournalBundle\Entity\Journal;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +14,11 @@ class WorkflowController extends Controller
      */
     public function activesAction()
     {
-        return new Response('hello wf actives page');
+        $workflowService = $this->get('dp.workflow_service');
+
+        return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:_actives.html.twig', [
+            'workflows' => $workflowService->getUserRelatedActiveWorkflows(),
+        ]);
     }
 
     /**
