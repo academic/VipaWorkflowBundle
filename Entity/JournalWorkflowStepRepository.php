@@ -6,9 +6,9 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 
 /**
- * Class WorkflowStepTranslationRepository
+ * Class JournalWorkflowStepRepository
  * @package Dergipark\WorkflowBundle\Entity
  */
-class WorkflowStepTranslationRepository extends EntityRepository
+class JournalWorkflowStepRepository extends EntityRepository
 {
 }

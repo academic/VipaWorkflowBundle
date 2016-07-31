@@ -1,0 +1,34 @@
+Dergipark\WorkflowBundle\Entity\JournalWorkflowStep:
+  type: entity
+  table: bc_journal_wf_step
+  repositoryClass: Dergipark\WorkflowBundle\Entity\JournalWorkflowStepRepository
+  type: entity
+  id:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+  fields:
+    order:
+      column: 'step_order'
+      type: integer
+      nullable: true
+  manyToOne:
+    journal:
+      targetEntity: Ojs\JournalBundle\Entity\Journal
+      joinColumn:
+        name: journal_id
+        referencedColumnName: id
+  manyToMany:
+    grantedUsers:
+      targetEntity: Ojs\UserBundle\Entity\User
+      joinTable:
+        name: bc_journal_wf_step_user
+        joinColumns:
+          step_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          user_id:
+            referencedColumnName: id
+  lifecycleCallbacks: {}
