@@ -23,12 +23,9 @@ services:
     class: Dergipark\WorkflowBundle\Service\WorkflowService
     arguments:
       - "@doctrine.orm.entity_manager"
-      - "@router"
-      - "@translator"
       - "@ojs.journal_service"
       - "@security.token_storage"
-      - "@request_stack"
-      - "@event_dispatcher"
+      - "@dp.wf_logger_service"
 
   dp.wf_logger_service:
     class: Dergipark\WorkflowBundle\Service\WorkflowLoggerService

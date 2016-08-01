@@ -5,6 +5,7 @@ namespace Dergipark\WorkflowBundle\Service;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
 use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
+use Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog;
 use Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus;
 use Doctrine\ORM\EntityManager;
 use JMS\Serializer\Exception\LogicException;
@@ -181,6 +182,17 @@ class WorkflowService
         $timeline['article'] = $articleWorkflow->getArticle();
 
         return $timeline;
+    }
+
+    /**
+     * @param ArticleWorkflow $articleWorkflow
+     * @return array
+     */
+    public function getWorkflowLogs(ArticleWorkflow $articleWorkflow)
+    {
+        return $this->em->getRepository(WorkflowHistoryLog::class)->findBy([
+            'articleWorkflow' => $articleWorkflow,
+        ]);
     }
 
     /**

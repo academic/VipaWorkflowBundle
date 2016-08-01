@@ -55,6 +55,15 @@ $(document).ready(function() {
                 $('#workflow-step-'+$stepOrder).addClass('btn-primary');
                 $('.timeline').html(data);
             });
+        },
+        showHistoryLog: function ($this) {
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dergipark_workflow_history_log', {
+                    journalId: journalId,
+                    workflowId: workflowId
+                })
+            });
         }
     };
 });

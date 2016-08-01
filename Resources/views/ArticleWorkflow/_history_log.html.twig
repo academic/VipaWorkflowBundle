@@ -1,0 +1,29 @@
+<div class="panel panel-primary">
+    <div class="panel-heading text-center">{{ 'workflow.log.history'|trans }}</div>
+    <table class="table table-hover table-condensed">
+        <thead class="text-center">
+            <tr>
+                <th>#</th>
+                <th>{{ 'log.message'|trans }}</th>
+                <th>{{ 'log.type'|trans }}</th>
+                <th>{{ 'log.time'|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+                <tr>
+                    <th>{{ loop.index }}</th>
+                    <th>{{ log.logText }}</th>
+                    <th>{{ log.logType }}</th>
+                    <th><abbr title="{{ log.time|date('Y-m-d H:i:s') }}" class="ago">{{ log.time|date('Y-m-d H:i:s') }}</abbr></th>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $('abbr.ago').each(function () {
+        $(this).livestamp($(this).attr('title'));
+    });
+</script>

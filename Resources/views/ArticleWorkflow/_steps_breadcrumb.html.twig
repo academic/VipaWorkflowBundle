@@ -7,4 +7,10 @@
             <a onclick="OjsWorkflow.loadStep({{ loop.index }})" class="btn btn-default" id="workflow-step-{{ loop.index }}">{{ step|trans }}</a>
         {% endfor %}
     </div>
+    <button class="btn btn-default btn-small pull-right"
+            onclick="OjsWorkflow.showHistoryLog(this)"
+            data-toggle="tooltip"
+            title="{{ 'browse.workflow.history'|trans }}">
+        <i class="fa fa-history"></i>
+    </button>
 </div>

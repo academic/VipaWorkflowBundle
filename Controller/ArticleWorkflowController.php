@@ -40,4 +40,18 @@ class ArticleWorkflowController extends Controller
             'step' => $step,
         ]);
     }
+
+    /**
+     * @param $workflowId
+     * @return Response
+     */
+    public function historyLogAction($workflowId)
+    {
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+
+        return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:_history_log.html.twig', [
+            'logs' => $workflowService->getWorkflowLogs($workflow),
+        ]);
+    }
 }

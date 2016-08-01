@@ -8,3 +8,10 @@ dergipark_workflow_timeline_step:
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
+
+dergipark_workflow_history_log:
+  path:     /{workflowId}/history/log
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:historyLog" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
