@@ -1,0 +1,42 @@
+Dergipark\WorkflowBundle\Entity\StepDialog:
+  type: entity
+  table: bc_wf_step_dialog
+  repositoryClass: Dergipark\WorkflowBundle\Entity\StepDialogRepository
+  type: entity
+  id:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+  fields:
+    dialogType:
+      column: dialog_type
+      type: string
+      nullable: true
+    status:
+      type: integer
+      nullable: false
+      options:
+        default: 1
+    openedAt:
+      type: datetime
+      nullable: false
+  manyToOne:
+    step:
+      targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep
+      joinColumn:
+        name: workflow_step_id
+        referencedColumnName: id
+  manyToMany:
+    users:
+      targetEntity: Ojs\UserBundle\Entity\User
+      joinTable:
+        name: bc_wf_step_dialog_users
+        joinColumns:
+          dialog_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          user_id:
+            referencedColumnName: id
+  lifecycleCallbacks: {}
