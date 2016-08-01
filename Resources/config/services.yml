@@ -30,6 +30,12 @@ services:
       - "@request_stack"
       - "@event_dispatcher"
 
+  dp.wf_logger_service:
+    class: Dergipark\WorkflowBundle\Service\WorkflowLoggerService
+    arguments:
+      - "@doctrine.orm.entity_manager"
+      - "@ojs.journal_service"
+
   dp.workflow.article_submit_event_listener:
     class: Dergipark\WorkflowBundle\EventListener\ArticleSubmitEventListener
     arguments: ["@dp.workflow_service"]

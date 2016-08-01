@@ -25,3 +25,9 @@ Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog:
     permission:
       type: text
       nullable: true
+  manyToOne:
+    articleWorkflow:
+      targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflow
+      joinColumn:
+        name: article_workflow_id
+        referencedColumnName: id

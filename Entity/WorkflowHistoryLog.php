@@ -36,6 +36,11 @@ class WorkflowHistoryLog
      */
     private $permission;
 
+    /**
+     * @var ArticleWorkflow
+     */
+    private $articleWorkflow;
+
     public function __construct()
     {
     }
@@ -126,6 +131,26 @@ class WorkflowHistoryLog
     public function setPermission($permission)
     {
         $this->permission = $permission;
+
+        return $this;
+    }
+
+    /**
+     * @return ArticleWorkflow
+     */
+    public function getArticleWorkflow()
+    {
+        return $this->articleWorkflow;
+    }
+
+    /**
+     * @param ArticleWorkflow $articleWorkflow
+     *
+     * @return $this
+     */
+    public function setArticleWorkflow($articleWorkflow)
+    {
+        $this->articleWorkflow = $articleWorkflow;
 
         return $this;
     }
