@@ -33,6 +33,11 @@ class ArticleWorkflow
     public $relatedUsers;
 
     /**
+     * @var ArticleWorkflowStep
+     */
+    public $currentStep;
+
+    /**
      * @var int
      */
     protected $status = ArticleWorkflowStatus::ACTIVE;
@@ -139,6 +144,26 @@ class ArticleWorkflow
     public function setStatus($status)
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return ArticleWorkflowStep
+     */
+    public function getCurrentStep()
+    {
+        return $this->currentStep;
+    }
+
+    /**
+     * @param ArticleWorkflowStep $currentStep
+     *
+     * @return $this
+     */
+    public function setCurrentStep($currentStep)
+    {
+        $this->currentStep = $currentStep;
 
         return $this;
     }

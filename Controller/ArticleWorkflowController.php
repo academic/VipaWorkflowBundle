@@ -7,17 +7,18 @@ use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\JournalBundle\Entity\Journal;
 use Symfony\Component\HttpFoundation\Response;
 
-class WorkflowController extends Controller
+class ArticleWorkflowController extends Controller
 {
     /**
      * @return Response
      */
-    public function activesAction()
+    public function timelineAction($workflowId)
     {
         $workflowService = $this->get('dp.workflow_service');
+        $articleWorkflow = $workflowService->getArticleWorkflow($workflowId);
 
-        return $this->render('DergiparkWorkflowBundle:Workflow:_actives.html.twig', [
-            'workflows' => $workflowService->getUserRelatedActiveWorkflows(),
+        return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:_timeline.html.twig', [
+            'timeline' => $workflowService->getWorkflowTimeline($articleWorkflow),
         ]);
     }
 }

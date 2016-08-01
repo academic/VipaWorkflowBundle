@@ -30,7 +30,10 @@
                 <tr>
                     <td>{{ workflow.article.id }}</td>
                     <td>
-                        <a href="" class="title">
+                        <a href="{{ path('dergipark_workflow_article_workflow', {
+                            journalId: workflow.journal.id,
+                            workflowId: workflow.id,
+                        }) }}" class="title">
                             {{ workflow.article.title }}
                         </a>
                         <hr>

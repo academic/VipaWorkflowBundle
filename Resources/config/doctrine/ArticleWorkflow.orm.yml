@@ -30,6 +30,11 @@ Dergipark\WorkflowBundle\Entity\ArticleWorkflow:
       joinColumn:
         name: article_id
         referencedColumnName: id
+    currentStep:
+      targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep
+      joinColumn:
+        name: current_step_id
+        referencedColumnName: id
   manyToMany:
     relatedUsers:
       targetEntity: Ojs\UserBundle\Entity\User

@@ -1,6 +1,6 @@
 var domain = document.domain;
 var url = document.URL;
-var journalId = 1;
+var journalId = 2;
 
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
@@ -130,4 +130,8 @@ if(url.match(new RegExp('journal/'+journalId+'/submission/preview', 'g'))){
 
 if(url.match(new RegExp('/journal/'+journalId+'/submission/me', 'g'))){
     window.location = 'http://ojs.dev/journal/'+journalId+'/workflow/active';
+}
+
+if(url.match(new RegExp('/journal/'+journalId+'/workflow/active', 'g'))){
+    window.location = 'http://ojs.dev'+$('#flow-list tr:last td:eq(1) a').attr('href');
 }

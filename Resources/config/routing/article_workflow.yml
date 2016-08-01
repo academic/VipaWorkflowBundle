@@ -1,0 +1,3 @@
+dergipark_workflow_article_workflow:
+  path:     /{workflowId}
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:timeline" }

@@ -5,3 +5,7 @@ dergipark_workflow:
 dergipark_workflow_step:
     resource: "routing/wf_setting.yml"
     prefix:   /journal/{journalId}/workflow-setting/
+
+dergipark_workflow_article_workflow:
+    resource: "routing/article_workflow.yml"
+    prefix:   /journal/{journalId}/article-workflow/

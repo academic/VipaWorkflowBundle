@@ -15,7 +15,6 @@ use Ojs\UserBundle\Entity\User;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Ojs\JournalBundle\Entity\Article;
@@ -84,8 +83,13 @@ class WorkflowService
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    /**
+     * @param Article $article
+     * @return ArticleWorkflow
+     */
     public function prepareArticleWorkflow(Article $article)
     {
+        say('prepare stated');
         $articleWorkflow = new ArticleWorkflow();
         $articleWorkflow
             ->setArticle($article)
@@ -94,6 +98,7 @@ class WorkflowService
             ;
 
         foreach($this->currentJournalWorkflowSteps() as $step){
+            system('say "journal step '.$step->getOrder().'"');
             $articleWorkflowStep = new ArticleWorkflowStep();
             $articleWorkflowStep
                 ->setOrder($step->getOrder())
@@ -104,6 +109,11 @@ class WorkflowService
                 $articleWorkflow->addRelatedUser($user);
             }
             $this->em->persist($articleWorkflowStep);
+
+            if($step->getOrder() == 1){
+                system('say "set current step baby!"');
+                $articleWorkflow->setCurrentStep($articleWorkflowStep);
+            }
         }
         $articleWorkflow->addRelatedUser($article->getSubmitterUser());
 
@@ -116,11 +126,20 @@ class WorkflowService
         return $articleWorkflow;
     }
 
+    /**
+     * @return array|JournalWorkflowStep[]
+     */
     public function currentJournalWorkflowSteps()
     {
+        say('journal workflow count '.count($this->em->getRepository(JournalWorkflowStep::class)->findAll()));
         return $this->em->getRepository(JournalWorkflowStep::class)->findAll();
     }
 
+    /**
+     * @param User|null $user
+     * @param Journal|null $journal
+     * @return array|ArticleWorkflow[]
+     */
     public function getUserRelatedActiveWorkflows(User $user = null, Journal $journal = null)
     {
         if(!$user){
@@ -161,5 +180,33 @@ class WorkflowService
         }
 
         return $userRelatedWorkflows;
+    }
+
+    /**
+     * @param $articleWorkflowId
+     * @param int $status
+     * @return ArticleWorkflow
+     */
+    public function getArticleWorkflow($articleWorkflowId, $status = ArticleWorkflowStatus::ACTIVE)
+    {
+        return $this->em->getRepository(ArticleWorkflow::class)->findOneBy([
+            'journal' => $this->journalService->getSelectedJournal(),
+            'id' => $articleWorkflowId,
+            'status' => $status,
+        ]);
+    }
+
+    /**
+     * @param ArticleWorkflow $articleWorkflow
+     * @return array
+     */
+    public function getWorkflowTimeline(ArticleWorkflow $articleWorkflow)
+    {
+        $timeline = [];
+        $timeline['workflow'] = $articleWorkflow;
+        $timeline['journal'] = $articleWorkflow->getJournal();
+        $timeline['article'] = $articleWorkflow->getArticle();
+
+        return $timeline;
     }
 }
