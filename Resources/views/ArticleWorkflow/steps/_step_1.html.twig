@@ -1,0 +1,28 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        {{ step.id }}
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ 'select.action'|trans }}
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#">{{ 'assign.grammer.editor'|trans }}</a></li>
+                <li><a href="#">{{ 'assign.spelling.editor'|trans }}</a></li>
+                <li><a href="#">{{ 'assign.issue.to.author'|trans }}</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">{{ 'create.issue'|trans }}</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">{{ 'go.to.reviewing'|trans }}</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">{{ 'accept.submission'|trans }}</a></li>
+                <li><a href="#">{{ 'decline.submission'|trans }}</a></li>
+            </ul>
+        </div>
+        <br>
+        <br>
+    </div>
+    <div class="panel-body">
+        dialogs goes here
+    </div>
+</div>

@@ -1,3 +1,10 @@
 dergipark_workflow_article_workflow:
   path:     /{workflowId}
   defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:timeline" }
+
+dergipark_workflow_timeline_step:
+  path:     /{workflowId}/step/{stepOrder}
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:step" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true

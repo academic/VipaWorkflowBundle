@@ -42,6 +42,19 @@ $(document).ready(function() {
                 type: 'inline',
                 href: '#wf-step-description-'+$stepOrder
             });
+        },
+        loadStep: function ($stepOrder) {
+            $.get(Routing.generate('dergipark_workflow_timeline_step', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: $stepOrder
+            }), function( data ) {
+                $.each($('.btn-breadcrumb a'), function(index,value){
+                    $(value).removeClass('btn-primary');
+                });
+                $('#workflow-step-'+$stepOrder).addClass('btn-primary');
+                $('.timeline').html(data);
+            });
         }
     };
 });

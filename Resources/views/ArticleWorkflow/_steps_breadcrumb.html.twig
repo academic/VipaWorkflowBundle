@@ -1,12 +1,10 @@
 <div class="row col-lg-12 text-center">
     <div class="btn-group btn-breadcrumb">
-        <a href="#" class="btn btn-default" data-toggle="tooltip" title="{{ 'workflow.actives' }}"><i class="glyphicon glyphicon-flag"></i></a>
+        <a href="{{ path('dergipark_workflow_flow_active', {
+            'journalId': timeline.journal.id
+        }) }}" class="btn btn-default" data-toggle="tooltip" title="{{ 'workflow.actives' }}"><i class="glyphicon glyphicon-flag"></i></a>
         {% for step in ['wf.step.pre.control','wf.step.review','wf.step.arrangement'] %}
-            {% if loop.index == timeline.workflow.currentStep.order %}
-                <a href="javascript:void(0);" class="btn btn-primary">{{ step|trans }}</a>
-            {% else %}
-                <a href="OjsWorkflow.loadStep({{ loop.index }})" class="btn btn-default" disabled="">{{ step|trans }}</a>
-            {% endif %}
+            <a onclick="OjsWorkflow.loadStep({{ loop.index }})" class="btn btn-default" id="workflow-step-{{ loop.index }}">{{ step|trans }}</a>
         {% endfor %}
     </div>
 </div>
