@@ -12,11 +12,7 @@ use Ojs\CoreBundle\Params\ArticleStatuses;
 use Ojs\JournalBundle\Entity\Journal;
 use Ojs\JournalBundle\Service\JournalService;
 use Ojs\UserBundle\Entity\User;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Ojs\JournalBundle\Entity\Article;
 
 class WorkflowService
@@ -25,11 +21,6 @@ class WorkflowService
      * @var EntityManager
      */
     private $em;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
 
     /**
      * @var JournalService
@@ -42,45 +33,27 @@ class WorkflowService
     private $tokenStorage;
 
     /**
-     * @var TranslatorInterface
+     * @var WorkflowLoggerService
      */
-    private $translator;
+    private $wfLogger;
 
     /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @param EntityManager             $em
-     * @param RouterInterface           $router
-     * @param TranslatorInterface       $translator
-     * @param JournalService            $journalService
-     * @param TokenStorageInterface     $tokenStorage
-     * @param RequestStack              $requestStack
-     * @param EventDispatcherInterface  $eventDispatcher
+     * WorkflowService constructor.
+     * @param EntityManager $em
+     * @param JournalService $journalService
+     * @param TokenStorageInterface $tokenStorage
+     * @param WorkflowLoggerService $wfLogger
      */
     public function __construct(
-        EntityManager $em = null,
-        RouterInterface $router = null,
-        TranslatorInterface $translator = null,
-        JournalService $journalService = null,
-        TokenStorageInterface $tokenStorage = null,
-        RequestStack $requestStack,
-        EventDispatcherInterface $eventDispatcher
+        EntityManager $em,
+        JournalService $journalService,
+        TokenStorageInterface $tokenStorage,
+        WorkflowLoggerService $wfLogger
     ) {
-        $this->em = $em;
-        $this->router = $router;
-        $this->journalService = $journalService;
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
-        $this->requestStack = $requestStack;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->em               = $em;
+        $this->journalService   = $journalService;
+        $this->tokenStorage     = $tokenStorage;
+        $this->wfLogger         = $wfLogger;
     }
 
     /**
@@ -89,7 +62,7 @@ class WorkflowService
      */
     public function prepareArticleWorkflow(Article $article)
     {
-        say('prepare stated');
+        $user = $this->getUser();
         $articleWorkflow = new ArticleWorkflow();
         $articleWorkflow
             ->setArticle($article)
@@ -98,20 +71,18 @@ class WorkflowService
             ;
 
         foreach($this->currentJournalWorkflowSteps() as $step){
-            system('say "journal step '.$step->getOrder().'"');
             $articleWorkflowStep = new ArticleWorkflowStep();
             $articleWorkflowStep
                 ->setOrder($step->getOrder())
                 ->setGrantedUsers($step->getGrantedUsers())
                 ->setArticleWorkflow($articleWorkflow)
                 ;
-            foreach($step->getGrantedUsers() as $user){
-                $articleWorkflow->addRelatedUser($user);
+            foreach($step->getGrantedUsers() as $stepUser){
+                $articleWorkflow->addRelatedUser($stepUser);
             }
             $this->em->persist($articleWorkflowStep);
 
             if($step->getOrder() == 1){
-                system('say "set current step baby!"');
                 $articleWorkflow->setCurrentStep($articleWorkflowStep);
             }
         }
@@ -120,6 +91,13 @@ class WorkflowService
         $this->em->persist($articleWorkflow);
 
         $article->setStatus(ArticleStatuses::STATUS_INREVIEW);
+
+        //log workflow events
+        $this->wfLogger->setArticleWorkflow($articleWorkflow);
+        $this->wfLogger->log('Article Submitted By -> '. $user->getUsername());
+        $this->wfLogger->log('Article Workflow Started');
+        $this->wfLogger->log('Setted up all Workflow Steps');
+        $this->wfLogger->log('Give permissions for journal specified users');
 
         $this->em->flush();
 
@@ -131,7 +109,6 @@ class WorkflowService
      */
     public function currentJournalWorkflowSteps()
     {
-        say('journal workflow count '.count($this->em->getRepository(JournalWorkflowStep::class)->findAll()));
         return $this->em->getRepository(JournalWorkflowStep::class)->findAll();
     }
 
@@ -143,11 +120,7 @@ class WorkflowService
     public function getUserRelatedActiveWorkflows(User $user = null, Journal $journal = null)
     {
         if(!$user){
-            $token = $this->tokenStorage->getToken();
-            if(!$token){
-                throw new LogicException('i can not find current user token :/');
-            }
-            $user = $token->getUser();
+            $user = $this->getUser();
         }
         if(!$journal){
             $journal = $this->journalService->getSelectedJournal();
@@ -208,5 +181,17 @@ class WorkflowService
         $timeline['article'] = $articleWorkflow->getArticle();
 
         return $timeline;
+    }
+
+    /**
+     * @return User
+     */
+    private function getUser()
+    {
+        $token = $this->tokenStorage->getToken();
+        if(!$token){
+            throw new LogicException('i can not find current user token :/');
+        }
+        return $token->getUser();
     }
 }
