@@ -80,7 +80,7 @@ class StepDialogController extends Controller
 
         return $this->render('DergiparkWorkflowBundle:ArticleWorkflow/actions:_specific_dialog.html.twig', [
             'form' => $form->createView(),
-            'actionAlias' => $actionAlias
+            'actionAlias' => $actionAlias,
         ]);
     }
 

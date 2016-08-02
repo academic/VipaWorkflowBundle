@@ -2,6 +2,14 @@ var domain = document.domain;
 var url = document.URL;
 var journalId = 2;
 
+if(typeof(String.prototype.trim) === "undefined")
+{
+    String.prototype.trim = function()
+    {
+        return String(this).replace(/^\s+|\s+$/g, '');
+    };
+}
+
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -133,5 +141,40 @@ if(url.match(new RegExp('/journal/'+journalId+'/submission/me', 'g'))){
 }
 
 if(url.match(new RegExp('/journal/'+journalId+'/workflow/active', 'g'))){
-    window.location = 'http://ojs.dev'+$('#flow-list tr:last td:eq(1) a').attr('href');
+    window.location = 'http://ojs.dev'+$('#flow-list tr:last td:eq(1) a').attr('href')+'#workflow-test';
 }
+
+function waitStep1load(){
+
+    if(typeof step1Loaded !== 'undefined'){
+        return;
+    }
+    if($('#dialogs-box-1').length == 1 && $('#dialogs-box-1').text().trim() !== 'installing.dialogs...'){
+        $('.panel-heading .dropdown-toggle:eq(0)').click();
+        console.log('clicked toggle');
+        $('.step-actions-menu li:eq(0) a')[0].click();
+        setInterval(function(){ fillUsersInput(); }, 1000);
+        step1Loaded = true;
+    }
+}
+
+function fillUsersInput(){
+    if(typeof fillUsersInputVar !== 'undefined'){
+        return;
+    }
+    console.log('pass var baby');
+    if($('select[name="dialog[users][]"]').length > 0){
+        $('select[name="dialog[users][]"]').remove();
+        console.log('removed input');
+        $('form[name="dialog"]').append('<input name="dialog[users][]" value="3"/>');
+        console.log('append input');
+        $('form[name="dialog"]').parent().find('button')[0].click();
+        console.log('click button');
+        fillUsersInputVar = true;
+    }
+}
+
+if(url.match(new RegExp('/journal/'+journalId+'/article-workflow/', 'g')) && url.match(new RegExp('#workflow-test', 'g'))){
+    setInterval(function(){ waitStep1load(); }, 2000);
+}
+
