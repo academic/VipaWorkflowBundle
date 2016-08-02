@@ -1,0 +1,41 @@
+dp_workflow_create_specific_dialog:
+  path:     /create/spesific-dialog
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:createSpecificDialog" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
+dp_workflow_create_basic_dialog:
+  path:     /create/basic-dialog
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:createBasicDialog" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
+dp_workflow_accept_goto_arrangement:
+  path:     /accept/goto-arrangement
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:acceptGotoArrangement" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
+dp_workflow_goto_reviewing:
+  path:     /goto-reviewing
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:gotoReviewing" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
+dp_workflow_accept_submission:
+  path:     /accept-submission
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:acceptSubmission" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
+dp_workflow_decline_submission:
+  path:     /decline-submission
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:declineSubmission" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true

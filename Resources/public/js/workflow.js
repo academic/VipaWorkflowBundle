@@ -64,6 +64,24 @@ $(document).ready(function() {
                     workflowId: workflowId
                 })
             });
+        },
+        createSpecificDialog: function ($this, $dialogType) {
+
+        },
+        createBasicDialog: function($this){
+
+        },
+        acceptAndGotoArrangement: function($this){
+
+        },
+        gotoReviewing: function($this){
+
+        },
+        acceptSubmission: function($this){
+
+        },
+        declineSubmission: function($this){
+
         }
     };
 });

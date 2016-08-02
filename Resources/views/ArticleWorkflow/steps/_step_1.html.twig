@@ -7,16 +7,44 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="#">{{ 'assign.grammer.editor'|trans }}</a></li>
-                <li><a href="#">{{ 'assign.spelling.editor'|trans }}</a></li>
-                <li><a href="#">{{ 'assign.issue.to.author'|trans }}</a></li>
+                <li>
+                    <a onclick="OjsWorkflow.createSpecificDialog(this, 'assign-grammer-editor')">
+                        {{ 'assign.grammer.editor'|trans }}
+                    </a>
+                </li>
+                <li>
+                    <a onclick="OjsWorkflow.createSpecificDialog(this, 'assign-spelling-editor')">
+                        {{ 'assign.spelling.editor'|trans }}
+                    </a>
+                </li>
+                <li>
+                    <a onclick="OjsWorkflow.createSpecificDialog(this, 'assign-issue-to-author')">
+                        {{ 'assign.issue.to.author'|trans }}
+                    </a>
+                </li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#">{{ 'create.issue'|trans }}</a></li>
+                <li>
+                    <a onclick="OjsWorkflow.createBasicDialog(this)">
+                        {{ 'create.issue'|trans }}
+                    </a>
+                </li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#">{{ 'go.to.reviewing'|trans }}</a></li>
+                <li>
+                    <a onclick="OjsWorkflow.gotoReviewing(this)">
+                        {{ 'go.to.reviewing'|trans }}
+                    </a>
+                </li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#">{{ 'accept.submission'|trans }}</a></li>
-                <li><a href="#">{{ 'decline.submission'|trans }}</a></li>
+                <li>
+                    <a onclick="OjsWorkflow.acceptSubmission(this)">
+                        {{ 'accept.submission'|trans }}
+                    </a>
+                </li>
+                <li>
+                    <a onclick="OjsWorkflow.declineSubmission(this)">
+                        {{ 'decline.submission'|trans }}
+                    </a>
+                </li>
             </ul>
         </div>
         <br>

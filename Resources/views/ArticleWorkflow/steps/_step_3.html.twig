@@ -7,13 +7,33 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="#">{{ 'assign.layout.editor'|trans }}</a></li>
-                <li><a href="#">{{ 'assign.copy.editor'|trans }}</a></li>
-                <li><a href="#">{{ 'assign.proof.reader'|trans }}</a></li>
+                <li>
+                    <a onclick="OjsWorkflow.createSpecificDialog(this, 'assign-layout-editor')">
+                        {{ 'assign.layout.editor'|trans }}
+                    </a>
+                </li>
+                <li>
+                    <a onclick="OjsWorkflow.createSpecificDialog(this, 'assign-copy-editor')">
+                        {{ 'assign.copy.editor'|trans }}
+                    </a>
+                </li>
+                <li>
+                    <a onclick="OjsWorkflow.createSpecificDialog(this, 'assign-proof-reader')">
+                        {{ 'assign.proof.reader'|trans }}
+                    </a>
+                </li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#">{{ 'ask.author.for.correction'|trans }}</a></li>
+                <li>
+                    <a onclick="OjsWorkflow.createSpecificDialog(this, 'ask-author-for-correction')">
+                        {{ 'ask.author.for.correction'|trans }}
+                    </a>
+                </li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#">{{ 'create.issue'|trans }}</a></li>
+                <li>
+                    <a onclick="OjsWorkflow.createBasicDialog(this)">
+                        {{ 'create.issue'|trans }}
+                    </a>
+                </li>
             </ul>
         </div>
         <br>

@@ -15,3 +15,8 @@ dergipark_workflow_history_log:
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
+
+# step dialog related routing
+dergipark_workflow_dialog:
+    resource: "dialog.yml"
+    prefix:   /{workflowId}/dialog/{stepOrder}
