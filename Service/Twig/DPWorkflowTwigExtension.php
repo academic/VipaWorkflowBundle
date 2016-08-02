@@ -2,6 +2,7 @@
 
 namespace Dergipark\WorkflowBundle\Service\Twig;
 
+use Dergipark\WorkflowBundle\Params\StepActionTypes;
 use Doctrine\ORM\EntityManager;
 use Ojs\JournalBundle\Service\JournalService;
 use Symfony\Component\Routing\RouterInterface;
@@ -87,12 +88,18 @@ class DPWorkflowTwigExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('actionType', array($this, 'getActionType')),
+            new \Twig_SimpleFunction('actionAlias', array($this, 'getActionAlias')),
         );
     }
 
     public function getActionType($const)
     {
         return constant('Dergipark\WorkflowBundle\Params\StepActionTypes::'.$const);
+    }
+
+    public function getActionAlias($actionType)
+    {
+        return StepActionTypes::$typeAlias[$actionType];
     }
 
     public function getName()

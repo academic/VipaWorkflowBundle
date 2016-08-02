@@ -56,6 +56,15 @@ $(document).ready(function() {
                 $('.timeline').html(data);
             });
         },
+        loadDialogs: function () {
+            $.get(Routing.generate('dp_workflow_step_dialogs', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder
+            }), function( data ) {
+                $('#dialogs-box-'+stepOrder).html(data);
+            });
+        },
         showHistoryLog: function ($this) {
             $.fancybox({
                 type: 'ajax',

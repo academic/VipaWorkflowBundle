@@ -57,11 +57,12 @@
         <br>
         <br>
     </div>
-    <div class="panel-body">
-        dialogs goes here
+    <div class="panel-body" id="dialogs-box-1">
+        {{ 'installing.dialogs'|trans }}...
     </div>
 </div>
 
 <script>
     var stepOrder = 1;
+    OjsWorkflow.loadDialogs();
 </script>

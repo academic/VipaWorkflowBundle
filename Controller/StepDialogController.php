@@ -14,6 +14,25 @@ use Symfony\Component\HttpFoundation\Response;
 
 class StepDialogController extends Controller
 {
+    public function getDialogsAction(Request $request, $workflowId, $stepOrder)
+    {
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $this->throw404IfNotFound($journal);
+        $em = $this->getDoctrine()->getManager();
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => $stepOrder,
+        ]);
+        $dialogs = $em->getRepository(StepDialog::class)->findBy([
+            'step' => $step,
+        ]);
+
+        return $this->render('DergiparkWorkflowBundle:StepDialog:_step_dialogs.html.twig', [
+            'dialogs' => $dialogs,
+        ]);
+    }
     /**
      * @param Request $request
      * @param $workflowId
@@ -22,9 +41,12 @@ class StepDialogController extends Controller
      */
     public function createSpecificDialogAction(Request $request, $workflowId, $stepOrder)
     {
+        //set vars
         $actionType = $request->get('actionType');
         $actionAlias = StepActionTypes::$typeAlias[$actionType];
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $user = $this->getUser();
+
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
@@ -40,6 +62,7 @@ class StepDialogController extends Controller
             ->setOpenedAt(new \DateTime())
             ->setStatus(StepDialogStatus::ACTIVE)
             ->setStep($step)
+            ->setCreatedDialogBy($user)
             ;
 
         $form = $this->createForm(new DialogType(), $dialog, [
