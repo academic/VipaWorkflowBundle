@@ -41,6 +41,11 @@ class StepDialog
     public $step;
 
     /**
+     * @var User
+     */
+    public $createdDialogBy;
+
+    /**
      * @var int
      */
     protected $status = StepDialogStatus::ACTIVE;
@@ -186,6 +191,26 @@ class StepDialog
     public function setStep($step)
     {
         $this->step = $step;
+
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getCreatedDialogBy()
+    {
+        return $this->createdDialogBy;
+    }
+
+    /**
+     * @param User $createdDialogBy
+     *
+     * @return $this
+     */
+    public function setCreatedDialogBy($createdDialogBy)
+    {
+        $this->createdDialogBy = $createdDialogBy;
 
         return $this;
     }

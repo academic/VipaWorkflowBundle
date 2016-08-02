@@ -28,6 +28,11 @@ Dergipark\WorkflowBundle\Entity\StepDialog:
       joinColumn:
         name: workflow_step_id
         referencedColumnName: id
+    createdDialogBy:
+      targetEntity: Ojs\UserBundle\Entity\User
+      joinColumn:
+        name: step_dialog_created_by
+        referencedColumnName: id
   manyToMany:
     users:
       targetEntity: Ojs\UserBundle\Entity\User
