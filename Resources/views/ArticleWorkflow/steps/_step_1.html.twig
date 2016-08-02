@@ -8,40 +8,47 @@
             </button>
             <ul class="dropdown-menu step-actions-menu">
                 <li>
-                    <a onclick="OjsWorkflow.createSpecificDialog(this, 'assign-grammer-editor')">
+                    <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                       data-action-type="{{ actionType('ASSIGN_GRAMMER_EDITOR') }}">
                         {{ 'assign.grammer.editor'|trans }}
                     </a>
                 </li>
                 <li>
-                    <a onclick="OjsWorkflow.createSpecificDialog(this, 'assign-spelling-editor')">
+                    <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                       data-action-type="{{ actionType('ASSIGN_SPELLING_EDITOR') }}">
                         {{ 'assign.spelling.editor'|trans }}
                     </a>
                 </li>
                 <li>
-                    <a onclick="OjsWorkflow.createSpecificDialog(this, 'assign-issue-to-author')">
+                    <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                       data-action-type="{{ actionType('ASK_AUTHOR_FOR_CORRECTION') }}">
                         {{ 'assign.issue.to.author'|trans }}
                     </a>
                 </li>
                 <li role="separator" class="divider"></li>
                 <li>
-                    <a onclick="OjsWorkflow.createBasicDialog(this)">
+                    <a onclick="OjsWorkflow.createBasicDialog(this)"
+                       data-action-type="{{ actionType('CREATE_ISSUE') }}">
                         {{ 'create.issue'|trans }}
                     </a>
                 </li>
                 <li role="separator" class="divider"></li>
                 <li>
-                    <a onclick="OjsWorkflow.gotoReviewing(this)">
+                    <a onclick="OjsWorkflow.gotoReviewing(this)"
+                       data-action-type="{{ actionType('GOTO_REVIEWING') }}">
                         {{ 'go.to.reviewing'|trans }}
                     </a>
                 </li>
                 <li role="separator" class="divider"></li>
                 <li>
-                    <a onclick="OjsWorkflow.acceptSubmission(this)">
+                    <a onclick="OjsWorkflow.acceptSubmission(this)"
+                       data-action-type="{{ actionType('ACCEPT_SUBMISSION') }}">
                         {{ 'accept.submission'|trans }}
                     </a>
                 </li>
                 <li>
-                    <a onclick="OjsWorkflow.declineSubmission(this)">
+                    <a onclick="OjsWorkflow.declineSubmission(this)"
+                       data-action-type="{{ actionType('DECLINE_SUBMISSION') }}">
                         {{ 'decline.submission'|trans }}
                     </a>
                 </li>

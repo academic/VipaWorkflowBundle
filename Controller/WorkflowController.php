@@ -2,9 +2,7 @@
 
 namespace Dergipark\WorkflowBundle\Controller;
 
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
-use Ojs\JournalBundle\Entity\Journal;
 use Symfony\Component\HttpFoundation\Response;
 
 class WorkflowController extends Controller

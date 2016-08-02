@@ -26,6 +26,7 @@ services:
       - "@ojs.journal_service"
       - "@security.token_storage"
       - "@dp.wf_logger_service"
+      - "@twig"
 
   dp.wf_logger_service:
     class: Dergipark\WorkflowBundle\Service\WorkflowLoggerService

@@ -5,16 +5,31 @@ namespace Dergipark\WorkflowBundle\Params;
 class StepActionTypes
 {
     const ASSIGN_GRAMMER_EDITOR = 1;
-    const ASSIGN_SPELLING_EDITOR = 1;
-    const CREATE_ISSUE = 1;
-    const GOTO_REVIEWING = 1;
-    const ACCEPT_SUBMISSION = 1;
-    const DECLINE_SUBMISSION = 1;
-    const ASSIGN_SECTION_EDITOR = 0;
-    const ASSIGN_REVIEWER = 0;
-    const ASK_AUTHOR_FOR_CORRECTION = 0;
-    const ACCEPT_GOTO_ARRANGEMENT = 0;
-    const ASSIGN_LAYOUT_EDITOR = 0;
-    const ASSIGN_COPY_EDITOR = 0;
-    const ASSIGN_PROOF_READER = 0;
+    const ASSIGN_SPELLING_EDITOR = 2;
+    const CREATE_ISSUE = 3;
+    const GOTO_REVIEWING = 4;
+    const ACCEPT_SUBMISSION = 5;
+    const DECLINE_SUBMISSION = 6;
+    const ASSIGN_SECTION_EDITOR = 7;
+    const ASSIGN_REVIEWER = 8;
+    const ASK_AUTHOR_FOR_CORRECTION = 9;
+    const ACCEPT_GOTO_ARRANGEMENT = 10;
+    const ASSIGN_LAYOUT_EDITOR = 11;
+    const ASSIGN_COPY_EDITOR = 12;
+    const ASSIGN_PROOF_READER = 13;
+
+    static $typeAlias = [
+        self::ASSIGN_GRAMMER_EDITOR => '_assign_grammer_editor',
+        self::ASSIGN_SPELLING_EDITOR => '_assign_spelling_editor',
+        self::CREATE_ISSUE => '_create_issue',
+        self::GOTO_REVIEWING => '_goto_reviewing',
+        self::ACCEPT_SUBMISSION => '_accept_submission',
+        self::ASSIGN_SECTION_EDITOR => '_assign_section_editor',
+        self::ASSIGN_REVIEWER => '_assign_reviewer',
+        self::ASK_AUTHOR_FOR_CORRECTION => '_ask_author_for_correction',
+        self::ACCEPT_GOTO_ARRANGEMENT => '_accept_goto_arrangement',
+        self::ASSIGN_LAYOUT_EDITOR => '_assign_layout_editor',
+        self::ASSIGN_COPY_EDITOR => '_assign_copy_editor',
+        self::ASSIGN_PROOF_READER => '_proof_reader',
+    ];
 }

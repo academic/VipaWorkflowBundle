@@ -2,19 +2,63 @@
 
 namespace Dergipark\WorkflowBundle\Controller;
 
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Dergipark\WorkflowBundle\Entity\StepDialog;
+use Dergipark\WorkflowBundle\Form\Type\DialogType;
+use Dergipark\WorkflowBundle\Params\StepActionTypes;
+use Dergipark\WorkflowBundle\Params\StepDialogStatus;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class StepDialogController extends Controller
 {
     /**
+     * @param Request $request
      * @param $workflowId
      * @param $stepOrder
-     * @return Response
+     * @return JsonResponse|Response
      */
-    public function createSpecificDialogAction($workflowId, $stepOrder)
+    public function createSpecificDialogAction(Request $request, $workflowId, $stepOrder)
     {
-        return new Response('createSpecificDialogAction');
+        $actionType = $request->get('actionType');
+        $actionAlias = StepActionTypes::$typeAlias[$actionType];
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $this->throw404IfNotFound($journal);
+        $em = $this->getDoctrine()->getManager();
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => $stepOrder,
+        ]);
+
+        $dialog = new StepDialog();
+        $dialog
+            ->setDialogType($actionType)
+            ->setOpenedAt(new \DateTime())
+            ->setStatus(StepDialogStatus::ACTIVE)
+            ->setStep($step)
+            ;
+
+        $form = $this->createForm(new DialogType(), $dialog, [
+            'action' => $request->getUri(),
+            'action_alias' => $actionAlias,
+        ]);
+        $form->handleRequest($request);
+
+        if($request->getMethod() == 'POST' && $form->isValid()){
+            $em->persist($dialog);
+            $em->flush();
+
+            return new Response($workflowService->getMessageBlock('successful_create_'.$actionAlias));
+        }
+
+        return $this->render('DergiparkWorkflowBundle:ArticleWorkflow/actions:_specific_dialog.html.twig', [
+            'form' => $form->createView(),
+            'actionAlias' => $actionAlias
+        ]);
     }
 
     /**
@@ -24,7 +68,7 @@ class StepDialogController extends Controller
      */
     public function createBasicDialogAction($workflowId, $stepOrder)
     {
-        return new Response('createBasicDialogAction');
+        return new Response('createBasicDialogAction -> '. $workflowId. '---> '.$stepOrder);
     }
 
     /**
@@ -34,7 +78,7 @@ class StepDialogController extends Controller
      */
     public function acceptGotoArrangementAction($workflowId, $stepOrder)
     {
-        return new Response('acceptGotoArrangementAction');
+        return new Response('acceptGotoArrangementAction -> '. $workflowId. '---> '.$stepOrder);
     }
 
     /**
@@ -44,7 +88,7 @@ class StepDialogController extends Controller
      */
     public function gotoReviewingAction($workflowId, $stepOrder)
     {
-        return new Response('gotoReviewingAction');
+        return new Response('gotoReviewingAction -> '. $workflowId. '---> '.$stepOrder);
     }
 
     /**
@@ -54,7 +98,7 @@ class StepDialogController extends Controller
      */
     public function acceptSubmissionAction($workflowId, $stepOrder)
     {
-        return new Response('acceptSubmissionAction');
+        return new Response('acceptSubmissionAction -> '. $workflowId. '---> '.$stepOrder);
     }
 
     /**
@@ -64,6 +108,6 @@ class StepDialogController extends Controller
      */
     public function declineSubmissionAction($workflowId, $stepOrder)
     {
-        return new Response('declineSubmissionAction');
+        return new Response('declineSubmissionAction -> '. $workflowId. '---> '.$stepOrder);
     }
 }

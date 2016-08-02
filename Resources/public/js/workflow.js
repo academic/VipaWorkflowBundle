@@ -65,14 +65,35 @@ $(document).ready(function() {
                 })
             });
         },
-        createSpecificDialog: function ($this, $dialogType) {
+        getActionType: function($this){
+            return $($this).attr('data-action-type');
+        },
+        createSpecificDialog: function ($this) {
             $.fancybox({
                 type: 'ajax',
                 href: Routing.generate('dp_workflow_create_specific_dialog', {
                     journalId: journalId,
                     workflowId: workflowId,
-                    stepOrder: stepOrder
-                })
+                    stepOrder: stepOrder,
+                    actionType: this.getActionType($this)
+                }),
+                autoSize: false,
+                width: '600px',
+                maxWidth: '600px',
+                height: 'auto'
+            });
+        },
+        postSpecificDialog: function ($this) {
+            var dialogForm = $('form[name="dialog"]');
+            $.post( dialogForm.attr('action'), dialogForm.serialize(), function( data ) {
+                $.fancybox({
+                    content: data,
+                    type: 'inline',
+                    autoSize: false,
+                    width: '600px',
+                    maxWidth: '600px',
+                    height: 'auto'
+                });
             });
         },
         createBasicDialog: function($this){
@@ -81,8 +102,13 @@ $(document).ready(function() {
                 href: Routing.generate('dp_workflow_create_basic_dialog', {
                     journalId: journalId,
                     workflowId: workflowId,
-                    stepOrder: stepOrder
-                })
+                    stepOrder: stepOrder,
+                    actionType: this.getActionType($this)
+                }),
+                autoSize: false,
+                width: '600px',
+                maxWidth: '600px',
+                height: 'auto'
             });
         },
         acceptAndGotoArrangement: function($this){
@@ -91,8 +117,13 @@ $(document).ready(function() {
                 href: Routing.generate('dp_workflow_accept_goto_arrangement', {
                     journalId: journalId,
                     workflowId: workflowId,
-                    stepOrder: stepOrder
-                })
+                    stepOrder: stepOrder,
+                    actionType: this.getActionType($this)
+                }),
+                autoSize: false,
+                width: '600px',
+                maxWidth: '600px',
+                height: 'auto'
             });
         },
         gotoReviewing: function($this){
@@ -101,8 +132,13 @@ $(document).ready(function() {
                 href: Routing.generate('dp_workflow_goto_reviewing', {
                     journalId: journalId,
                     workflowId: workflowId,
-                    stepOrder: stepOrder
-                })
+                    stepOrder: stepOrder,
+                    actionType: this.getActionType($this)
+                }),
+                autoSize: false,
+                width: '600px',
+                maxWidth: '600px',
+                height: 'auto'
             });
         },
         acceptSubmission: function($this){
@@ -111,8 +147,13 @@ $(document).ready(function() {
                 href: Routing.generate('dp_workflow_accept_submission', {
                     journalId: journalId,
                     workflowId: workflowId,
-                    stepOrder: stepOrder
-                })
+                    stepOrder: stepOrder,
+                    actionType: this.getActionType($this)
+                }),
+                autoSize: false,
+                width: '600px',
+                maxWidth: '600px',
+                height: 'auto'
             });
         },
         declineSubmission: function($this){
@@ -121,8 +162,13 @@ $(document).ready(function() {
                 href: Routing.generate('dp_workflow_decline_submission', {
                     journalId: journalId,
                     workflowId: workflowId,
-                    stepOrder: stepOrder
-                })
+                    stepOrder: stepOrder,
+                    actionType: this.getActionType($this)
+                }),
+                autoSize: false,
+                width: '600px',
+                maxWidth: '600px',
+                height: 'auto'
             });
         }
     };

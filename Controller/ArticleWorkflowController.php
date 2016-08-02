@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ArticleWorkflowController extends Controller
 {
     /**
+     * @param $workflowId
      * @return Response
      */
     public function timelineAction($workflowId)
@@ -24,6 +25,8 @@ class ArticleWorkflowController extends Controller
     }
 
     /**
+     * @param $workflowId
+     * @param $stepOrder
      * @return Response
      */
     public function stepAction($workflowId, $stepOrder)

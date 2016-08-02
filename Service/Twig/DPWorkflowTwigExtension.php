@@ -83,14 +83,16 @@ class DPWorkflowTwigExtension extends \Twig_Extension
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function getFilters()
-    {
-        return array();
-    }
-
     public function getFunctions()
     {
-        return array();
+        return array(
+            new \Twig_SimpleFunction('actionType', array($this, 'getActionType')),
+        );
+    }
+
+    public function getActionType($const)
+    {
+        return constant('Dergipark\WorkflowBundle\Params\StepActionTypes::'.$const);
     }
 
     public function getName()

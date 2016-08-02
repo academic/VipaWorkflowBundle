@@ -1,0 +1,7 @@
+{% block successful_create__assign_grammer_editor %}
+    <script>
+        $.fancybox.close();
+        swal("Good job!", "Dialog Created! Long Description goes here", "success");
+        OjsWorkflow.loadStep(stepOrder);
+    </script>
+{% endblock %}

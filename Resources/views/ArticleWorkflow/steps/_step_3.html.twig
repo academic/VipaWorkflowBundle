@@ -8,29 +8,34 @@
             </button>
             <ul class="dropdown-menu step-actions-menu">
                 <li>
-                    <a onclick="OjsWorkflow.createSpecificDialog(this, 'assign-layout-editor')">
+                    <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                       data-action-type="{{ actionType('ASSIGN_LAYOUT_EDITOR') }}">
                         {{ 'assign.layout.editor'|trans }}
                     </a>
                 </li>
                 <li>
-                    <a onclick="OjsWorkflow.createSpecificDialog(this, 'assign-copy-editor')">
+                    <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                       data-action-type="{{ actionType('ASSIGN_COPY_EDITOR') }}">
                         {{ 'assign.copy.editor'|trans }}
                     </a>
                 </li>
                 <li>
-                    <a onclick="OjsWorkflow.createSpecificDialog(this, 'assign-proof-reader')">
+                    <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                       data-action-type="{{ actionType('ASSIGN_PROOF_READER') }}">
                         {{ 'assign.proof.reader'|trans }}
                     </a>
                 </li>
                 <li role="separator" class="divider"></li>
                 <li>
-                    <a onclick="OjsWorkflow.createSpecificDialog(this, 'ask-author-for-correction')">
+                    <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                       data-action-type="{{ actionType('ASK_AUTHOR_FOR_CORRECTION') }}">
                         {{ 'ask.author.for.correction'|trans }}
                     </a>
                 </li>
                 <li role="separator" class="divider"></li>
                 <li>
-                    <a onclick="OjsWorkflow.createBasicDialog(this)">
+                    <a onclick="OjsWorkflow.createBasicDialog(this)"
+                       data-action-type="{{ actionType('CREATE_ISSUE') }}">
                         {{ 'create.issue'|trans }}
                     </a>
                 </li>

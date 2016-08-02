@@ -39,6 +39,11 @@ class WorkflowService
     private $wfLogger;
 
     /**
+     * @var \Twig_Environment
+     */
+    private $twig;
+
+    /**
      * WorkflowService constructor.
      * @param EntityManager $em
      * @param JournalService $journalService
@@ -49,12 +54,14 @@ class WorkflowService
         EntityManager $em,
         JournalService $journalService,
         TokenStorageInterface $tokenStorage,
-        WorkflowLoggerService $wfLogger
+        WorkflowLoggerService $wfLogger,
+        \Twig_Environment $twig
     ) {
         $this->em               = $em;
         $this->journalService   = $journalService;
         $this->tokenStorage     = $tokenStorage;
         $this->wfLogger         = $wfLogger;
+        $this->twig             = $twig;
     }
 
     /**
@@ -193,6 +200,16 @@ class WorkflowService
         return $this->em->getRepository(WorkflowHistoryLog::class)->findBy([
             'articleWorkflow' => $articleWorkflow,
         ]);
+    }
+
+    /**
+     * @param $block
+     */
+    public function getMessageBlock($block)
+    {
+        $template = $this->twig->loadTemplate('DergiparkWorkflowBundle:ArticleWorkflow:_message_blocks.html.twig');
+        return $template->renderBlock($block, []);
+
     }
 
     /**
