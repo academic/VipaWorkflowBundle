@@ -1,1 +1,3 @@
-.hello{}
+.step-actions-menu li{
+    cursor: pointer;
+}

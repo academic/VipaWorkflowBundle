@@ -66,22 +66,64 @@ $(document).ready(function() {
             });
         },
         createSpecificDialog: function ($this, $dialogType) {
-
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dp_workflow_create_specific_dialog', {
+                    journalId: journalId,
+                    workflowId: workflowId,
+                    stepOrder: stepOrder
+                })
+            });
         },
         createBasicDialog: function($this){
-
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dp_workflow_create_basic_dialog', {
+                    journalId: journalId,
+                    workflowId: workflowId,
+                    stepOrder: stepOrder
+                })
+            });
         },
         acceptAndGotoArrangement: function($this){
-
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dp_workflow_accept_goto_arrangement', {
+                    journalId: journalId,
+                    workflowId: workflowId,
+                    stepOrder: stepOrder
+                })
+            });
         },
         gotoReviewing: function($this){
-
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dp_workflow_goto_reviewing', {
+                    journalId: journalId,
+                    workflowId: workflowId,
+                    stepOrder: stepOrder
+                })
+            });
         },
         acceptSubmission: function($this){
-
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dp_workflow_accept_submission', {
+                    journalId: journalId,
+                    workflowId: workflowId,
+                    stepOrder: stepOrder
+                })
+            });
         },
         declineSubmission: function($this){
-
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dp_workflow_decline_submission', {
+                    journalId: journalId,
+                    workflowId: workflowId,
+                    stepOrder: stepOrder
+                })
+            });
         }
     };
 });

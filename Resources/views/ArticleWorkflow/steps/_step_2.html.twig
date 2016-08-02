@@ -6,7 +6,7 @@
                 {{ 'select.action'|trans }}
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu step-actions-menu">
                 <li>
                     <a onclick="OjsWorkflow.createSpecificDialog(this, 'assign-section-editor')">
                         {{ 'assign.section.editor'|trans }}
@@ -49,3 +49,7 @@
         dialogs goes here
     </div>
 </div>
+
+<script>
+    var stepOrder = 2;
+</script>
