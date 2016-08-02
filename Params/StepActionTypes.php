@@ -30,6 +30,6 @@ class StepActionTypes
         self::ACCEPT_GOTO_ARRANGEMENT => '_accept_goto_arrangement',
         self::ASSIGN_LAYOUT_EDITOR => '_assign_layout_editor',
         self::ASSIGN_COPY_EDITOR => '_assign_copy_editor',
-        self::ASSIGN_PROOF_READER => '_proof_reader',
+        self::ASSIGN_PROOF_READER => '_assign_proof_reader',
     ];
 }

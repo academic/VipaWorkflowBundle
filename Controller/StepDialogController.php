@@ -52,7 +52,7 @@ class StepDialogController extends Controller
             $em->persist($dialog);
             $em->flush();
 
-            return new Response($workflowService->getMessageBlock('successful_create_'.$actionAlias));
+            return $workflowService->getMessageBlock('successful_create'.$actionAlias);
         }
 
         return $this->render('DergiparkWorkflowBundle:ArticleWorkflow/actions:_specific_dialog.html.twig', [

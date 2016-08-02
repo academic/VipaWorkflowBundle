@@ -13,6 +13,7 @@ use Ojs\CoreBundle\Params\ArticleStatuses;
 use Ojs\JournalBundle\Entity\Journal;
 use Ojs\JournalBundle\Service\JournalService;
 use Ojs\UserBundle\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Ojs\JournalBundle\Entity\Article;
 
@@ -204,11 +205,12 @@ class WorkflowService
 
     /**
      * @param $block
+     * @return Response
      */
     public function getMessageBlock($block)
     {
         $template = $this->twig->loadTemplate('DergiparkWorkflowBundle:ArticleWorkflow:_message_blocks.html.twig');
-        return $template->renderBlock($block, []);
+        return new Response($template->renderBlock($block, []));
 
     }
 
