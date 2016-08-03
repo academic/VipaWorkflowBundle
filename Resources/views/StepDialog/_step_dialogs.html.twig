@@ -13,8 +13,12 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a onclick="OjsWorkflow.loadPosts({{ dialog.id }})">
-                                    <span class="glyphicon glyphicon-refresh"></span>
                                     {{ 'refresh.posts'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a data-toggle="collapse" href="#collapse-panel-{{ dialog.id }}">
+                                    {{ 'collapse.dialog'|trans }}
                                 </a>
                             </li>
                         </ul>
@@ -23,26 +27,28 @@
                         {{ user }}<br>
                     {% endfor %}
                 </div>
-                <div class="panel-body panel-dialog-body">
-                    <ul class="dialog-box" id="dialog-posts-{{ dialog.id }}">
-                        <script>
-                            OjsWorkflow.loadPosts({{ dialog.id }});
-                        </script>
-                    </ul>
-                </div>
-                <div class="panel-footer">
-                    <div class="input-group">
-                        <input type="text" class="form-control input-sm dialog-comment-input" placeholder="{{ 'type.comment.here'|trans }}" />
-                        <span class="input-group-btn">
-                            <button class="btn btn-warning btn-sm" onclick="OjsWorkflow.sendComment(this, {{ dialog.id }})">
-                                <i class="fa fa-comment"></i>
-                                {{ 'add.comment'|trans }}
-                            </button>
-                            <button class="btn btn-default btn-sm" onclick="OjsWorkflow.sendFile(this, {{ dialog.id }})">
-                                <i class="fa fa-file-archive-o"></i>
-                                {{ 'workflow.send.file'|trans }}
-                            </button>
-                        </span>
+                <div id="collapse-panel-{{ dialog.id }}" class="collapse in">
+                    <div class="panel-body panel-dialog-body">
+                        <ul class="dialog-box" id="dialog-posts-{{ dialog.id }}">
+                            <script>
+                                OjsWorkflow.loadPosts({{ dialog.id }});
+                            </script>
+                        </ul>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="input-group">
+                            <input type="text" class="form-control input-sm dialog-comment-input" placeholder="{{ 'type.comment.here'|trans }}" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-warning btn-sm" onclick="OjsWorkflow.sendComment(this, {{ dialog.id }})">
+                                    <i class="fa fa-comment"></i>
+                                    {{ 'add.comment'|trans }}
+                                </button>
+                                <button class="btn btn-default btn-sm" onclick="OjsWorkflow.sendFile(this, {{ dialog.id }})">
+                                    <i class="fa fa-file-archive-o"></i>
+                                    {{ 'workflow.send.file'|trans }}
+                                </button>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

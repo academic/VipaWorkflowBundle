@@ -1,13 +1,33 @@
 {% for post in posts %}
     {% if post.sendedBy.username == app.user.username %}
+        <li class="right clearfix">
+            <span class="dialog-img pull-right">
+                <img src="http://placehold.it/50/FA6F57/fff&text={{ 'you'|trans }}" class="img-circle"/>
+            </span>
+            <div class="dialog-box-body clearfix">
+                <div class="header">
+                    <small class=" text-muted">
+                        <span class="glyphicon glyphicon-time"></span>
+                        <abbr title="{{ post.sendedAt|date('Y-m-d H:i:s') }}" class="ago">{{ post.sendedAt|date('Y-m-d H:i:s') }}</abbr>
+                    </small>
+                    <strong class="pull-right primary-font">
+                        {{ 'you'|trans }}
+                    </strong>
+                </div>
+                <p>
+                    {{ post.text }}
+                </p>
+            </div>
+        </li>
+    {% else %}
         <li class="left clearfix">
             <span class="dialog-img pull-left">
-                <img src="http://placehold.it/50/55C1E7/fff&text={{ 'you'|trans }}" alt="User Avatar" class="img-circle" />
+                <img src="http://placehold.it/50/55C1E7/fff&text={{ 'assigned'|trans }}" alt="User Avatar" class="img-circle" />
             </span>
             <div class="dialog-box-body clearfix">
                 <div class="header">
                     <strong class="primary-font">
-                        {{ 'you'|trans }}
+                        {{ post.sendedBy.username }}
                     </strong>
                     <small class="pull-right text-muted">
                         <span class="glyphicon glyphicon-time"></span>
@@ -19,25 +39,8 @@
                 </p>
             </div>
         </li>
-    {% else %}
-        <li class="right clearfix">
-            <span class="dialog-img pull-right">
-                <img src="http://placehold.it/50/FA6F57/fff&text=Assigned" class="img-circle"/>
-            </span>
-            <div class="dialog-box-body clearfix">
-                <div class="header">
-                    <small class=" text-muted">
-                        <span class="glyphicon glyphicon-time"></span>
-                        <abbr title="{{ post.sendedAt|date('Y-m-d H:i:s') }}" class="ago">{{ post.sendedAt|date('Y-m-d H:i:s') }}</abbr>
-                    </small>
-                    <strong class="pull-right primary-font">
-                        {{ post.sendedBy.username }}
-                    </strong>
-                </div>
-                <p>
-                    {{ post.text }}
-                </p>
-            </div>
-        </li>
     {% endif %}
 {% endfor %}
+<script>
+    OjsWorkflow.refreshAgoPlugin();
+</script>

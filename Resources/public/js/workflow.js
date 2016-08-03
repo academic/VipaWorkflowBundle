@@ -1,6 +1,5 @@
 $(document).ready(function() {
     $('.fancybox').fancybox({});
-    setInterval(function(){ OjsWorkflow.refreshAgoPlugin()}, 5000);
     OjsWorkflow = {
         basicJournalWfSetting: function($this) {
             $this = $($this);
