@@ -31,6 +31,11 @@ class StepDialog
     private $dialogType;
 
     /**
+     * @var string
+     */
+    private $title;
+
+    /**
      * @var ArrayCollection|User[]
      */
     public $users;
@@ -66,6 +71,26 @@ class StepDialog
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return $this
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
     }
 
     /**

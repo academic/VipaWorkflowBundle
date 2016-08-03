@@ -14,6 +14,9 @@ Dergipark\WorkflowBundle\Entity\StepDialog:
       column: dialog_type
       type: string
       nullable: true
+    title:
+      type: string
+      nullable: true
     status:
       type: integer
       nullable: false
