@@ -50,7 +50,7 @@ class LeftMenuListener implements EventSubscriberInterface
         $menuItem = $menuEvent->getMenuItem();
         $items = [
             // [field, label, route, icon]
-            ['steps', 'workflow.settings', 'dergipark_workflow_step_index', 'random'],
+            ['steps', 'workflow.setting', 'dergipark_workflow_step_index', 'random'],
         ];
         foreach ($items as $item) {
             $field = $item[0];
