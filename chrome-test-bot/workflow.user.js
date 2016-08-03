@@ -144,6 +144,11 @@ if(url.match(new RegExp('/journal/'+journalId+'/workflow/active', 'g'))){
     window.location = 'http://ojs.dev'+$('#flow-list tr:last td:eq(1) a').attr('href')+'#workflow-test';
 }
 
+function closeOkMessages(){
+    if($('button.confirm').length > 0){
+        $('button.confirm')[0].click();
+    }
+}
 function waitStep1load(){
 
     if(typeof step1Loaded !== 'undefined'){
@@ -151,26 +156,58 @@ function waitStep1load(){
     }
     if($('#dialogs-box-1').length == 1 && $('#dialogs-box-1').text().trim() !== 'installing.dialogs...'){
         $('.panel-heading .dropdown-toggle:eq(0)').click();
-        console.log('clicked toggle');
         $('.step-actions-menu li:eq(0) a')[0].click();
-        setInterval(function(){ fillUsersInput(); }, 1000);
+        setInterval(function(){ assignGrammerEditor(); }, 1000);
         step1Loaded = true;
     }
 }
 
-function fillUsersInput(){
-    if(typeof fillUsersInputVar !== 'undefined'){
+function assignGrammerEditor(){
+    if(typeof assignGrammerEditorVar !== 'undefined'){
         return;
     }
-    console.log('pass var baby');
     if($('select[name="dialog[users][]"]').length > 0){
         $('select[name="dialog[users][]"]').remove();
-        console.log('removed input');
-        $('form[name="dialog"]').append('<input name="dialog[users][]" value="3"/>');
-        console.log('append input');
+        $('form[name="dialog"]').append('<input name="dialog[users][]" value="4"/>');
         $('form[name="dialog"]').parent().find('button')[0].click();
-        console.log('click button');
-        fillUsersInputVar = true;
+        assignGrammerEditorVar = true;
+        console.log('click spelling button');
+        console.log('assigned grammer editor');
+        setInterval(function(){ closeOkMessages(); }, 500);
+        setInterval(function(){ assignSpellingEditor(); }, 1000);
+        setTimeout(function(){ $('.step-actions-menu li:eq(1) a')[0].click() }, 4000);
+    }
+}
+
+function assignSpellingEditor(){
+    if(typeof assignSpellingEditorVar !== 'undefined'){
+        return;
+    }
+    if($('select[name="dialog[users][]"]').length > 0){
+        console.log('finded form');
+        $('select[name="dialog[users][]"]').remove();
+        $('form[name="dialog"]').append('<input name="dialog[users][]" value="5"/>');
+        $('form[name="dialog"]').parent().find('button')[0].click();
+        assignSpellingEditorVar = true;
+        console.log('assigned spelling editor');
+        setTimeout(function(){ $('.step-actions-menu li:eq(2) a')[0].click() }, 4000);
+        setInterval(function(){ askAuthorForCorrection(); }, 1000);
+    }else{
+        console.log('can not find spelling form');
+    }
+}
+
+function askAuthorForCorrection(){
+    if(typeof askAuthorForCorrectionVar !== 'undefined'){
+        return;
+    }
+    if($('select[name="dialog[users][]"]').length > 0){
+        $('select[name="dialog[users][]"]').remove();
+        $('form[name="dialog"]').append('<input name="dialog[users][]" value="3"/>');
+        $('form[name="dialog"]').parent().find('button')[0].click();
+        askAuthorForCorrectionVar = true;
+        console.log('assigned author');
+        console.log('finished baby');
     }
 }
 
