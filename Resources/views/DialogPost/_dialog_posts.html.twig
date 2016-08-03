@@ -40,6 +40,8 @@
             </div>
         </li>
     {% endif %}
+{% else %}
+    <h6 class="text-center">{{ 'no.post'|trans }}</h6>
 {% endfor %}
 <script>
     OjsWorkflow.refreshAgoPlugin();

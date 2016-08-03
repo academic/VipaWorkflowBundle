@@ -1,3 +1,11 @@
+.panel-dialog{
+    opacity: 0.5;
+}
+
+.panel-dialog:hover{
+    opacity: 1;
+}
+
 .dialog-box
 {
     list-style: none;
@@ -26,7 +34,7 @@
 .dialog-box li .dialog-box-body p
 {
     margin: 0;
-    color: #777777;
+    color: #555;
 }
 
 .panel-dialog .slidedown .glyphicon, .dialog-box .glyphicon
@@ -43,4 +51,8 @@
 
 .dropdown-menu li a{
     cursor: pointer;
+}
+
+.dialog-box-body p{
+    font-size: 14px;
 }

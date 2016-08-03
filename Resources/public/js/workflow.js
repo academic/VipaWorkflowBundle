@@ -92,6 +92,9 @@ $(document).ready(function() {
                 $(this).livestamp($(this).attr('title'));
             });
         },
+        refreshTooltip: function () {
+            $("[data-toggle=tooltip]").tooltip();
+        },
         createSpecificDialog: function ($this) {
             $.fancybox({
                 type: 'ajax',

@@ -4,7 +4,7 @@
             <div class="panel panel-default panel-dialog">
                 <div class="panel-heading">
                     <span class="glyphicon glyphicon-comment"></span>
-                    {{ actionAlias(dialog.dialogType)~'.dialog.header'|trans }}
+                    <b>{{ actionAlias(dialog.dialogType)~'.dialog.header'|trans }}</b>
                     <div class="btn-group pull-right">
                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
                             {{ 'select.action'|trans }}
@@ -22,14 +22,32 @@
                                 </a>
                             </li>
                         </ul>
-                    </div><br>
+                    </div>
+                    <br>
+                    {{ 'assigned.to'|trans }}:
                     {% for user in dialog.users %}
-                        {{ user }}<br>
+                        <a data-toggle="tooltip" title="{{ user }}"
+                           href="{{ path('ojs_user_profile', {slug: user.username}) }}"
+                           target="_blank">
+                            @{{ user.username }}
+                        </a>
                     {% endfor %}
+                    <br>
+                    {{ 'created.by'|trans }}:
+                    <a data-toggle="tooltip" title="{{ dialog.createdDialogBy }}"
+                       href="{{ path('ojs_user_profile', {slug: dialog.createdDialogBy.username}) }}"
+                       target="_blank">
+                        {% if dialog.createdDialogBy.username == app.user.username %}
+                            {{ 'you'|trans }}
+                        {% else %}
+                            @{{ dialog.createdDialogBy.username }}
+                        {% endif %}
+                    </a>
                 </div>
                 <div id="collapse-panel-{{ dialog.id }}" class="collapse in">
                     <div class="panel-body panel-dialog-body">
                         <ul class="dialog-box" id="dialog-posts-{{ dialog.id }}">
+                            {{ 'loading.posts'|trans }}...
                             <script>
                                 OjsWorkflow.loadPosts({{ dialog.id }});
                             </script>
@@ -55,3 +73,6 @@
         </div>
     </div>
 {% endfor %}
+<script>
+    OjsWorkflow.refreshTooltip();
+</script>
