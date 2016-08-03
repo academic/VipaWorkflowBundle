@@ -137,6 +137,19 @@ $(document).ready(function() {
                 height: 'auto'
             });
         },
+        postBasicDialog: function ($this) {
+            var dialogForm = $('form[name="dialog"]');
+            $.post( dialogForm.attr('action'), dialogForm.serialize(), function( data ) {
+                $.fancybox({
+                    content: data,
+                    type: 'inline',
+                    autoSize: false,
+                    width: '600px',
+                    maxWidth: '600px',
+                    height: 'auto'
+                });
+            });
+        },
         acceptAndGotoArrangement: function($this){
             $.fancybox({
                 type: 'ajax',
