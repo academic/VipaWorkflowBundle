@@ -207,11 +207,23 @@ class WorkflowService
      * @param $block
      * @return Response
      */
-    public function getMessageBlock($block)
+    public function getMessageBlock($block, $params = [])
     {
         $template = $this->twig->loadTemplate('DergiparkWorkflowBundle:ArticleWorkflow:_message_blocks.html.twig');
-        return new Response($template->renderBlock($block, []));
 
+        return new Response($template->renderBlock($block, $params));
+    }
+
+    /**
+     * @param $block
+     * @param array $params
+     * @return Response
+     */
+    public function getFormBlock($block, $params = [])
+    {
+        $template = $this->twig->loadTemplate('DergiparkWorkflowBundle:ArticleWorkflow:_action_forms.html.twig');
+
+        return new Response($template->renderBlock($block, $params));
     }
 
     /**
