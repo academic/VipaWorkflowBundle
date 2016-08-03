@@ -20,3 +20,8 @@ dergipark_workflow_history_log:
 dergipark_workflow_dialog:
     resource: "dialog.yml"
     prefix:   /{workflowId}/step/{stepOrder}
+
+# dialog post related routing
+dergipark_workflow_dialog_post:
+    resource: "post.yml"
+    prefix:   /{workflowId}/step/{stepOrder}/dialog/{dialogId}

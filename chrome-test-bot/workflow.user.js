@@ -214,4 +214,3 @@ function askAuthorForCorrection(){
 if(url.match(new RegExp('/journal/'+journalId+'/article-workflow/', 'g')) && url.match(new RegExp('#workflow-test', 'g'))){
     setInterval(function(){ waitStep1load(); }, 2000);
 }
-

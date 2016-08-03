@@ -247,6 +247,24 @@ $(document).ready(function() {
                     }
                 });
             });
+        },
+        sendComment: function ($this, $dialogId) {
+            var $comment = $($this).parent().parent().find('.dialog-comment-input').val();
+            if($comment == ''){
+                return true;
+            }
+            $.post(Routing.generate('dp_workflow_dialog_posts_new_comment', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder,
+                dialogId: $dialogId
+            }), {
+                comment: $comment
+            }, function( data ) {
+                if(data.success == true){
+                    swal(Translator.trans('excellent'), Translator.trans('your.messages.sended'), "success");
+                }
+            });
         }
     };
 });
