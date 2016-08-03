@@ -2,7 +2,6 @@
 
 namespace Dergipark\WorkflowBundle\Controller;
 
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
 use Dergipark\WorkflowBundle\Entity\DialogPost;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Dergipark\WorkflowBundle\Params\DialogPostTypes;
@@ -22,21 +21,17 @@ class DialogPostController extends Controller
      */
     public function getPostsAction(Request $request, $workflowId, $stepOrder, $dialogId)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
-        $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
-        $workflowService = $this->get('dp.workflow_service');
-        $workflow = $workflowService->getArticleWorkflow($workflowId);
-        $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
-            'articleWorkflow' => $workflow,
-            'order' => $stepOrder,
-        ]);
-        $dialogs = $em->getRepository(StepDialog::class)->findBy([
-            'step' => $step,
+        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
+
+        $posts = $em->getRepository(DialogPost::class)->findBy([
+            'dialog' => $dialog,
+        ], [
+            'id' => 'ASC',
         ]);
 
-        return $this->render('DergiparkWorkflowBundle:StepDialog:_step_dialogs.html.twig', [
-            'dialogs' => $dialogs,
+        return $this->render('DergiparkWorkflowBundle:DialogPost:_dialog_posts.html.twig', [
+            'posts' => $posts,
         ]);
     }
 

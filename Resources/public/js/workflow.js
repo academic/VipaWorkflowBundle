@@ -1,5 +1,6 @@
 $(document).ready(function() {
     $('.fancybox').fancybox({});
+    setInterval(function(){ OjsWorkflow.refreshAgoPlugin()}, 5000);
     OjsWorkflow = {
         basicJournalWfSetting: function($this) {
             $this = $($this);
@@ -65,6 +66,16 @@ $(document).ready(function() {
                 $('#dialogs-box-'+stepOrder).html(data);
             });
         },
+        loadPosts: function ($dialogId) {
+            $.get(Routing.generate('dp_workflow_dialog_posts', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder,
+                dialogId: $dialogId
+            }), function( data ) {
+                $('#dialog-posts-'+$dialogId).html(data);
+            });
+        },
         showHistoryLog: function ($this) {
             $.fancybox({
                 type: 'ajax',
@@ -76,6 +87,11 @@ $(document).ready(function() {
         },
         getActionType: function($this){
             return $($this).attr('data-action-type');
+        },
+        refreshAgoPlugin: function(){
+            $('abbr.ago').each(function () {
+                $(this).livestamp($(this).attr('title'));
+            });
         },
         createSpecificDialog: function ($this) {
             $.fancybox({
@@ -262,6 +278,7 @@ $(document).ready(function() {
                 comment: $comment
             }, function( data ) {
                 if(data.success == true){
+                    OjsWorkflow.loadPosts($dialogId);
                     swal(Translator.trans('excellent'), Translator.trans('your.messages.sended'), "success");
                 }
             });
