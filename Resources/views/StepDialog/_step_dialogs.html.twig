@@ -7,19 +7,14 @@
                     {{ actionAlias(dialog.dialogType)~'.dialog.header'|trans }}
                     <div class="btn-group pull-right">
                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            <span class="glyphicon glyphicon-chevron-down"></span>
+                            {{ 'select.action'|trans }}
+                            <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu slidedown">
+                        <ul class="dropdown-menu">
                             <li>
-                                <a href="http://www.jquery2dotnet.com">
+                                <a onclick="OjsWorkflow.loadPosts({{ dialog.id }})">
                                     <span class="glyphicon glyphicon-refresh"></span>
-                                    {{ 'close'|trans }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="http://www.jquery2dotnet.com">
-                                    <span class="glyphicon glyphicon-refresh"></span>
-                                    {{ 'some.action'|trans }}
+                                    {{ 'refresh.posts'|trans }}
                                 </a>
                             </li>
                         </ul>

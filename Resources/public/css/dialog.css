@@ -37,5 +37,10 @@
 .panel-dialog-body
 {
     overflow-y: scroll;
-    height: 250px;
+    height: auto;
+    max-height: 250px;
+}
+
+.dropdown-menu li a{
+    cursor: pointer;
 }
