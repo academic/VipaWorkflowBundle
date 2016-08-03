@@ -82,7 +82,7 @@ class StepDialogController extends Controller
             return $workflowService->getMessageBlock('successful_create'.$actionAlias);
         }
 
-        return $workflowService->getFormBlock('_spesific_form', [
+        return $workflowService->getFormBlock('_specific_form', [
             'form' => $form->createView(),
             'actionAlias' => $actionAlias,
         ]);
@@ -262,12 +262,20 @@ class StepDialogController extends Controller
 
     /**
      * @param $workflowId
-     * @param $stepOrder
-     * @return Response
+     * @return JsonResponse
      */
-    public function declineSubmissionAction($workflowId, $stepOrder)
+    public function declineSubmissionAction($workflowId)
     {
-        return new Response('declineSubmissionAction -> '. $workflowId. '---> '.$stepOrder);
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $this->throw404IfNotFound($journal);
+
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $workflowService->declineSubmission($workflow, true);
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
     }
 
     /**

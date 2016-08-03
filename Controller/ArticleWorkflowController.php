@@ -18,6 +18,7 @@ class ArticleWorkflowController extends Controller
     {
         $workflowService = $this->get('dp.workflow_service');
         $articleWorkflow = $workflowService->getArticleWorkflow($workflowId);
+        $this->throw404IfNotFound($articleWorkflow);
 
         return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:_timeline.html.twig', [
             'timeline' => $workflowService->getWorkflowTimeline($articleWorkflow),

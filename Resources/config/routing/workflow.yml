@@ -1,6 +1,8 @@
 dergipark_workflow_flow_active:
   path:     /active
   defaults: { _controller: "DergiparkWorkflowBundle:Workflow:actives" }
+  options:
+    expose: true
 
 dergipark_workflow_flow_history:
   path:     /history

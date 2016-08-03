@@ -220,18 +220,32 @@ $(document).ready(function() {
             });
         },
         declineSubmission: function($this){
-            $.fancybox({
-                type: 'ajax',
-                href: Routing.generate('dp_workflow_decline_submission', {
+            swal({
+                title: Translator.trans('workflow.are.you.sure.decline.submission'),
+                text: Translator.trans('workflow.decline.submission.warnings'),
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: Translator.trans('workflow.yes.decline.submission'),
+                closeOnConfirm: false
+            }, function() {
+                $.get( Routing.generate('dp_workflow_decline_submission', {
                     journalId: journalId,
                     workflowId: workflowId,
-                    stepOrder: stepOrder,
-                    actionType: this.getActionType($this)
-                }),
-                autoSize: false,
-                width: '600px',
-                maxWidth: '600px',
-                height: 'auto'
+                    stepOrder: stepOrder
+                }), function( data ) {
+                    if(data.success == true){
+                        swal(
+                            Translator.trans('successful'),
+                            Translator.trans('successful.go.to.other.workflows'), "success"
+                        );
+                        window.location = Routing.generate('dergipark_workflow_flow_active', {
+                            journalId: journalId
+                        });
+                    }else{
+                        alert('Some error occured');
+                    }
+                });
             });
         }
     };

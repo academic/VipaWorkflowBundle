@@ -7,6 +7,7 @@ use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
 use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
 use Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog;
 use Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus;
+use Dergipark\WorkflowBundle\Params\StepStatus;
 use Doctrine\ORM\EntityManager;
 use JMS\Serializer\Exception\LogicException;
 use Ojs\CoreBundle\Params\ArticleStatuses;
@@ -149,13 +150,14 @@ class WorkflowService
             $userRelatedWorkflows = $this->em->getRepository(ArticleWorkflow::class)->findBy([
                 'status'    => ArticleWorkflowStatus::ACTIVE,
                 'journal'   => $journal,
-            ]);
+            ], ['id' => 'DESC']);
         }else{
             $userRelatedWorkflows = $this->em->getRepository(ArticleWorkflow::class)
                 ->createQueryBuilder('aw')
                 ->andWhere('aw.status = '.ArticleWorkflowStatus::ACTIVE)
                 ->andWhere(':user MEMBER OF aw.relatedUsers')
                 ->setParameter(':user', $user)
+                ->orderBy('aw.id', 'DESC')
                 ->getQuery()
                 ->getResult()
             ;
@@ -224,6 +226,36 @@ class WorkflowService
         $template = $this->twig->loadTemplate('DergiparkWorkflowBundle:ArticleWorkflow:_action_forms.html.twig');
 
         return new Response($template->renderBlock($block, $params));
+    }
+
+    /**
+     * @param ArticleWorkflow $workflow
+     * @param bool $flush
+     * @return bool
+     */
+    public function declineSubmission(ArticleWorkflow $workflow, $flush = false)
+    {
+        $article = $workflow->getArticle();
+        $steps = $this->em->getRepository(ArticleWorkflowStep::class)->findBy([
+            'articleWorkflow' => $workflow,
+            'status' => StepStatus::ACTIVE,
+        ]);
+
+        foreach($steps as $step){
+            $step->setStatus(StepStatus::CLOSED);
+            $this->em->persist($step);
+        }
+        $workflow->setStatus(ArticleWorkflowStatus::HISTORY);
+        $article->setStatus(ArticleStatuses::STATUS_REJECTED);
+        $this->em->persist($workflow);
+        $this->em->persist($article);
+
+        if(!$flush){
+            return true;
+        }
+        $this->em->flush();
+
+        return true;
     }
 
     /**
