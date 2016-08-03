@@ -1,0 +1,39 @@
+Dergipark\WorkflowBundle\Entity\DialogPost:
+  type: entity
+  table: bc_wf_dialog_post
+  repositoryClass: Dergipark\WorkflowBundle\Entity\DialogPostRepository
+  type: entity
+  id:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+  fields:
+    sendedAt:
+      column: 'sended_at'
+      type: datetime
+      nullable: false
+    type:
+      type: integer
+      nullable: false
+      options:
+        default: 1
+    text:
+      type: string
+      nullable: true
+    file:
+      type: string
+      nullable: true
+  manyToOne:
+    dialog:
+      targetEntity: Dergipark\WorkflowBundle\Entity\StepDialog
+      joinColumn:
+        name: dialog_id
+        referencedColumnName: id
+    sendedBy:
+      targetEntity: Ojs\UserBundle\Entity\User
+      joinColumn:
+        name: user_id
+        referencedColumnName: id
+  lifecycleCallbacks: {}
