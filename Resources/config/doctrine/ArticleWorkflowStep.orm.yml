@@ -14,6 +14,9 @@ Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep:
       column: 'step_order'
       type: integer
       nullable: true
+    status:
+      type: integer
+      nullable: true
   manyToOne:
     articleWorkflow:
       targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflow

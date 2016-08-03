@@ -7,6 +7,7 @@ use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Dergipark\WorkflowBundle\Form\Type\DialogType;
 use Dergipark\WorkflowBundle\Params\StepActionTypes;
 use Dergipark\WorkflowBundle\Params\StepDialogStatus;
+use Dergipark\WorkflowBundle\Params\StepStatus;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\JournalBundle\Form\Type\JournalUsersFieldType;
 use Symfony\Component\Form\FormInterface;
@@ -180,11 +181,37 @@ class StepDialogController extends Controller
     /**
      * @param $workflowId
      * @param $stepOrder
-     * @return Response
+     * @return JsonResponse
      */
     public function acceptGotoArrangementAction($workflowId, $stepOrder)
     {
-        return new Response('acceptGotoArrangementAction -> '. $workflowId. '---> '.$stepOrder);
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+
+        $this->throw404IfNotFound($journal);
+        $em = $this->getDoctrine()->getManager();
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => $stepOrder,
+        ]);
+
+        // deactive current step
+        $step->setStatus(StepStatus::CLOSED);
+        $em->persist($step);
+
+        $arrangementStep = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => 3,
+        ]);
+        $this->throw404IfNotFound($arrangementStep);
+        $workflow->setCurrentStep($arrangementStep);
+        $em->persist($workflow);
+        $em->flush();
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
     }
 
     /**
@@ -194,7 +221,33 @@ class StepDialogController extends Controller
      */
     public function gotoReviewingAction($workflowId, $stepOrder)
     {
-        return new Response('gotoReviewingAction -> '. $workflowId. '---> '.$stepOrder);
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+
+        $this->throw404IfNotFound($journal);
+        $em = $this->getDoctrine()->getManager();
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => $stepOrder,
+        ]);
+
+        // deactive current step
+        $step->setStatus(StepStatus::CLOSED);
+        $em->persist($step);
+
+        $reviewStep = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => 2,
+        ]);
+        $this->throw404IfNotFound($reviewStep);
+        $workflow->setCurrentStep($reviewStep);
+        $em->persist($workflow);
+        $em->flush();
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
     }
 
     /**

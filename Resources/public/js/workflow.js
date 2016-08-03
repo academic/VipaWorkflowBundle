@@ -151,33 +151,57 @@ $(document).ready(function() {
             });
         },
         acceptAndGotoArrangement: function($this){
-            $.fancybox({
-                type: 'ajax',
-                href: Routing.generate('dp_workflow_accept_goto_arrangement', {
+            swal({
+                title: Translator.trans('workflow.are.you.sure.goto.arrangement'),
+                text: Translator.trans('workflow.goto.arrangement.warnings'),
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: Translator.trans('workflow.yes.goto.arrangement'),
+                closeOnConfirm: false
+            }, function() {
+                $.get( Routing.generate('dp_workflow_accept_goto_arrangement', {
                     journalId: journalId,
                     workflowId: workflowId,
-                    stepOrder: stepOrder,
-                    actionType: this.getActionType($this)
-                }),
-                autoSize: false,
-                width: '600px',
-                maxWidth: '600px',
-                height: 'auto'
+                    stepOrder: stepOrder
+                }), function( data ) {
+                    if(data.success == true){
+                        swal(
+                            Translator.trans('successful'),
+                            Translator.trans('successful.go.on.arrangement'), "success"
+                        );
+                        OjsWorkflow.loadStep(3);
+                    }else{
+                        alert('Some error occured');
+                    }
+                });
             });
         },
         gotoReviewing: function($this){
-            $.fancybox({
-                type: 'ajax',
-                href: Routing.generate('dp_workflow_goto_reviewing', {
+            swal({
+                title: Translator.trans('workflow.are.you.sure.goto.reviewing'),
+                text: Translator.trans('workflow.goto.reviewing.warnings'),
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: Translator.trans('workflow.yes.goto.reviewing'),
+                closeOnConfirm: false
+            }, function() {
+                $.get( Routing.generate('dp_workflow_goto_reviewing', {
                     journalId: journalId,
                     workflowId: workflowId,
-                    stepOrder: stepOrder,
-                    actionType: this.getActionType($this)
-                }),
-                autoSize: false,
-                width: '600px',
-                maxWidth: '600px',
-                height: 'auto'
+                    stepOrder: stepOrder
+                }), function( data ) {
+                    if(data.success == true){
+                        swal(
+                            Translator.trans('successful'),
+                            Translator.trans('successful.go.on.reviewing'), "success"
+                        );
+                        OjsWorkflow.loadStep(2);
+                    }else{
+                        alert('Some error occured');
+                    }
+                });
             });
         },
         acceptSubmission: function($this){

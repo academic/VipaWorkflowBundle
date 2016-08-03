@@ -2,6 +2,7 @@
 
 namespace Dergipark\WorkflowBundle\Entity;
 
+use Dergipark\WorkflowBundle\Params\StepStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Ojs\UserBundle\Entity\User;
 
@@ -20,6 +21,11 @@ class ArticleWorkflowStep
      * @var integer
      */
     private $order;
+
+    /**
+     * @var integer
+     */
+    private $status = StepStatus::ACTIVE;
 
     /**
      * @var ArrayCollection|User[]
@@ -55,6 +61,26 @@ class ArticleWorkflowStep
     public function setOrder($order)
     {
         $this->order = $order;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     *
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
 
         return $this;
     }
