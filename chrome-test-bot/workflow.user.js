@@ -141,7 +141,7 @@ if(url.match(new RegExp('/journal/'+journalId+'/submission/me', 'g'))){
 }
 
 if(url.match(new RegExp('/journal/'+journalId+'/workflow/active', 'g'))){
-    window.location = 'http://ojs.dev'+$('#flow-list tr:last td:eq(1) a').attr('href')+'#workflow-test';
+    window.location = 'http://ojs.dev'+$('#flow-list tr:first td:eq(1) a').attr('href')+'#workflow-test';
 }
 
 function closeOkMessages(){
