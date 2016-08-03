@@ -105,6 +105,23 @@ $(document).ready(function() {
                 });
             });
         },
+        createDialogWithAuthor: function($this){
+            $.get( Routing.generate('dp_workflow_create_dialog_with_author', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder,
+                actionType: this.getActionType($this)
+            }), function( data ) {
+                $.fancybox({
+                    content: data,
+                    type: 'inline',
+                    autoSize: false,
+                    width: '600px',
+                    maxWidth: '600px',
+                    height: 'auto'
+                });
+            });
+        },
         createBasicDialog: function($this){
             $.fancybox({
                 type: 'ajax',

@@ -33,6 +33,7 @@ class StepDialogController extends Controller
             'dialogs' => $dialogs,
         ]);
     }
+
     /**
      * @param Request $request
      * @param $workflowId
@@ -82,6 +83,45 @@ class StepDialogController extends Controller
             'form' => $form->createView(),
             'actionAlias' => $actionAlias,
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $workflowId
+     * @param $stepOrder
+     * @return JsonResponse|Response
+     */
+    public function createDialogWithAuthorAction(Request $request, $workflowId, $stepOrder)
+    {
+        //set vars
+        $actionType = $request->get('actionType');
+        $actionAlias = StepActionTypes::$typeAlias[$actionType];
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $user = $this->getUser();
+
+        $this->throw404IfNotFound($journal);
+        $em = $this->getDoctrine()->getManager();
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => $stepOrder,
+        ]);
+        $articleSubmitter = $workflow->getArticle()->getSubmitterUser();
+
+        $dialog = new StepDialog();
+        $dialog
+            ->setDialogType($actionType)
+            ->setOpenedAt(new \DateTime())
+            ->setStatus(StepDialogStatus::ACTIVE)
+            ->setStep($step)
+            ->setCreatedDialogBy($user)
+            ->addUser($articleSubmitter)
+        ;
+        $em->persist($dialog);
+        $em->flush();
+
+        return $workflowService->getMessageBlock('successful_create'.$actionAlias);
     }
 
     /**

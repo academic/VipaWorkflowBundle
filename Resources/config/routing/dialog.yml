@@ -12,6 +12,13 @@ dp_workflow_create_specific_dialog:
   options:
       expose: true
 
+dp_workflow_create_dialog_with_author:
+  path:     /create/author-dialog
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:createDialogWithAuthor" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
 dp_workflow_create_basic_dialog:
   path:     /create/basic-dialog
   defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:createBasicDialog" }
