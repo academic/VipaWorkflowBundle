@@ -27,27 +27,27 @@ class WorkflowService
     /**
      * @var EntityManager
      */
-    private $em;
+    public $em;
 
     /**
      * @var JournalService
      */
-    private $journalService;
+    public $journalService;
 
     /**
      * @var TokenStorageInterface
      */
-    private $tokenStorage;
+    public $tokenStorage;
 
     /**
      * @var WorkflowLoggerService
      */
-    private $wfLogger;
+    public $wfLogger;
 
     /**
      * @var \Twig_Environment
      */
-    private $twig;
+    public $twig;
 
     /**
      * WorkflowService constructor.
@@ -345,7 +345,7 @@ class WorkflowService
     /**
      * @return User
      */
-    private function getUser()
+    public function getUser()
     {
         $token = $this->tokenStorage->getToken();
         if(!$token){
