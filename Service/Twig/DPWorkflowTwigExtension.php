@@ -3,6 +3,7 @@
 namespace Dergipark\WorkflowBundle\Service\Twig;
 
 use Dergipark\WorkflowBundle\Params\StepActionTypes;
+use Dergipark\WorkflowBundle\Service\WorkflowPermissionService;
 use Doctrine\ORM\EntityManager;
 use Ojs\JournalBundle\Service\JournalService;
 use Symfony\Component\Routing\RouterInterface;
@@ -55,14 +56,21 @@ class DPWorkflowTwigExtension extends \Twig_Extension
     private $eventDispatcher;
 
     /**
-     * @param EntityManager             $em
-     * @param RouterInterface           $router
-     * @param TranslatorInterface       $translator
-     * @param JournalService            $journalService
-     * @param TokenStorageInterface     $tokenStorage
-     * @param Session                   $session
-     * @param RequestStack              $requestStack
-     * @param EventDispatcherInterface  $eventDispatcher
+     * @var WorkflowPermissionService
+     */
+    public $wfPermissionService;
+
+    /**
+     * DPWorkflowTwigExtension constructor.
+     * @param EntityManager|null $em
+     * @param RouterInterface|null $router
+     * @param TranslatorInterface|null $translator
+     * @param JournalService|null $journalService
+     * @param TokenStorageInterface|null $tokenStorage
+     * @param Session|null $session
+     * @param RequestStack $requestStack
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param WorkflowPermissionService $permissionService
      */
     public function __construct(
         EntityManager $em = null,
@@ -72,16 +80,18 @@ class DPWorkflowTwigExtension extends \Twig_Extension
         TokenStorageInterface $tokenStorage = null,
         Session $session = null,
         RequestStack $requestStack,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        WorkflowPermissionService $permissionService
     ) {
-        $this->em = $em;
-        $this->router = $router;
-        $this->journalService = $journalService;
-        $this->tokenStorage = $tokenStorage;
-        $this->session = $session;
-        $this->translator = $translator;
-        $this->requestStack = $requestStack;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->em                   = $em;
+        $this->router               = $router;
+        $this->journalService       = $journalService;
+        $this->tokenStorage         = $tokenStorage;
+        $this->session              = $session;
+        $this->translator           = $translator;
+        $this->requestStack         = $requestStack;
+        $this->eventDispatcher      = $eventDispatcher;
+        $this->wfPermissionService  = $permissionService;
     }
 
     public function getFunctions()
@@ -89,6 +99,7 @@ class DPWorkflowTwigExtension extends \Twig_Extension
         return array(
             new \Twig_SimpleFunction('actionType', array($this, 'getActionType')),
             new \Twig_SimpleFunction('actionAlias', array($this, 'getActionAlias')),
+            new \Twig_SimpleFunction('permissionCheck', array($this, 'getPermissionCheck')),
         );
     }
 
@@ -105,5 +116,10 @@ class DPWorkflowTwigExtension extends \Twig_Extension
     public function getName()
     {
         return 'dergipark_workflow_extension';
+    }
+
+    public function getPermissionCheck()
+    {
+        return $this->wfPermissionService;
     }
 }
