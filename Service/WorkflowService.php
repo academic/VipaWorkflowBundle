@@ -267,10 +267,38 @@ class WorkflowService
      * @param bool $flush
      * @return bool
      */
+    public function acceptSubmission(ArticleWorkflow $workflow, $flush = false)
+    {
+        $article = $workflow->getArticle();
+        $steps = $this->em->getRepository(ArticleWorkflowStep::class)->findBy([
+            'articleWorkflow' => $workflow,
+            'status' => StepStatus::ACTIVE,
+        ]);
+
+        foreach($steps as $step){
+            $step->setStatus(StepStatus::CLOSED);
+            $this->em->persist($step);
+        }
+        $workflow->setStatus(ArticleWorkflowStatus::HISTORY);
+        $article->setStatus(ArticleStatuses::STATUS_PUBLISHED);
+        $article->setAcceptanceDate(new \DateTime());
+        $this->em->persist($workflow);
+        $this->em->persist($article);
+
+        if(!$flush){
+            return true;
+        }
+        $this->em->flush();
+
+        return true;
+    }
+
+    /**
+     * @param ArticleWorkflow $workflow
+     * @return array
+     */
     public function getUserRelatedFiles(ArticleWorkflow $workflow)
     {
-        $files = [];
-
         //collect article files
         $articleFiles = $workflow->getArticle()->getArticleFiles()->toArray();
 

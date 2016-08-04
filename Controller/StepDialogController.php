@@ -252,12 +252,26 @@ class StepDialogController extends Controller
 
     /**
      * @param $workflowId
-     * @param $stepOrder
-     * @return Response
+     * @return JsonResponse
      */
-    public function acceptSubmissionAction($workflowId, $stepOrder)
+    public function acceptSubmissionAction($workflowId)
     {
-        return new Response('acceptSubmissionAction -> '. $workflowId. '---> '.$stepOrder);
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $this->throw404IfNotFound($journal);
+
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $workflowService->acceptSubmission($workflow, true);
+
+        return new JsonResponse([
+            'success' => true,
+            'data' => [
+                'redirectUrl' => $this->generateUrl('ojs_journal_article_show', [
+                    'journalId' => $workflow->getArticle()->getJournal()->getId(),
+                    'id' => $workflow->getArticle()->getId(),
+                ])
+            ]
+        ]);
     }
 
     /**

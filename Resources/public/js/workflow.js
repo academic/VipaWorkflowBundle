@@ -223,18 +223,30 @@ $(document).ready(function() {
             });
         },
         acceptSubmission: function($this){
-            $.fancybox({
-                type: 'ajax',
-                href: Routing.generate('dp_workflow_accept_submission', {
+            swal({
+                title: Translator.trans('workflow.are.you.sure.accept.submission'),
+                text: Translator.trans('workflow.accept.submission.warnings'),
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#5fba7d',
+                confirmButtonText: Translator.trans('workflow.yes.accept.submission'),
+                closeOnConfirm: false
+            }, function() {
+                $.get( Routing.generate('dp_workflow_accept_submission', {
                     journalId: journalId,
                     workflowId: workflowId,
-                    stepOrder: stepOrder,
-                    actionType: this.getActionType($this)
-                }),
-                autoSize: false,
-                width: '600px',
-                maxWidth: '600px',
-                height: 'auto'
+                    stepOrder: stepOrder
+                }), function( data ) {
+                    if(data.success == true){
+                        swal(
+                            Translator.trans('successful'),
+                            Translator.trans('successful.go.to.accepted.article'), "success"
+                        );
+                        window.location = data.data.redirectUrl;
+                    }else{
+                        alert('Some error occured');
+                    }
+                });
             });
         },
         declineSubmission: function($this){
