@@ -57,11 +57,16 @@ class StepDialogController extends Controller
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
+        $wfPermissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
         ]);
+        $this->throw404IfNotFound($step);
+        if(!$wfPermissionService->isGrantedForStep($step)){
+            throw new AccessDeniedException;
+        }
 
         $dialog = new StepDialog();
         $dialog
@@ -113,11 +118,16 @@ class StepDialogController extends Controller
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
+        $wfPermissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
         ]);
+        $this->throw404IfNotFound($step);
+        if(!$wfPermissionService->isGrantedForStep($step)){
+            throw new AccessDeniedException;
+        }
         $articleSubmitter = $workflow->getArticle()->getSubmitterUser();
 
         $dialog = new StepDialog();

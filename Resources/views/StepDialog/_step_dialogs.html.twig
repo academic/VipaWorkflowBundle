@@ -29,7 +29,11 @@
                         <a data-toggle="tooltip" title="{{ user }}"
                            href="{{ path('ojs_user_profile', {slug: user.username}) }}"
                            target="_blank">
-                            @{{ user.username }}
+                            {% if user.username == app.user.username %}
+                                {{ 'you'|trans }}
+                            {% else %}
+                                @{{ user.username }}
+                            {% endif %}
                         </a>
                     {% endfor %}
                     <br>
