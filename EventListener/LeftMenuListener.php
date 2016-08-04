@@ -2,6 +2,7 @@
 
 namespace Dergipark\WorkflowBundle\EventListener;
 
+use Dergipark\WorkflowBundle\Service\WorkflowPermissionService;
 use Ojs\CoreBundle\Acl\AuthorizationChecker;
 use Ojs\JournalBundle\Event\MenuEvent;
 use Ojs\JournalBundle\Event\MenuEvents;
@@ -10,21 +11,36 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class LeftMenuListener implements EventSubscriberInterface
 {
-    /** @var  AuthorizationChecker */
+    /**
+     * @var  AuthorizationChecker
+     */
     private $checker;
 
-    /** @var  JournalService */
+    /**
+     * @var  JournalService
+     */
     private $journalService;
+
+    /**
+     * @var WorkflowPermissionService
+     */
+    private $wfPermissionService;
 
     /**
      * LeftMenuListener constructor.
      * @param AuthorizationChecker $checker
      * @param JournalService $journalService
+     * @param WorkflowPermissionService $wfPermissionService
      */
-    public function __construct(AuthorizationChecker $checker, JournalService $journalService)
+    public function __construct(
+        AuthorizationChecker $checker,
+        JournalService $journalService,
+        WorkflowPermissionService $wfPermissionService
+    )
     {
-        $this->checker = $checker;
-        $this->journalService = $journalService;
+        $this->checker              = $checker;
+        $this->journalService       = $journalService;
+        $this->wfPermissionService  = $wfPermissionService;
     }
 
 
@@ -44,6 +60,9 @@ class LeftMenuListener implements EventSubscriberInterface
      */
     public function onLeftMenuInitialized(MenuEvent $menuEvent)
     {
+        if(!$this->wfPermissionService->grantedForWorkflowSetting()){
+            return;
+        }
         $journal = $this->journalService->getSelectedJournal();
         $journalId = $journal->getId();
 
