@@ -21,7 +21,7 @@ class ArticleWorkflowController extends Controller
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $this->throw404IfNotFound($workflow);
 
-        if($this->get('dp.workflow_permission_service')->isGrantedForTimeline($workflow)){
+        if(!$this->get('dp.workflow_permission_service')->isGrantedForTimeline($workflow)){
             throw new AccessDeniedException;
         }
         return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:_timeline.html.twig', [
@@ -43,7 +43,7 @@ class ArticleWorkflowController extends Controller
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
         ]);
-        if($this->get('dp.workflow_permission_service')->isGrantedForTimeline($workflow)){
+        if(!$this->get('dp.workflow_permission_service')->isGrantedForTimeline($workflow)){
             throw new AccessDeniedException;
         }
 
@@ -58,7 +58,7 @@ class ArticleWorkflowController extends Controller
      */
     public function historyLogAction($workflowId)
     {
-        if($this->get('dp.workflow_permission_service')->isGrantedForWorkflowHistory()){
+        if(!$this->get('dp.workflow_permission_service')->isGrantedForWorkflowHistory()){
             throw new AccessDeniedException;
         }
         $workflowService = $this->get('dp.workflow_service');
