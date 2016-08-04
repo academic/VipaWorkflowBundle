@@ -33,6 +33,8 @@ class DialogPostController extends Controller
 
         return $this->render('DergiparkWorkflowBundle:DialogPost:_dialog_posts.html.twig', [
             'posts' => $posts,
+            'filePostType' => DialogPostTypes::TYPE_FILE,
+            'textPostType' => DialogPostTypes::TYPE_TEXT,
         ]);
     }
 
@@ -74,14 +76,12 @@ class DialogPostController extends Controller
      */
     public function browseFilesAction(Request $request, $workflowId, $dialogId)
     {
-        $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $workflow = $workflowService->getArticleWorkflow($workflowId);
-        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
 
         return $this->render('DergiparkWorkflowBundle:DialogPost:_browse_files.html.twig', [
             'files' => $workflowService->getUserRelatedFiles($workflow),
+            'dialogId' => $dialogId,
         ]);
     }
 
@@ -92,6 +92,30 @@ class DialogPostController extends Controller
      */
     public function postFileAction(Request $request, $dialogId)
     {
-        return new Response('hello there');
+        $files = $request->request->get('files');
+        if(!$files){
+            return new LogicException('files param must be!');
+        }
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
+
+        foreach($files as $file){
+            $filePost = new DialogPost();
+            $filePost
+                ->setDialog($dialog)
+                ->setSendedBy($user)
+                ->setSendedAt(new \DateTime())
+                ->setFileName($file['fileName'])
+                ->setFileOriginalName($file['fileOriginalName'])
+                ->setType(DialogPostTypes::TYPE_FILE)
+                ;
+            $em->persist($filePost);
+        }
+        $em->flush();
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
     }
 }

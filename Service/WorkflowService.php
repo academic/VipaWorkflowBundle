@@ -304,8 +304,9 @@ class WorkflowService
         foreach($files as $file){
             if($file instanceof ArticleFile){
                 $normalizeFile[] = [
+                    'originalname' => $file->getFile(),
                     'filename' => $file->getFile(),
-                    'path' => '/pathfile/'.$file->getFile(),
+                    'filepath' => '/uploads/articlefiles/'.$file->getFile(),
                 ];
             }
         }

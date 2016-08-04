@@ -22,7 +22,10 @@ Dergipark\WorkflowBundle\Entity\DialogPost:
     text:
       type: string
       nullable: true
-    file:
+    fileOriginalName:
+      type: string
+      nullable: true
+    fileName:
       type: string
       nullable: true
   manyToOne:

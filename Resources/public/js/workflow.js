@@ -304,13 +304,41 @@ $(document).ready(function() {
             $('#workflow-file-upload-hidden-input').click();
         },
         exposeUploadedFile: function (data) {
-            var cloneTemplate = $('.upload-file-expose-template').clone();
-            $('.upload-file-expose-template').after(cloneTemplate);
+            if(typeof data.result.files !== 'undefined'){
+                swal(Translator.trans('wrong.file'), Translator.trans('select.another.file.type'), "warning");
+                return false;
+            }
+            $('.upload-file-expose-template').clone().insertBefore('#upload-button-box');
             var realTemplate = $('.upload-file-expose-template:last');
             realTemplate.removeClass('hidden').removeClass('upload-file-expose-template');
-            realTemplate.find('input[type="checkbox"]').val(data.result.originalname);
+            realTemplate.find('input[type="checkbox"]').attr('data-file-original-name', data.result.originalname);
+            realTemplate.find('input[type="checkbox"]').attr('data-file-name', data.result.filename);
             realTemplate.find('th:eq(1)').html(data.result.originalname);
             realTemplate.find('th:eq(2) a').attr('href', data.result.filepath);
+        },
+        sendSelectedFiles: function($dialogId){
+            var files = [];
+            var findCheckedFileInputs = $('#browse-files-table').find('input:checked:not([data-file-name=""])');
+            $.each(findCheckedFileInputs, function (index, value) {
+                files.push({
+                    fileOriginalName: $(value).attr('data-file-original-name'),
+                    fileName: $(value).attr('data-file-name')
+                });
+            });
+            $.post(Routing.generate('dp_workflow_dialog_posts_new_file', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder,
+                dialogId: $dialogId
+            }), {
+                files: files
+            }, function( data ) {
+                if(data.success == true){
+                    $.fancybox.close();
+                    OjsWorkflow.loadPosts($dialogId);
+                    swal(Translator.trans('excellent'), Translator.trans('your.files.sended'), "success");
+                }
+            });
         }
     };
 });

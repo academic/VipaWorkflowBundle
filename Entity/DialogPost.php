@@ -34,7 +34,12 @@ class DialogPost
     /**
      * @var string
      */
-    private $file;
+    private $fileOriginalName;
+
+    /**
+     * @var string
+     */
+    private $fileName;
 
     /**
      * @var StepDialog
@@ -126,19 +131,39 @@ class DialogPost
     /**
      * @return string
      */
-    public function getFile()
+    public function getFileOriginalName()
     {
-        return $this->file;
+        return $this->fileOriginalName;
     }
 
     /**
-     * @param string $file
+     * @param string $fileOriginalName
      *
      * @return $this
      */
-    public function setFile($file)
+    public function setFileOriginalName($fileOriginalName)
     {
-        $this->file = $file;
+        $this->fileOriginalName = $fileOriginalName;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileName()
+    {
+        return $this->fileName;
+    }
+
+    /**
+     * @param string $fileName
+     *
+     * @return $this
+     */
+    public function setFileName($fileName)
+    {
+        $this->fileName = $fileName;
 
         return $this;
     }
