@@ -60,7 +60,7 @@ class LeftMenuListener implements EventSubscriberInterface
      */
     public function onLeftMenuInitialized(MenuEvent $menuEvent)
     {
-        if(!$this->wfPermissionService->grantedForWorkflowSetting()){
+        if(!$this->wfPermissionService->isGrantedForWorkflowSetting()){
             return;
         }
         $journal = $this->journalService->getSelectedJournal();
@@ -68,25 +68,21 @@ class LeftMenuListener implements EventSubscriberInterface
 
         $menuItem = $menuEvent->getMenuItem();
         $items = [
-            // [field, label, route, icon]
-            ['steps', 'workflow.setting', 'dergipark_workflow_step_index', 'random'],
+            ['workflow.setting', 'dergipark_workflow_step_index', 'random'],
         ];
         foreach ($items as $item) {
-            $field = $item[0];
-            $label = $item[1];
-            $path = $item[2];
-            $icon = $item[3];
+            $label = $item[0];
+            $path = $item[1];
+            $icon = $item[2];
 
-            if (empty($field) || $this->checker->isGranted('VIEW', $journal, $field)) {
-                $menuItem->addChild(
-                    $label,
-                    [
-                        'route' => $path,
-                        'routeParameters' => ['journalId' => $journalId],
-                        'extras' => ['icon' => $icon]
-                    ]
-                );
-            }
+            $menuItem->addChild(
+                $label,
+                [
+                    'route' => $path,
+                    'routeParameters' => ['journalId' => $journalId],
+                    'extras' => ['icon' => $icon]
+                ]
+            );
         }
     }
 

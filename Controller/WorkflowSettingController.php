@@ -7,6 +7,7 @@ use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
 use Dergipark\WorkflowBundle\Form\Type\JournalWfSettingType;
 use Dergipark\WorkflowBundle\Form\Type\JournalWfStepType;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,6 +18,9 @@ class WorkflowSettingController extends Controller
      */
     public function indexAction()
     {
+        if(!$this->get('dp.workflow_permission_service')->isGrantedForWorkflowSetting()){
+            throw new AccessDeniedException;
+        }
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         return $this->render('DergiparkWorkflowBundle:WorkflowSetting:_workflow_setting.html.twig',[
             'journal' => $journal,
@@ -29,6 +33,9 @@ class WorkflowSettingController extends Controller
      */
     public function basicSettingAction(Request $request)
     {
+        if(!$this->get('dp.workflow_permission_service')->isGrantedForWorkflowSetting()){
+            throw new AccessDeniedException;
+        }
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
@@ -64,6 +71,9 @@ class WorkflowSettingController extends Controller
      */
     public function stepUsersSetupAction(Request $request, $stepOrder)
     {
+        if(!$this->get('dp.workflow_permission_service')->isGrantedForWorkflowSetting()){
+            throw new AccessDeniedException;
+        }
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();

@@ -2,6 +2,8 @@
 
 namespace Dergipark\WorkflowBundle\Service;
 
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
+
 class WorkflowPermissionService
 {
     /**
@@ -24,13 +26,48 @@ class WorkflowPermissionService
      *
      * @return bool
      */
-    public function grantedForWorkflowSetting()
+    public function isGrantedForWorkflowSetting()
     {
         $user = $this->workflowService->getUser();
         $journal = $this->workflowService->journalService->getSelectedJournal();
 
         if($user->isAdmin()
             || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGrantedForWorkflowHistory()
+    {
+        $user = $this->workflowService->getUser();
+        $journal = $this->workflowService->journalService->getSelectedJournal();
+
+        if($user->isAdmin()
+            || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param ArticleWorkflow $workflow
+     * @return bool
+     */
+    public function isGrantedForTimeline(ArticleWorkflow $workflow)
+    {
+        $user = $this->workflowService->getUser();
+        $journal = $this->workflowService->journalService->getSelectedJournal();
+        if($user->isAdmin()
+            || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
+            return true;
+        }
+        if($workflow->relatedUsers->contains($user)){
             return true;
         }
 
