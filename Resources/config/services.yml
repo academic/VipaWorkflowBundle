@@ -10,12 +10,16 @@ services:
       - "@session"
       - "@request_stack"
       - "@event_dispatcher"
+      - "@dp.workflow_permission_service"
     tags:
       - { name: twig.extension }
 
   dp.workflow.left_menu_listener:
     class: Dergipark\WorkflowBundle\EventListener\LeftMenuListener
-    arguments: ["@security.authorization_checker", "@ojs.journal_service"]
+    arguments:
+      - "@security.authorization_checker"
+      - "@ojs.journal_service"
+      - "@dp.workflow_permission_service"
     tags:
       - { name: kernel.event_subscriber }
 
@@ -27,6 +31,11 @@ services:
       - "@security.token_storage"
       - "@dp.wf_logger_service"
       - "@twig"
+
+  dp.workflow_permission_service:
+    class: Dergipark\WorkflowBundle\Service\WorkflowPermissionService
+    arguments:
+      - "@dp.workflow_service"
 
   dp.wf_logger_service:
     class: Dergipark\WorkflowBundle\Service\WorkflowLoggerService
