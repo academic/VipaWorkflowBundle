@@ -4,13 +4,17 @@ namespace Dergipark\WorkflowBundle\Service;
 
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Dergipark\WorkflowBundle\Entity\DialogPost;
 use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
+use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog;
 use Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus;
+use Dergipark\WorkflowBundle\Params\DialogPostTypes;
 use Dergipark\WorkflowBundle\Params\StepStatus;
 use Doctrine\ORM\EntityManager;
 use JMS\Serializer\Exception\LogicException;
 use Ojs\CoreBundle\Params\ArticleStatuses;
+use Ojs\JournalBundle\Entity\ArticleFile;
 use Ojs\JournalBundle\Entity\Journal;
 use Ojs\JournalBundle\Service\JournalService;
 use Ojs\UserBundle\Entity\User;
@@ -256,6 +260,57 @@ class WorkflowService
         $this->em->flush();
 
         return true;
+    }
+
+    /**
+     * @param ArticleWorkflow $workflow
+     * @param bool $flush
+     * @return bool
+     */
+    public function getUserRelatedFiles(ArticleWorkflow $workflow)
+    {
+        $files = [];
+
+        //collect article files
+        $articleFiles = $workflow->getArticle()->getArticleFiles()->toArray();
+
+        //collect article submission files
+        $articleSubmissionFiles = $workflow->getArticle()->getArticleSubmissionFiles()->toArray();
+
+        //collect post files
+        $workflowPostFiles = $this->em->getRepository(DialogPost::class)
+            ->createQueryBuilder('dialogPost')
+            ->join('dialogPost.dialog', 'stepDialog')
+            ->join('stepDialog.step', 'articleWorkflowStep')
+            ->andWhere('articleWorkflowStep.articleWorkflow = :articleWorkflow')
+            ->setParameter('articleWorkflow', $workflow)
+            ->andWhere('dialogPost.type = :fileType')
+            ->setParameter('fileType', DialogPostTypes::TYPE_FILE)
+            ->getQuery()
+            ->getResult();
+        $files = array_merge($articleFiles, $articleSubmissionFiles, $workflowPostFiles);
+        $files = $this->normalizeBrowseFiles($files);
+
+        return $files;
+    }
+
+    /**
+     * @param array $files
+     * @return array
+     */
+    private function normalizeBrowseFiles($files = array())
+    {
+        $normalizeFile = [];
+        foreach($files as $file){
+            if($file instanceof ArticleFile){
+                $normalizeFile[] = [
+                    'filename' => $file->getFile(),
+                    'path' => '/pathfile/'.$file->getFile(),
+                ];
+            }
+        }
+
+        return $normalizeFile;
     }
 
     /**

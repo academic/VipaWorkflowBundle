@@ -9,6 +9,7 @@ use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Pagerfanta\Exception\LogicException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DialogPostController extends Controller
 {
@@ -64,5 +65,33 @@ class DialogPostController extends Controller
         return new JsonResponse([
             'success' => true,
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $dialogId
+     * @return LogicException|JsonResponse
+     */
+    public function browseFilesAction(Request $request, $workflowId, $dialogId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $workflowService = $this->get('dp.workflow_service');
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
+
+        return $this->render('DergiparkWorkflowBundle:DialogPost:_browse_files.html.twig', [
+            'files' => $workflowService->getUserRelatedFiles($workflow),
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $dialogId
+     * @return LogicException|JsonResponse
+     */
+    public function postFileAction(Request $request, $dialogId)
+    {
+        return new Response('hello there');
     }
 }

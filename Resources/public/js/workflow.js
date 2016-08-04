@@ -284,6 +284,33 @@ $(document).ready(function() {
                     swal(Translator.trans('excellent'), Translator.trans('your.messages.sended'), "success");
                 }
             });
+        },
+        browseFiles: function ($this, $dialogId) {
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dp_workflow_dialog_posts_browse_files', {
+                    journalId: journalId,
+                    workflowId: workflowId,
+                    stepOrder: stepOrder,
+                    dialogId: $dialogId
+                }),
+                autoSize: false,
+                width: '600px',
+                maxWidth: '600px',
+                height: 'auto'
+            });
+        },
+        uploadCustomFile: function () {
+            $('#workflow-file-upload-hidden-input').click();
+        },
+        exposeUploadedFile: function (data) {
+            var cloneTemplate = $('.upload-file-expose-template').clone();
+            $('.upload-file-expose-template').after(cloneTemplate);
+            var realTemplate = $('.upload-file-expose-template:last');
+            realTemplate.removeClass('hidden').removeClass('upload-file-expose-template');
+            realTemplate.find('input[type="checkbox"]').val(data.result.originalname);
+            realTemplate.find('th:eq(1)').html(data.result.originalname);
+            realTemplate.find('th:eq(2) a').attr('href', data.result.filepath);
         }
     };
 });
