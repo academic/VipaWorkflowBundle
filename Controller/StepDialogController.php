@@ -10,6 +10,7 @@ use Dergipark\WorkflowBundle\Params\StepDialogStatus;
 use Dergipark\WorkflowBundle\Params\StepStatus;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\JournalBundle\Form\Type\JournalUsersFieldType;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,20 +18,22 @@ use Symfony\Component\HttpFoundation\Response;
 
 class StepDialogController extends Controller
 {
-    public function getDialogsAction(Request $request, $workflowId, $stepOrder)
+    public function getDialogsAction($workflowId, $stepOrder)
     {
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
+        //check permissions
+        if(!$this->get('dp.workflow_permission_service')->isGrantedForTimeline($workflow)){
+            throw new AccessDeniedException;
+        }
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
         ]);
-        $dialogs = $em->getRepository(StepDialog::class)->findBy([
-            'step' => $step,
-        ]);
+        $dialogs = $workflowService->getUserRelatedStepDialogs($workflow, $step);
 
         return $this->render('DergiparkWorkflowBundle:StepDialog:_step_dialogs.html.twig', [
             'dialogs' => $dialogs,
@@ -76,6 +79,11 @@ class StepDialogController extends Controller
         $form->handleRequest($request);
 
         if($request->getMethod() == 'POST' && $form->isValid()){
+            foreach($dialog->getUsers() as $user){
+                $workflow->addRelatedUser($user);
+            }
+            $em->persist($workflow);
+
             $em->persist($dialog);
             $em->flush();
 
@@ -166,6 +174,10 @@ class StepDialogController extends Controller
         $form->handleRequest($request);
 
         if($request->getMethod() == 'POST' && $form->isValid()){
+            foreach($dialog->getUsers() as $user){
+                $workflow->addRelatedUser($user);
+            }
+            $em->persist($workflow);
             $em->persist($dialog);
             $em->flush();
 

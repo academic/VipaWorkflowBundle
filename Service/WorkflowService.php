@@ -343,6 +343,57 @@ class WorkflowService
     }
 
     /**
+     * @param ArticleWorkflow $workflow
+     * @param ArticleWorkflowStep $step
+     * @return array|StepDialog[]
+     */
+    public function getUserRelatedStepDialogs(ArticleWorkflow $workflow, ArticleWorkflowStep $step)
+    {
+        $user = $this->getUser();
+        $journal = $workflow->getArticle()->getJournal();
+        $dialogRepo = $this->em->getRepository(StepDialog::class);
+        $fetchAll = false;
+        //if user have admin role or related roles
+        if($user->isAdmin()
+            || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
+            $fetchAll = true;
+        }
+        //if user in step granted users
+        if($step->grantedUsers->contains($user)){
+            $fetchAll = true;
+        }
+        if($fetchAll){
+            $dialogs = $dialogRepo->findBy(['step' => $step]);
+        }else{
+            $dialogs = $dialogRepo
+                ->createQueryBuilder('sd')
+                ->andWhere(':user MEMBER OF sd.users')
+                ->setParameter('user', $user)
+                ->andWhere('sd.step = :step')
+                ->setParameter('step', $step)
+                ->getQuery()
+                ->getResult()
+                ;
+        }
+
+        return $dialogs;
+    }
+
+    /**
+     * @param array $searchRoles
+     * @param array $roleBag
+     * @return bool
+     */
+    public function haveLeastRole($searchRoles = [], $roleBag = [])
+    {
+        if(count(array_intersect($searchRoles, $roleBag)) > 0){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @return User
      */
     public function getUser()

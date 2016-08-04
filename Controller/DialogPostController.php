@@ -14,13 +14,10 @@ use Symfony\Component\HttpFoundation\Response;
 class DialogPostController extends Controller
 {
     /**
-     * @param Request $request
-     * @param $workflowId
-     * @param $stepOrder
      * @param $dialogId
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function getPostsAction(Request $request, $workflowId, $stepOrder, $dialogId)
+    public function getPostsAction($dialogId)
     {
         $em = $this->getDoctrine()->getManager();
         $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
