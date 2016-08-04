@@ -3,6 +3,8 @@
 namespace Dergipark\WorkflowBundle\Service;
 
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Dergipark\WorkflowBundle\Entity\StepDialog;
 
 class WorkflowPermissionService
 {
@@ -22,27 +24,9 @@ class WorkflowPermissionService
     }
 
     /**
-     * checks permission for workflow settings page
-     *
      * @return bool
      */
-    public function isGrantedForWorkflowSetting()
-    {
-        $user = $this->workflowService->getUser();
-        $journal = $this->workflowService->journalService->getSelectedJournal();
-
-        if($user->isAdmin()
-            || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isGrantedForWorkflowHistory()
+    public function isHaveEditorRole()
     {
         $user = $this->workflowService->getUser();
         $journal = $this->workflowService->journalService->getSelectedJournal();
@@ -59,15 +43,56 @@ class WorkflowPermissionService
      * @param ArticleWorkflow $workflow
      * @return bool
      */
-    public function isGrantedForTimeline(ArticleWorkflow $workflow)
+    public function isInWorkflowRelatedUsers(ArticleWorkflow $workflow)
     {
         $user = $this->workflowService->getUser();
         $journal = $this->workflowService->journalService->getSelectedJournal();
+
         if($user->isAdmin()
             || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
             return true;
         }
         if($workflow->relatedUsers->contains($user)){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param ArticleWorkflowStep $step
+     * @return bool
+     */
+    public function isGrantedForStep(ArticleWorkflowStep $step)
+    {
+        $user = $this->workflowService->getUser();
+        $journal = $this->workflowService->journalService->getSelectedJournal();
+
+        if($user->isAdmin()
+            || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
+            return true;
+        }
+        if($step->grantedUsers->contains($user)){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param StepDialog $dialog
+     * @return bool
+     */
+    public function isGrantedForDialogPost(StepDialog $dialog)
+    {
+        $user = $this->workflowService->getUser();
+        $journal = $this->workflowService->journalService->getSelectedJournal();
+
+        if($user->isAdmin()
+            || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
+            return true;
+        }
+        if($dialog->users->contains($user)){
             return true;
         }
 
