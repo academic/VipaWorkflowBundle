@@ -41,6 +41,7 @@ jQuery(document).ready(function($) {
         $('.name-wrap').addClass('hidden');
     }
     //bind to div and on change remove unnecessary fields
+    //this lines can be removal, and can trigger an browser crash
     $('.build-wrap').bind("DOMSubtreeModified",function(){
         removeUnnecessaryFields();
     });
