@@ -19,7 +19,9 @@
         <i class="fa fa-warning"></i>
         {{ 'wf.each.change.will.effect.hereafter'|trans }}
     </div>
-    <button class="btn btn-default btn-sm" onclick="OjsWorkflow.basicJournalWfSetting(this)" href="{{ path('dergipark_workflow_basic_settings', {journalId: selectedJournal().id}) }}">{{ 'workflow.basic_settings' }}</button>
+    <button class="btn btn-default btn-sm" onclick="OjsWorkflow.basicJournalWfSetting(this)" href="{{ path('dergipark_workflow_basic_settings', {journalId: selectedJournal().id}) }}">
+        {{ 'workflow.basic_settings'|trans }}
+    </button>
     <hr>
     <table class="table">
         <thead>
@@ -30,51 +32,23 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th>{{ 'wf.step.pre.control'|trans }}</th>
-                <th>1</th>
-                <th>
-                    <button class="btn btn-primary btn-sm" onclick="OjsWorkflow.stepGrantedUsersSetup(this, 1)">
-                        <i class="fa fa-users" data-toggle="tooltip" data-title="{{ 'wf.step.granted.users.setup'|trans }}"></i>
-                    </button>
-                    <button class="btn btn-success btn-sm" onclick="OjsWorkflow.showStepDetail(this, 1)">
-                        <i class="fa fa-info-circle" data-toggle="tooltip"  data-title="{{ 'show.step.detail'|trans }}"></i>
-                    </button>
-                    <a class="btn btn-primary btn-sm" href="{{ path('dp_workflow_review_form', {journalId: selectedJournal().id, stepOrder: 1}) }}">
-                        <i class="fa fa-comments-o" data-toggle="tooltip"  data-title="{{ 'show.review.forms'|trans }}"></i>
-                    </a>
-                </th>
-            </tr>
-            <tr>
-                <th>{{ 'wf.step.review'|trans }}</th>
-                <th>2</th>
-                <th>
-                    <button class="btn btn-primary btn-sm" onclick="OjsWorkflow.stepGrantedUsersSetup(this, 2)">
-                        <i class="fa fa-users" data-toggle="tooltip"  data-title="{{ 'wf.step.granted.users.setup'|trans }}"></i>
-                    </button>
-                    <button class="btn btn-success btn-sm" onclick="OjsWorkflow.showStepDetail(this, 2)">
-                        <i class="fa fa-info-circle" data-toggle="tooltip"  data-title="{{ 'show.step.detail'|trans }}"></i>
-                    </button>
-                    <a class="btn btn-primary btn-sm" href="{{ path('dp_workflow_review_form', {journalId: selectedJournal().id, stepOrder: 2}) }}">
-                        <i class="fa fa-comments-o" data-toggle="tooltip"  data-title="{{ 'show.review.forms'|trans }}"></i>
-                    </a>
-                </th>
-            </tr>
-            <tr>
-                <th>{{ 'wf.step.arrangement'|trans }}</th>
-                <th>3</th>
-                <th>
-                    <button class="btn btn-primary btn-sm" onclick="OjsWorkflow.stepGrantedUsersSetup(this, 3)">
-                        <i class="fa fa-users" data-toggle="tooltip"  data-title="{{ 'wf.step.granted.users.setup'|trans }}"></i>
-                    </button>
-                    <button class="btn btn-success btn-sm" onclick="OjsWorkflow.showStepDetail(this, 3)">
-                        <i class="fa fa-info-circle" data-toggle="tooltip"  data-title="{{ 'show.step.detail'|trans }}"></i>
-                    </button>
-                    <a class="btn btn-primary btn-sm" href="{{ path('dp_workflow_review_form', {journalId: selectedJournal().id, stepOrder: 3}) }}">
-                        <i class="fa fa-comments-o" data-toggle="tooltip"  data-title="{{ 'show.review.forms'|trans }}"></i>
-                    </a>
-                </th>
-            </tr>
+            {% for step in steps %}
+                <tr>
+                    <th>{{ ('wf.step.'~journalStepAlias(step.order))|trans }}</th>
+                    <th>{{ step.order }}</th>
+                    <th>
+                        <button class="btn btn-primary btn-sm" onclick="OjsWorkflow.stepGrantedUsersSetup(this, {{ step.order }})">
+                            <i class="fa fa-users" data-toggle="tooltip" data-title="{{ 'wf.step.granted.users.setup'|trans }}"></i>
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="OjsWorkflow.showStepDetail(this, {{ step.order }})">
+                            <i class="fa fa-info-circle" data-toggle="tooltip"  data-title="{{ 'show.step.detail'|trans }}"></i>
+                        </button>
+                        <a class="btn btn-primary btn-sm" href="{{ path('dp_workflow_review_form', {journalId: selectedJournal().id, stepId: step.id}) }}">
+                            <i class="fa fa-comments-o" data-toggle="tooltip"  data-title="{{ 'show.review.forms'|trans }}"></i>
+                        </a>
+                    </th>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 

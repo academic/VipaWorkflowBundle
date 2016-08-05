@@ -19,13 +19,19 @@ class WorkflowSettingController extends Controller
     public function indexAction()
     {
         $permissionService = $this->get('dp.workflow_permission_service');
+        $em = $this->getDoctrine()->getManager();
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         //#permissioncheck
         if(!$permissionService->isHaveEditorRole()){
             throw new AccessDeniedException;
         }
+        $journalSteps = $em->getRepository(JournalWorkflowStep::class)->findBy([
+            'journal' => $journal,
+        ], ['order' => 'ASC']);
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         return $this->render('DergiparkWorkflowBundle:WorkflowSetting:_workflow_setting.html.twig',[
             'journal' => $journal,
+            'steps' => $journalSteps,
         ]);
     }
 

@@ -102,22 +102,4 @@ your.messages.sended: 'your.messages.sended'
 wrong.file: 'wrong.file'
 select.another.file.type: 'select.another.file.type'
 your.files.sended: 'your.files.sended'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+workflow.basic_settings: 'Basic Settings'

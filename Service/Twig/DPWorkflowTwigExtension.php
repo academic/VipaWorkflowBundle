@@ -2,6 +2,7 @@
 
 namespace Dergipark\WorkflowBundle\Service\Twig;
 
+use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
 use Dergipark\WorkflowBundle\Params\StepActionTypes;
 use Dergipark\WorkflowBundle\Service\WorkflowPermissionService;
 use Doctrine\ORM\EntityManager;
@@ -100,12 +101,18 @@ class DPWorkflowTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('actionType', array($this, 'getActionType')),
             new \Twig_SimpleFunction('actionAlias', array($this, 'getActionAlias')),
             new \Twig_SimpleFunction('permissionCheck', array($this, 'getPermissionCheck')),
+            new \Twig_SimpleFunction('journalStepAlias', array($this, 'getJournalStepAlias')),
         );
     }
 
     public function getActionType($const)
     {
         return constant('Dergipark\WorkflowBundle\Params\StepActionTypes::'.$const);
+    }
+
+    public function getJournalStepAlias($stepOrder)
+    {
+        return JournalWorkflowSteps::$stepAlias[$stepOrder];
     }
 
     public function getActionAlias($actionType)
