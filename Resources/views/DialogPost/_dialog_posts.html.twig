@@ -41,7 +41,13 @@
                     </small>
                 </div>
                 <p>
-                    {{ post.text }}
+                    {% if post.type == filePostType %}
+                        <a href="/uploads/articlefiles/{{ post.fileName }}" target="_blank">
+                            {{ post.fileOriginalName }}
+                        </a>
+                    {% elseif post.type == textPostType %}
+                        {{ post.text }}
+                    {% endif %}
                 </p>
             </div>
         </li>

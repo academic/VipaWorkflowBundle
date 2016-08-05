@@ -1,59 +1,62 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        {{ step.id }}
-        <div class="btn-group pull-right">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ 'select.action'|trans }}
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu step-actions-menu">
-                <li>
-                    <a onclick="OjsWorkflow.createSpecificDialog(this)"
-                       data-action-type="{{ actionType('ASSIGN_GRAMMER_EDITOR') }}">
-                        {{ 'assign.grammer.editor'|trans }}
-                    </a>
-                </li>
-                <li>
-                    <a onclick="OjsWorkflow.createSpecificDialog(this)"
-                       data-action-type="{{ actionType('ASSIGN_SPELLING_EDITOR') }}">
-                        {{ 'assign.spelling.editor'|trans }}
-                    </a>
-                </li>
-                <li>
-                    <a onclick="OjsWorkflow.createDialogWithAuthor(this)"
-                       data-action-type="{{ actionType('ASK_AUTHOR_FOR_CORRECTION') }}">
-                        {{ 'assign.issue.to.author'|trans }}
-                    </a>
-                </li>
-                <li role="separator" class="divider"></li>
-                <li>
-                    <a onclick="OjsWorkflow.createBasicDialog(this)"
-                       data-action-type="{{ actionType('CREATE_ISSUE') }}">
-                        {{ 'create.issue'|trans }}
-                    </a>
-                </li>
-                <li role="separator" class="divider"></li>
-                <li>
-                    <a onclick="OjsWorkflow.gotoReviewing(this)"
-                       data-action-type="{{ actionType('GOTO_REVIEWING') }}">
-                        {{ 'go.to.reviewing'|trans }}
-                    </a>
-                </li>
-                <li role="separator" class="divider"></li>
-                <li>
-                    <a onclick="OjsWorkflow.acceptSubmission(this)"
-                       data-action-type="{{ actionType('ACCEPT_SUBMISSION') }}">
-                        {{ 'accept.submission'|trans }}
-                    </a>
-                </li>
-                <li>
-                    <a onclick="OjsWorkflow.declineSubmission(this)"
-                       data-action-type="{{ actionType('DECLINE_SUBMISSION') }}">
-                        {{ 'decline.submission'|trans }}
-                    </a>
-                </li>
-            </ul>
-        </div>
+        {% if permissionCheck().isGrantedForStep(step) %}
+            <div class="btn-group pull-right">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ 'select.action'|trans }}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu step-actions-menu">
+                    <li>
+                        <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                           data-action-type="{{ actionType('ASSIGN_GRAMMER_EDITOR') }}">
+                            {{ 'assign.grammer.editor'|trans }}
+                        </a>
+                    </li>
+                    <li>
+                        <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                           data-action-type="{{ actionType('ASSIGN_SPELLING_EDITOR') }}">
+                            {{ 'assign.spelling.editor'|trans }}
+                        </a>
+                    </li>
+                    <li>
+                        <a onclick="OjsWorkflow.createDialogWithAuthor(this)"
+                           data-action-type="{{ actionType('ASK_AUTHOR_FOR_CORRECTION') }}">
+                            {{ 'assign.issue.to.author'|trans }}
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a onclick="OjsWorkflow.createBasicDialog(this)"
+                           data-action-type="{{ actionType('CREATE_ISSUE') }}">
+                            {{ 'create.issue'|trans }}
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a onclick="OjsWorkflow.gotoReviewing(this)"
+                           data-action-type="{{ actionType('GOTO_REVIEWING') }}">
+                            {{ 'go.to.reviewing'|trans }}
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    {% if permissionCheck().isHaveEditorRole() %}
+                        <li>
+                            <a onclick="OjsWorkflow.acceptSubmission(this)"
+                               data-action-type="{{ actionType('ACCEPT_SUBMISSION') }}">
+                                {{ 'accept.submission'|trans }}
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a onclick="OjsWorkflow.declineSubmission(this)"
+                           data-action-type="{{ actionType('DECLINE_SUBMISSION') }}">
+                            {{ 'decline.submission'|trans }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
         <br>
         <br>
     </div>

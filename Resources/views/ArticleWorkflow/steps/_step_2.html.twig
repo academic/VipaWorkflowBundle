@@ -1,53 +1,54 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        {{ step.id }}
-        <div class="btn-group pull-right">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ 'select.action'|trans }}
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu step-actions-menu">
-                <li>
-                    <a onclick="OjsWorkflow.createSpecificDialog(this)"
-                       data-action-type="{{ actionType('ASSIGN_SECTION_EDITOR') }}">
-                        {{ 'assign.section.editor'|trans }}
-                    </a>
-                </li>
-                <li>
-                    <a onclick="OjsWorkflow.createSpecificDialog(this)"
-                       data-action-type="{{ actionType('ASSIGN_REVIEWER') }}">
-                        {{ 'assign.reviewer'|trans }}
-                    </a>
-                </li>
-                <li>
-                    <a onclick="OjsWorkflow.createSpecificDialog(this)"
-                       data-action-type="{{ actionType('ASSIGN_SPELLING_EDITOR') }}">
-                        {{ 'assign.spelling.editor'|trans }}
-                    </a>
-                </li>
-                <li role="separator" class="divider"></li>
-                <li>
-                    <a onclick="OjsWorkflow.createDialogWithAuthor(this)"
-                       data-action-type="{{ actionType('ASK_AUTHOR_FOR_CORRECTION') }}">
-                        {{ 'ask.author.for.correction'|trans }}
-                    </a>
-                </li>
-                <li role="separator" class="divider"></li>
-                <li>
-                    <a onclick="OjsWorkflow.createBasicDialog(this)"
-                       data-action-type="{{ actionType('CREATE_ISSUE') }}">
-                        {{ 'create.issue'|trans }}
-                    </a>
-                </li>
-                <li role="separator" class="divider"></li>
-                <li>
-                    <a onclick="OjsWorkflow.acceptAndGotoArrangement(this)"
-                       data-action-type="{{ actionType('ACCEPT_GOTO_ARRANGEMENT') }}">
-                        {{ 'accept.and.goto.arrangement'|trans }}
-                    </a>
-                </li>
-            </ul>
-        </div>
+        {% if permissionCheck().isGrantedForStep(step) %}
+            <div class="btn-group pull-right">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ 'select.action'|trans }}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu step-actions-menu">
+                    <li>
+                        <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                           data-action-type="{{ actionType('ASSIGN_SECTION_EDITOR') }}">
+                            {{ 'assign.section.editor'|trans }}
+                        </a>
+                    </li>
+                    <li>
+                        <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                           data-action-type="{{ actionType('ASSIGN_REVIEWER') }}">
+                            {{ 'assign.reviewer'|trans }}
+                        </a>
+                    </li>
+                    <li>
+                        <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                           data-action-type="{{ actionType('ASSIGN_SPELLING_EDITOR') }}">
+                            {{ 'assign.spelling.editor'|trans }}
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a onclick="OjsWorkflow.createDialogWithAuthor(this)"
+                           data-action-type="{{ actionType('ASK_AUTHOR_FOR_CORRECTION') }}">
+                            {{ 'ask.author.for.correction'|trans }}
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a onclick="OjsWorkflow.createBasicDialog(this)"
+                           data-action-type="{{ actionType('CREATE_ISSUE') }}">
+                            {{ 'create.issue'|trans }}
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a onclick="OjsWorkflow.acceptAndGotoArrangement(this)"
+                           data-action-type="{{ actionType('ACCEPT_GOTO_ARRANGEMENT') }}">
+                            {{ 'accept.and.goto.arrangement'|trans }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
         <br>
         <br>
     </div>

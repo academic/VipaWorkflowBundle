@@ -60,7 +60,7 @@ class LeftMenuListener implements EventSubscriberInterface
      */
     public function onLeftMenuInitialized(MenuEvent $menuEvent)
     {
-        if(!$this->wfPermissionService->isGrantedForWorkflowSetting()){
+        if(!$this->wfPermissionService->isHaveEditorRole()){
             return;
         }
         $journal = $this->journalService->getSelectedJournal();
