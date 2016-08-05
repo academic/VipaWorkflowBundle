@@ -1,0 +1,23 @@
+#journal_review_form_content {
+    display: none;
+}
+
+.content {
+    margin: auto;
+    width: 100%;
+    max-width: 1280px;
+    padding-top: 5em;
+}
+
+.render-wrap {
+    display: none;
+}
+
+#edit-form {
+    display: none;
+    float: right;
+}
+
+.editing-form #edit-form {
+    display: block;
+}

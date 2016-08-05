@@ -4,6 +4,7 @@ namespace Dergipark\WorkflowBundle\Controller;
 
 use APY\DataGridBundle\Grid\Column\ActionsColumn;
 use APY\DataGridBundle\Grid\Source\Entity;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
 use Dergipark\WorkflowBundle\Entity\JournalReviewForm;
 use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
 use Dergipark\WorkflowBundle\Form\Type\JournalReviewFormType;
@@ -79,11 +80,9 @@ class JournalReviewFormController extends Controller
     }
 
     /**
-     * Creates a new ArticleFile entity.
-     * @param  Request $request
-     * @param  integer $stepId
+     * @param Request $request
+     * @param $stepId
      * @return RedirectResponse|Response
-     *
      */
     public function createAction(Request $request, $stepId)
     {
@@ -91,21 +90,17 @@ class JournalReviewFormController extends Controller
         $journal = $journalService->getSelectedJournal();
         $em = $this->getDoctrine()->getManager();
 
-        if (!$this->isGranted('EDIT', $journal, 'articles')) {
-            throw new AccessDeniedException("You not authorized for this page!");
-        }
-
-        /** @var Article $step */
-        $step = $em->getRepository('OjsJournalBundle:Article')->find($stepId);
+        /** @var JournalWorkflowStep $step */
+        $step = $em->getRepository(JournalWorkflowStep::class)->find($stepId);
         $this->throw404IfNotFound($step);
 
-        $entity = new ArticleFile();
-        $form = $this->createCreateForm($entity, $journal, $step)
+        $entity = new JournalReviewForm();
+        $form = $this->createCreateForm($entity, $step)
                      ->add('create', 'submit', ['label' => 'c']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $entity->setArticle($step);
+            $entity->setStep($step);
             $em->persist($entity);
             $em->flush();
 
@@ -113,17 +108,21 @@ class JournalReviewFormController extends Controller
 
             return $this->redirect(
                 $this->generateUrl(
-                    'ojs_journal_article_file_index',
-                    ['articleId' => $step->getId(), 'journalId' => $journal->getId()]
+                    'dp_workflow_review_form',
+                    [
+                        'stepId' => $step->getId(),
+                        'journalId' => $journal->getId()
+                    ]
                 )
             );
         }
 
         return $this->render(
-            'OjsJournalBundle:ArticleFile:new.html.twig',
+            'DergiparkWorkflowBundle:JournalReviewForm:new.html.twig',
             [
-                'entity' => $entity,
-                'form'   => $form->createView(),
+                'entity'    => $entity,
+                'form'      => $form->createView(),
+                'step'      => $step,
             ]
         );
     }
@@ -159,15 +158,15 @@ class JournalReviewFormController extends Controller
      */
     public function newAction($stepId)
     {
-        $journalService = $this->get('ojs.journal_service');
         $em = $this->getDoctrine()->getManager();
-        /** @var Article $step */
+        /** @var JournalWorkflowStep $step */
         $step = $em->getRepository(JournalWorkflowStep::class)->find($stepId);
+        $this->throw404IfNotFound($step);
 
         $entity = new JournalReviewForm();
         $entity->setStep($step);
         $form = $this->createCreateForm($entity, $step)
-                     ->add('create', 'submit', ['label' => 'c']);
+            ->add('create', 'submit', ['label' => 'c']);
 
         return $this->render(
             'DergiparkWorkflowBundle:JournalReviewForm:new.html.twig',
@@ -190,43 +189,35 @@ class JournalReviewFormController extends Controller
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $em = $this->getDoctrine()->getManager();
 
-        $step = $em->getRepository('OjsJournalBundle:Article')->find($stepId);
+        $step = $em->getRepository(ArticleWorkflowStep::class)->find($stepId);
         $this->throw404IfNotFound($step);
 
         /** @var ArticleFile $entity */
-        $entity = $em->getRepository('OjsJournalBundle:ArticleFile')->findOneBy(
+        $entity = $em->getRepository(JournalReviewForm::class)->findOneBy(
             [
-                'article' => $step,
-                'id'      => $id,
+                'step'  => $step,
+                'id'    => $id,
             ]
         );
 
         $this->throw404IfNotFound($entity);
 
-        if (!$this->isGranted('VIEW', $journal, 'articles')) {
-            throw new AccessDeniedException("You not authorized for this page!");
-        }
-
-        $type = ArticleFileParams::fileType($entity->getType());
-
         $token = $this
             ->get('security.csrf.token_manager')
-            ->refreshToken('ojs_journal_article_file'.$entity->getId());
+            ->refreshToken('dp_workflow_review_form'.$entity->getId());
 
         return $this->render(
-            'OjsJournalBundle:ArticleFile:show.html.twig',
+            'DergiparkWorkflowBundle:JournalReviewForm:show.html.twig',
             [
                 'entity' => $entity,
-                'type'   => $type,
                 'token'  => $token,
             ]
         );
     }
 
     /**
-     * Displays a form to edit an existing ArticleFile entity.
-     * @param integer $id
-     * @param integer $stepId
+     * @param $id
+     * @param $stepId
      * @return Response
      */
     public function editAction($id, $stepId)
@@ -235,33 +226,28 @@ class JournalReviewFormController extends Controller
         $journal = $journalService->getSelectedJournal();
         $em = $this->getDoctrine()->getManager();
 
-        if (!$this->isGranted('EDIT', $journal, 'articles')) {
-            throw new AccessDeniedException("You not authorized for this page!");
-        }
-
-        /** @var Article $step */
-        $step = $em->getRepository('OjsJournalBundle:Article')->find($stepId);
+        /** @var JournalWorkflowStep $step */
+        $step = $em->getRepository(JournalWorkflowStep::class)->find($stepId);
         $this->throw404IfNotFound($step);
 
-        /** @var ArticleFile $entity */
-        $entity = $em->getRepository('OjsJournalBundle:ArticleFile')->findOneBy(
+        /** @var JournalReviewForm $entity */
+        $entity = $em->getRepository(JournalReviewForm::class)->findOneBy(
             [
-                'article' => $step,
+                'step' => $step,
                 'id'      => $id,
             ]
         );
-
         $this->throw404IfNotFound($entity);
 
-        $editForm = $this->createEditForm($entity, $journal, $step)
-                         ->add('save', 'submit', ['label' => 'save']);
+        $editForm = $this->createEditForm($entity, $step)
+            ->add('save', 'submit', ['label' => 'save']);
 
         $token = $this
             ->get('security.csrf.token_manager')
-            ->refreshToken('ojs_journal_article_file'.$entity->getId());
+            ->refreshToken('dp_workflow_review_form'.$entity->getId());
 
         return $this->render(
-            'OjsJournalBundle:ArticleFile:edit.html.twig',
+            'DergiparkWorkflowBundle:JournalReviewForm:edit.html.twig',
             [
                 'entity'    => $entity,
                 'edit_form' => $editForm->createView(),
@@ -271,21 +257,23 @@ class JournalReviewFormController extends Controller
     }
 
     /**
-     * Creates a form to edit a ArticleFile entity.
-     * @param ArticleFile $entity The entity
-     * @param Journal $journal
-     * @param Article $step
-     * @return Form The form
+     * @param JournalReviewForm $entity
+     * @param JournalWorkflowStep $step
+     * @return Form
      */
-    private function createEditForm(ArticleFile $entity, Journal $journal, Article $step)
+    private function createEditForm(JournalReviewForm $entity, JournalWorkflowStep $step)
     {
         $form = $this->createForm(
-            new ArticleFileType(),
+            new JournalReviewFormType(),
             $entity,
             [
                 'action'  => $this->generateUrl(
-                    'ojs_journal_article_file_update',
-                    ['id' => $entity->getId(), 'journalId' => $journal->getId(), 'articleId' => $step->getId()]
+                    'dp_workflow_review_form_update',
+                    [
+                        'id' => $entity->getId(),
+                        'journalId' => $step->getJournal()->getId(),
+                        'stepId' => $step->getId()
+                    ]
                 ),
                 'method'  => 'PUT',
             ]
@@ -308,25 +296,21 @@ class JournalReviewFormController extends Controller
         $journal = $journalService->getSelectedJournal();
         $em = $this->getDoctrine()->getManager();
 
-        if (!$this->isGranted('EDIT', $journal, 'articles')) {
-            throw new AccessDeniedException("You not authorized for this page!");
-        }
-
-        /** @var Article $step */
-        $step = $em->getRepository('OjsJournalBundle:Article')->find($stepId);
+        /** @var JournalWorkflowStep $step */
+        $step = $em->getRepository(JournalWorkflowStep::class)->find($stepId);
         $this->throw404IfNotFound($step);
 
-        /** @var ArticleFile $entity */
-        $entity = $em->getRepository('OjsJournalBundle:ArticleFile')->findOneBy(
+        /** @var JournalReviewForm $entity */
+        $entity = $em->getRepository(JournalReviewForm::class)->findOneBy(
             [
-                'article' => $step,
+                'step' => $step,
                 'id'      => $id,
             ]
         );
         $this->throw404IfNotFound($entity);
 
-        $editForm = $this->createEditForm($entity, $journal, $step)
-                         ->add('save', 'submit', ['label' => 'save']);
+        $editForm = $this->createEditForm($entity, $step)
+            ->add('save', 'submit', ['label' => 'save']);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
@@ -336,14 +320,18 @@ class JournalReviewFormController extends Controller
 
             return $this->redirect(
                 $this->generateUrl(
-                    'ojs_journal_article_file_edit',
-                    ['id' => $id, 'journalId' => $journal->getId(), 'articleId' => $step->getId()]
+                    'dp_workflow_review_form_edit',
+                    [
+                        'id' => $id,
+                        'journalId' => $journal->getId(),
+                        'stepId' => $step->getId()
+                    ]
                 )
             );
         }
 
         return $this->render(
-            'OjsJournalBundle:ArticleFile:edit.html.twig',
+            'DergiparkWorkflowBundle:JournalReviewForm:edit.html.twig',
             [
                 'entity'    => $entity,
                 'edit_form' => $editForm->createView(),
@@ -352,36 +340,32 @@ class JournalReviewFormController extends Controller
     }
 
     /**
-     * Deletes a ArticleFile entity.
-     * @param  Request $request
-     * @param  integer $id
-     * @param  integer $stepId
+     * @param Request $request
+     * @param $id
+     * @param $stepId
      * @return RedirectResponse
      */
     public function deleteAction(Request $request, $id, $stepId)
     {
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $em = $this->getDoctrine()->getManager();
-        if (!$this->isGranted('EDIT', $journal, 'articles')) {
-            throw new AccessDeniedException("You not authorized for this page!");
-        }
 
-        /** @var Article $step */
-        $step = $em->getRepository('OjsJournalBundle:Article')->find($stepId);
+        /** @var JournalWorkflowStep $step */
+        $step = $em->getRepository(JournalWorkflowStep::class)->find($stepId);
         $this->throw404IfNotFound($step);
 
-        /** @var ArticleFile $entity */
-        $entity = $em->getRepository('OjsJournalBundle:ArticleFile')->findOneBy(
+        /** @var JournalReviewForm $entity */
+        $entity = $em->getRepository(JournalReviewForm::class)->findOneBy(
             [
-                'article' => $step,
-                'id'      => $id,
+                'step'  => $step,
+                'id'    => $id,
             ]
         );
 
         $this->throw404IfNotFound($entity);
 
         $csrf = $this->get('security.csrf.token_manager');
-        $token = $csrf->getToken('ojs_journal_article_file'.$entity->getId());
+        $token = $csrf->getToken('dp_workflow_review_form'.$entity->getId());
 
         if ($token != $request->get('_token')) {
             throw new TokenNotFoundException("Token Not Found!");
@@ -392,8 +376,11 @@ class JournalReviewFormController extends Controller
         $this->successFlashBag('successful.remove');
 
         return $this->redirectToRoute(
-            'ojs_journal_article_file_index',
-            ['articleId' => $entity->getArticle()->getId(), 'journalId' => $journal->getId()]
+            'dp_workflow_review_form',
+            [
+                'stepId' => $entity->getStep()->getId(),
+                'journalId' => $journal->getId(),
+            ]
         );
     }
 }

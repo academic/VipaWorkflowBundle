@@ -11,33 +11,9 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <style>
-
-        #journal_review_form_content {
-            display: none;
-        }
-
-        .content {
-            margin: auto;
-            width: 100%;
-            max-width: 1280px;
-            padding-top: 5em;
-        }
-
-        .render-wrap {
-            display: none;
-        }
-
-        #edit-form {
-            display: none;
-            float: right;
-        }
-
-        .editing-form #edit-form {
-            display: block;
-        }
-
-    </style>
+    {% stylesheets '@DergiparkWorkflowBundle/Resources/public/css/review-form/*'  output="assets/prod/css/review_form.css" %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
 {% endblock %}
 
 {% block body -%}
@@ -52,7 +28,6 @@
         <div class="render-wrap well"></div>
         <button id="edit-form" class="btn btn-primary">{{ 'resume.to.edit'|trans }}</button>
     {{ form_end(form) }}
-    {{ form(form) }}
 {% endblock %}
 
 {% block javascripts %}

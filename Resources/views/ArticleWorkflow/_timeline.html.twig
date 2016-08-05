@@ -12,7 +12,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets '@DergiparkWorkflowBundle/Resources/public/css/*'  output="assets/prod/css/article_workflow.css" %}
+    {% stylesheets '@DergiparkWorkflowBundle/Resources/public/css/workflow/*'  output="assets/prod/css/article_workflow.css" %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
 {% endblock %}

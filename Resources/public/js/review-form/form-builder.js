@@ -37,12 +37,13 @@ jQuery(document).ready(function($) {
     };
 
     function removeUnnecessaryFields(){
-        $('.className-wrap').addClass('hidden');
-        $('.name-wrap').addClass('hidden');
+        $('.form-elements .className-wrap').addClass('hidden');
+        $('.form-elements .name-wrap').addClass('hidden');
     }
     //bind to div and on change remove unnecessary fields
-    //this lines can be removal, and can trigger an browser crash
+    //this lines can be removal, because can trigger an browser crash
     $('.build-wrap').bind("DOMSubtreeModified",function(){
         removeUnnecessaryFields();
     });
+    removeUnnecessaryFields();
 });

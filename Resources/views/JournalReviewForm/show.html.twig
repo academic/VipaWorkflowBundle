@@ -1,22 +1,70 @@
 {% extends '::ojsbase.html.twig' %}
-{% block title %}{{ 'title.article_files_show'|trans }} {{ parent() }}{% endblock %}
+{% block title %}{{ 'title.review_form_show'|trans }} {{ parent() }}{% endblock %}
 {% block breadcrumb %}
         {% set list = [
         {'link': path('ojs_journal_dashboard_index', {journalId: selectedJournal().id}), 'title': 'dashboard'|trans},
-        {'link': path('ojs_journal_article_file_index', {'articleId': entity.article.id, 'journalId': selectedJournal().id}),'title': 'title.article_files'|trans},
-        {'title': 'title.article_files_show'|trans}
+        {'link': path('dp_workflow_review_form', {'stepId': entity.step.id, 'journalId': selectedJournal().id}),'title': 'title.review_forms'|trans},
+        {'title': 'title.review_form_edit'|trans}
     ] %}
     {{ breadcrumb(list) }}
 {% endblock %}
 
-{% block body -%}
-    <h1>{{ "articlefile"|trans }}</h1>
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@DergiparkWorkflowBundle/Resources/public/css/review-form/*'  output="assets/prod/css/review_form.css" %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    <style>
+        .render-wrap {
+            display: block;
+        }
+        .build-wrap{
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>{{ "review.form.detail"|trans }}</h1>
     {% include '::flashbag.html.twig' %}
-    {{ display(entity) }}
+    <table class="table">
+        <tr>
+            <th>{{ 'name'|trans}}</th>
+            <th>{{ entity.name }}</th>
+        </tr>
+        <tr>
+            <th>{{ 'active'|trans}}</th>
+            <th>{{ printYesNo(entity.active) }}</th>
+        </tr>
+        <tr>
+            <th>{{ 'review.form'|trans }}</th>
+            <th>
+                <div class="build-wrap well">
+                    <textarea id="journal_review_form_content">
+                        {{ entity.content }}
+                    </textarea>
+                </div>
+                <div class="render-wrap well"></div>
+            </th>
+        </tr>
+    </table>
     {{
     actions({
-        'back': {'href': path('ojs_journal_article_file_index', {'articleId': entity.article.id, 'journalId': selectedJournal().id})},
-        'edit': {'href': path('ojs_journal_article_file_edit', {'id': entity.id, 'articleId': entity.article.id, 'journalId': selectedJournal().id}), 'attributes': {'data-token': token}},
+        'back': {'href': path('dp_workflow_review_form', {'stepId': entity.step.id, 'journalId': selectedJournal().id})},
+        'edit': {'href': path('dp_workflow_review_form_edit', {'id': entity.id, 'stepId': entity.step.id, 'journalId': selectedJournal().id}), 'attributes': {'data-token': token}},
     })
     }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(document).ready(function($) {
+            var template = document.getElementById('journal_review_form_content');
+            var renderWrap = document.querySelector('.render-wrap');
+            $(template).formRender({
+                container: renderWrap
+            });
+        });
+    </script>
 {% endblock %}

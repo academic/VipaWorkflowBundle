@@ -3,6 +3,7 @@
 namespace Dergipark\WorkflowBundle\Entity;
 
 use APY\DataGridBundle\Grid\Mapping as GRID;
+use Ojs\CoreBundle\Entity\DisplayTrait;
 
 /**
  * Class JournalReviewForm
@@ -11,6 +12,7 @@ use APY\DataGridBundle\Grid\Mapping as GRID;
  */
 class JournalReviewForm
 {
+    use DisplayTrait;
     /**
      * @var integer
      */

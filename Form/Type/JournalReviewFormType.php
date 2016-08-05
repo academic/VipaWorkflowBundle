@@ -41,6 +41,9 @@ class JournalReviewFormType extends AbstractType
             array(
                 'data_class' => JournalReviewForm::class,
                 'cascade_validation' => true,
+                'attr' => [
+                    'novalidate' => 'novalidate',
+                ]
             )
         );
     }
