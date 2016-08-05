@@ -4,7 +4,9 @@ namespace Dergipark\WorkflowBundle\Controller;
 
 use APY\DataGridBundle\Grid\Column\ActionsColumn;
 use APY\DataGridBundle\Grid\Source\Entity;
+use Dergipark\WorkflowBundle\Entity\JournalReviewForm;
 use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
+use Dergipark\WorkflowBundle\Form\Type\JournalReviewFormType;
 use Doctrine\ORM\QueryBuilder;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\CoreBundle\Params\ArticleFileParams;
@@ -127,21 +129,22 @@ class JournalReviewFormController extends Controller
     }
 
     /**
-     * Creates a form to create a ArticleFile entity.
-     * @param   ArticleFile $entity
-     * @param   Journal $journal
-     * @param   Article $step
+     * @param JournalReviewForm $entity
+     * @param JournalWorkflowStep $step
      * @return Form
      */
-    private function createCreateForm(ArticleFile $entity, Journal $journal, Article $step)
+    private function createCreateForm(JournalReviewForm $entity, JournalWorkflowStep $step)
     {
         $form = $this->createForm(
-            new ArticleFileType(),
+            new JournalReviewFormType(),
             $entity,
             [
                 'action'  => $this->generateUrl(
-                    'ojs_journal_article_file_create',
-                    ['journalId' => $journal->getId(), 'articleId' => $step->getId()]
+                    'dp_workflow_review_form_create',
+                    [
+                        'journalId' => $step->getJournal()->getId(),
+                        'stepId' => $step->getId()
+                    ]
                 ),
                 'method'  => 'POST',
             ]
@@ -151,32 +154,27 @@ class JournalReviewFormController extends Controller
     }
 
     /**
-     * Displays a form to create a new ArticleFile entity.
-     * @param  integer $stepId
+     * @param $stepId
      * @return Response
      */
     public function newAction($stepId)
     {
         $journalService = $this->get('ojs.journal_service');
-        $journal = $journalService->getSelectedJournal();
         $em = $this->getDoctrine()->getManager();
-        if (!$this->isGranted('EDIT', $journal, 'articles')) {
-            throw new AccessDeniedException("You not authorized for this page!");
-        }
         /** @var Article $step */
-        $step = $em->getRepository('OjsJournalBundle:Article')->find($stepId);
+        $step = $em->getRepository(JournalWorkflowStep::class)->find($stepId);
 
-        $entity = new ArticleFile();
-        $entity->setArticle($step);
-        $form = $this->createCreateForm($entity, $journal, $step)
+        $entity = new JournalReviewForm();
+        $entity->setStep($step);
+        $form = $this->createCreateForm($entity, $step)
                      ->add('create', 'submit', ['label' => 'c']);
 
         return $this->render(
-            'OjsJournalBundle:ArticleFile:new.html.twig',
+            'DergiparkWorkflowBundle:JournalReviewForm:new.html.twig',
             [
-                'entity'  => $entity,
-                'form'    => $form->createView(),
-                'article' => $step,
+                'entity'    => $entity,
+                'form'      => $form->createView(),
+                'step'      => $step,
             ]
         );
     }

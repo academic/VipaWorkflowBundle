@@ -24,7 +24,7 @@ class JournalReviewForm
     /**
      * @var bool
      */
-    private $active;
+    private $active = true;
 
     /**
      * @var string
