@@ -293,6 +293,7 @@ $(document).ready(function() {
             }, function( data ) {
                 if(data.success == true){
                     OjsWorkflow.loadPosts($dialogId);
+                    $($this).parent().parent().find('.dialog-comment-input').val('');
                     swal(Translator.trans('excellent'), Translator.trans('your.messages.sended'), "success");
                 }
             });
