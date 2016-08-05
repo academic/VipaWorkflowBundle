@@ -88,7 +88,12 @@ class StepDialogController extends Controller
         if($request->getMethod() == 'POST' && $form->isValid()){
             foreach($dialog->getUsers() as $user){
                 $workflow->addRelatedUser($user);
+                //if action like section editor add to step granted users
+                if($actionType == StepActionTypes::ASSIGN_SECTION_EDITOR){
+                    $step->addGrantedUser($user);
+                }
             }
+            $em->persist($step);
             $em->persist($workflow);
 
             $em->persist($dialog);
@@ -229,7 +234,7 @@ class StepDialogController extends Controller
             'order' => $stepOrder,
         ]);
         //#permissioncheck
-        if(!$permissionService->isGrantedForStep($step)){
+        if(!$permissionService->isHaveEditorRole()){
             throw new AccessDeniedException;
         }
 
