@@ -40,6 +40,9 @@
                     <button class="btn btn-success btn-sm" onclick="OjsWorkflow.showStepDetail(this, 1)">
                         <i class="fa fa-info-circle" data-toggle="tooltip"  data-title="{{ 'show.step.detail'|trans }}"></i>
                     </button>
+                    <a class="btn btn-primary btn-sm" href="{{ path('dp_workflow_review_form', {journalId: selectedJournal().id, stepOrder: 1}) }}">
+                        <i class="fa fa-comments-o" data-toggle="tooltip"  data-title="{{ 'show.review.forms'|trans }}"></i>
+                    </a>
                 </th>
             </tr>
             <tr>
@@ -52,6 +55,9 @@
                     <button class="btn btn-success btn-sm" onclick="OjsWorkflow.showStepDetail(this, 2)">
                         <i class="fa fa-info-circle" data-toggle="tooltip"  data-title="{{ 'show.step.detail'|trans }}"></i>
                     </button>
+                    <a class="btn btn-primary btn-sm" href="{{ path('dp_workflow_review_form', {journalId: selectedJournal().id, stepOrder: 2}) }}">
+                        <i class="fa fa-comments-o" data-toggle="tooltip"  data-title="{{ 'show.review.forms'|trans }}"></i>
+                    </a>
                 </th>
             </tr>
             <tr>
@@ -64,6 +70,9 @@
                     <button class="btn btn-success btn-sm" onclick="OjsWorkflow.showStepDetail(this, 3)">
                         <i class="fa fa-info-circle" data-toggle="tooltip"  data-title="{{ 'show.step.detail'|trans }}"></i>
                     </button>
+                    <a class="btn btn-primary btn-sm" href="{{ path('dp_workflow_review_form', {journalId: selectedJournal().id, stepOrder: 3}) }}">
+                        <i class="fa fa-comments-o" data-toggle="tooltip"  data-title="{{ 'show.review.forms'|trans }}"></i>
+                    </a>
                 </th>
             </tr>
         </tbody>
