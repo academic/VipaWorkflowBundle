@@ -18,7 +18,9 @@ class WorkflowSettingController extends Controller
      */
     public function indexAction()
     {
-        if(!$this->get('dp.workflow_permission_service')->isHaveEditorRole()){
+        $permissionService = $this->get('dp.workflow_permission_service');
+        //#permissioncheck
+        if(!$permissionService->isHaveEditorRole()){
             throw new AccessDeniedException;
         }
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
@@ -33,7 +35,9 @@ class WorkflowSettingController extends Controller
      */
     public function basicSettingAction(Request $request)
     {
-        if(!$this->get('dp.workflow_permission_service')->isHaveEditorRole()){
+        $permissionService = $this->get('dp.workflow_permission_service');
+        //#permissioncheck
+        if(!$permissionService->isHaveEditorRole()){
             throw new AccessDeniedException;
         }
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
@@ -71,7 +75,9 @@ class WorkflowSettingController extends Controller
      */
     public function stepUsersSetupAction(Request $request, $stepOrder)
     {
-        if(!$this->get('dp.workflow_permission_service')->isHaveEditorRole()){
+        $permissionService = $this->get('dp.workflow_permission_service');
+        //#permissioncheck
+        if(!$permissionService->isHaveEditorRole()){
             throw new AccessDeniedException;
         }
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();

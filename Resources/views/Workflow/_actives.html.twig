@@ -49,6 +49,12 @@
                         {# expose article username here if user is not granted show not granted message #}
                     </td>
                 </tr>
+            {% else %}
+                <tr>
+                    <th colspan="4">
+                        <p>{{ 'no.workflow.if.you.have.related.workflow.you.can.see'|trans }}</p>
+                    </th>
+                </tr>
             {% endfor %}
             </tbody>
         </table>

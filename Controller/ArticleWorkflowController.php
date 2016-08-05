@@ -20,7 +20,7 @@ class ArticleWorkflowController extends Controller
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $this->throw404IfNotFound($workflow);
-
+        //#permissioncheck
         if(!$this->get('dp.workflow_permission_service')->isInWorkflowRelatedUsers($workflow)){
             throw new AccessDeniedException;
         }
@@ -43,6 +43,7 @@ class ArticleWorkflowController extends Controller
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
         ]);
+        //#permissioncheck
         if(!$this->get('dp.workflow_permission_service')->isInWorkflowRelatedUsers($workflow)){
             throw new AccessDeniedException;
         }
@@ -58,7 +59,8 @@ class ArticleWorkflowController extends Controller
      */
     public function historyLogAction($workflowId)
     {
-        if(!$this->get('dp.workflow_permission_service')->isGrantedForWorkflowHistory()){
+        //#permissioncheck
+        if(!$this->get('dp.workflow_permission_service')->isHaveEditorRole()){
             throw new AccessDeniedException;
         }
         $workflowService = $this->get('dp.workflow_service');

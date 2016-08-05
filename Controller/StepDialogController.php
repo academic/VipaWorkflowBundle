@@ -24,9 +24,10 @@ class StepDialogController extends Controller
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
+        $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
-        //check permissions
-        if(!$this->get('dp.workflow_permission_service')->isInWorkflowRelatedUsers($workflow)){
+        //#permissioncheck
+        if(!$permissionService->isInWorkflowRelatedUsers($workflow)){
             throw new AccessDeniedException;
         }
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
@@ -57,14 +58,15 @@ class StepDialogController extends Controller
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
-        $wfPermissionService = $this->get('dp.workflow_permission_service');
+        $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
         ]);
         $this->throw404IfNotFound($step);
-        if(!$wfPermissionService->isGrantedForStep($step)){
+        //#permissioncheck
+        if(!$permissionService->isGrantedForStep($step)){
             throw new AccessDeniedException;
         }
 
@@ -118,14 +120,15 @@ class StepDialogController extends Controller
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
-        $wfPermissionService = $this->get('dp.workflow_permission_service');
+        $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
         ]);
         $this->throw404IfNotFound($step);
-        if(!$wfPermissionService->isGrantedForStep($step)){
+        //#permissioncheck
+        if(!$permissionService->isGrantedForStep($step)){
             throw new AccessDeniedException;
         }
         $articleSubmitter = $workflow->getArticle()->getSubmitterUser();
@@ -146,6 +149,7 @@ class StepDialogController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param $workflowId
      * @param $stepOrder
      * @return Response
@@ -161,11 +165,17 @@ class StepDialogController extends Controller
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
+        $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
         ]);
+        $this->throw404IfNotFound($step);
+        //#permissioncheck
+        if(!$permissionService->isGrantedForStep($step)){
+            throw new AccessDeniedException;
+        }
 
         $dialog = new StepDialog();
         $dialog
@@ -212,11 +222,16 @@ class StepDialogController extends Controller
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
+        $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
         ]);
+        //#permissioncheck
+        if(!$permissionService->isGrantedForStep($step)){
+            throw new AccessDeniedException;
+        }
 
         // deactive current step
         $step->setStatus(StepStatus::CLOSED);
@@ -248,11 +263,16 @@ class StepDialogController extends Controller
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
+        $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
         ]);
+        //#permissioncheck
+        if(!$permissionService->isGrantedForStep($step)){
+            throw new AccessDeniedException;
+        }
 
         // deactive current step
         $step->setStatus(StepStatus::CLOSED);
@@ -280,7 +300,11 @@ class StepDialogController extends Controller
     {
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
-
+        $permissionService = $this->get('dp.workflow_permission_service');
+        //#permissioncheck
+        if(!$permissionService->isHaveEditorRole()){
+            throw new AccessDeniedException;
+        }
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $workflowService->acceptSubmission($workflow, true);
@@ -298,15 +322,27 @@ class StepDialogController extends Controller
 
     /**
      * @param $workflowId
+     * @param $stepOrder
      * @return JsonResponse
      */
-    public function declineSubmissionAction($workflowId)
+    public function declineSubmissionAction($workflowId, $stepOrder)
     {
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
-
+        $permissionService = $this->get('dp.workflow_permission_service');
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
+        //fetch step
+        $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => $stepOrder,
+        ]);
+        //#permissioncheck
+        if(!$permissionService->isGrantedForStep($step)){
+            throw new AccessDeniedException;
+        }
+
+        //decline submission
         $workflowService->declineSubmission($workflow, true);
 
         return new JsonResponse([
