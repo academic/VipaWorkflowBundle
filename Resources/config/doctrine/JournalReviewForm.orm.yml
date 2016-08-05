@@ -1,0 +1,29 @@
+Dergipark\WorkflowBundle\Entity\JournalReviewForm:
+  type: entity
+  table: bc_journal_review_form
+  repositoryClass: Dergipark\WorkflowBundle\Entity\JournalReviewFormRepository
+  type: entity
+  id:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      type: string
+      length: 255
+    active:
+      type: boolean
+      nullable: true
+      options:
+        default: true
+    content:
+      type: text
+  manyToOne:
+    step:
+      targetEntity: Dergipark\WorkflowBundle\Entity\JournalWorkflowStep
+      joinColumn:
+        name: journal_step_id
+        referencedColumnName: id
+  lifecycleCallbacks: {}
