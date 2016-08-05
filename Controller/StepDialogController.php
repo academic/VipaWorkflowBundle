@@ -26,7 +26,7 @@ class StepDialogController extends Controller
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         //check permissions
-        if(!$this->get('dp.workflow_permission_service')->isGrantedForTimeline($workflow)){
+        if(!$this->get('dp.workflow_permission_service')->isInWorkflowRelatedUsers($workflow)){
             throw new AccessDeniedException;
         }
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
