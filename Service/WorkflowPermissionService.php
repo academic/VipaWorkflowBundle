@@ -92,6 +92,9 @@ class WorkflowPermissionService
             || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
             return true;
         }
+        if($dialog->getStep()->grantedUsers->contains($user)){
+            return true;
+        }
         if($dialog->users->contains($user)){
             return true;
         }
