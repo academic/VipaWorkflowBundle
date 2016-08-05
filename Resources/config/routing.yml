@@ -2,6 +2,10 @@ dergipark_workflow:
     resource: "routing/workflow.yml"
     prefix:   /journal/{journalId}/workflow/
 
+dergipark_workflow_review_form:
+    resource: "routing/review_form.yml"
+    prefix:   /journal/{journalId}/workflow/{workflowId}/review-form
+
 dergipark_workflow_step:
     resource: "routing/wf_setting.yml"
     prefix:   /journal/{journalId}/workflow-setting/
