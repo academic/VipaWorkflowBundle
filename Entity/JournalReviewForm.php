@@ -2,9 +2,12 @@
 
 namespace Dergipark\WorkflowBundle\Entity;
 
+use APY\DataGridBundle\Grid\Mapping as GRID;
+
 /**
  * Class JournalReviewForm
  * @package Dergipark\WorkflowBundle\Entity
+ * @GRID\Source(columns="id,name,active")
  */
 class JournalReviewForm
 {
