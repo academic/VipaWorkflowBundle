@@ -1,0 +1,70 @@
+<div class="panel panelx panel-default">
+    <div class="panel-leftheading">
+        <i class="fa fa-info-circle fa-2x"></i>
+    </div>
+    <div class="panel-rightbody">
+        {% for translation in article.translations %}
+            <div class="well">
+                {% if translation.title is not null %}
+                    <strong>{{ 'article.title'|trans }} ({{ translation.locale }}): {{ translation.title }}</strong>
+                    {% include 'DergiparkWorkflowBundle:ArticleWorkflow:article_detail/searchon.html.twig' %}
+                    <br>
+                {% endif %}
+                {% if translation.abstract is null %}
+                    <div>{{ 'article.abstract'|trans }} ({{ translation.locale }}): -</div>
+                {% else %}
+                    <div>{{ 'article.abstract'|trans }} ({{ translation.locale }}): <i>{{ translation.abstract|trim|raw }}</i></div>
+                {% endif %}
+                {% if translation.keywords is null %}
+                    <div>{{ 'keywords'|trans }} ({{ translation.locale }}): -</div>
+                {% else %}
+                    <div>{{ 'keywords'|trans }} ({{ translation.locale }}): {{ translation.keywords }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        {% if article.articleSubmissionFiles|length > 0 %}
+            <div class="well">
+                <h5>{{ 'title.submission_files'|trans }}</h5>
+                <ul>
+                    {% for submissionFile in article.articleSubmissionFiles %}
+                        <li>
+                            <a href="{{ asset('uploads/submissionfiles/'~submissionFile.file) }}" target="_blank"> {{ submissionFile.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        {% if article.articleSubmissionFiles|length > 0 %}
+            <div class="well">
+                <h5>{{ 'title.submission_files'|trans }}</h5>
+                <ul>
+                    {% for submissionFile in article.articleSubmissionFiles %}
+                        <li>
+                            <a href="{{ asset('uploads/submissionfiles/'~submissionFile.file) }}" target="_blank"> {{ submissionFile.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        {% if article.articleFiles|length > 0 %}
+            <div class="well">
+                <h5>{{ 'title.article_files'|trans }}</h5>
+                <ul>
+                    {% for articleFile in article.articleFiles %}
+                        <li>
+                            <a href="{{ asset('uploads/articlefiles/'~articleFile.file) }}" target="_blank"> {{ articleFile.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        {% if permissionCheck().isHaveEditorRole() %}
+            <a target="_blank" href="{{ path('ojs_journal_article_show', {journalId: selectedJournal().id, id: article.id}) }}" class="btn btn-primary">
+                {{ 'title.article_show_and_edit'|trans }}
+            </a>
+        {% endif %}
+
+    </div>
+    <div class="clearfix">
+    </div>
+</div>

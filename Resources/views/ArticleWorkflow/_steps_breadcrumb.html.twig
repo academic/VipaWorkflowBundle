@@ -1,18 +1,30 @@
 <div class="row col-lg-12 text-center">
-    <div class="btn-group btn-breadcrumb">
-        <a href="{{ path('dergipark_workflow_flow_active', {
-            'journalId': timeline.journal.id
-        }) }}" class="btn btn-default" data-toggle="tooltip" title="{{ 'workflow.actives'|trans }}"><i class="glyphicon glyphicon-flag"></i></a>
-        {% for step in ['wf.step.pre.control','wf.step.review','wf.step.arrangement'] %}
-            <a onclick="OjsWorkflow.loadStep({{ loop.index }})" class="btn btn-default" id="workflow-step-{{ loop.index }}">{{ step|trans }}</a>
-        {% endfor %}
+    <div class="col-lg-2 text-center">
+        <button class="btn btn-default btn-xs pull-right"
+                onclick="OjsWorkflow.showSubmissionDetail(this)"
+                data-toggle="tooltip"
+                title="{{ 'submission.detail'|trans }}">
+            {{ 'submission.detail'|trans }}
+        </button>
+    </div>
+    <div class="col-lg-8">
+        <div class="btn-group btn-breadcrumb">
+            <a href="{{ path('dergipark_workflow_flow_active', {
+                'journalId': timeline.journal.id
+            }) }}" class="btn btn-default" data-toggle="tooltip" title="{{ 'workflow.actives'|trans }}"><i class="glyphicon glyphicon-flag"></i></a>
+            {% for step in ['wf.step.pre.control','wf.step.review','wf.step.arrangement'] %}
+                <a onclick="OjsWorkflow.loadStep({{ loop.index }})" class="btn btn-default" id="workflow-step-{{ loop.index }}">{{ step|trans }}</a>
+            {% endfor %}
+        </div>
     </div>
     {% if permissionCheck().isHaveEditorRole() %}
-        <button class="btn btn-default btn-small pull-right"
-                onclick="OjsWorkflow.showHistoryLog(this)"
-                data-toggle="tooltip"
-                title="{{ 'browse.workflow.history'|trans }}">
-            <i class="fa fa-history"></i>
-        </button>
+        <div class="col-lg-2">
+            <button class="btn btn-default btn-small pull-right"
+                    onclick="OjsWorkflow.showHistoryLog(this)"
+                    data-toggle="tooltip"
+                    title="{{ 'browse.workflow.history'|trans }}">
+                <i class="fa fa-history"></i>
+            </button>
+        </div>
     {% endif %}
 </div>

@@ -70,4 +70,20 @@ class ArticleWorkflowController extends Controller
             'logs' => $workflowService->getWorkflowLogs($workflow),
         ]);
     }
+
+    /**
+     * @param $workflowId
+     * @return Response
+     */
+    public function articleDetailAction($workflowId)
+    {
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        //#permissioncheck
+        if(!$this->get('dp.workflow_permission_service')->isInWorkflowRelatedUsers($workflow)){
+            throw new AccessDeniedException;
+        }
+
+        return $workflowService->getArticleDetail($workflow);
+    }
 }

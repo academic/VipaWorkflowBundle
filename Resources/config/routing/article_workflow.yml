@@ -16,6 +16,13 @@ dergipark_workflow_history_log:
   options:
       expose: true
 
+dergipark_workflow_article_detail:
+  path:     /{workflowId}/article/detail
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:articleDetail" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
 # step dialog related routing
 dergipark_workflow_dialog:
     resource: "dialog.yml"

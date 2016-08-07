@@ -43,6 +43,15 @@ $(document).ready(function() {
                 href: '#wf-step-description-'+$stepOrder
             });
         },
+        showSubmissionDetail: function () {
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dergipark_workflow_article_detail', {
+                    journalId: journalId,
+                    workflowId: workflowId
+                })
+            });
+        },
         loadStep: function ($stepOrder) {
             $.get(Routing.generate('dergipark_workflow_timeline_step', {
                 journalId: journalId,

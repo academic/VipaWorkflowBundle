@@ -394,6 +394,20 @@ class WorkflowService
     }
 
     /**
+     * @param ArticleWorkflow $workflow
+     * @return Response
+     */
+    public function getArticleDetail(ArticleWorkflow $workflow)
+    {
+        $article = $workflow->getArticle();
+        $template = $this->twig->render('DergiparkWorkflowBundle:ArticleWorkflow:_article_detail.html.twig', [
+            'article' => $article,
+        ]);
+
+        return new Response($template);
+    }
+
+    /**
      * @return User
      */
     public function getUser()
