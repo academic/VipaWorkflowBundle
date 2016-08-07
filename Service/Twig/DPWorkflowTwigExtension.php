@@ -102,12 +102,18 @@ class DPWorkflowTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('actionAlias', array($this, 'getActionAlias')),
             new \Twig_SimpleFunction('permissionCheck', array($this, 'getPermissionCheck')),
             new \Twig_SimpleFunction('journalStepAlias', array($this, 'getJournalStepAlias')),
+            new \Twig_SimpleFunction('dialogStatus', array($this, 'getDialogStatus')),
         );
     }
 
     public function getActionType($const)
     {
         return constant('Dergipark\WorkflowBundle\Params\StepActionTypes::'.$const);
+    }
+
+    public function getDialogStatus($const)
+    {
+        return constant('Dergipark\WorkflowBundle\Params\StepDialogStatus::'.$const);
     }
 
     public function getJournalStepAlias($stepOrder)

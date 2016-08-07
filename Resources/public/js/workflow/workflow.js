@@ -76,6 +76,22 @@ $(document).ready(function() {
                 $('#dialog-posts-'+$dialogId).html(data);
             });
         },
+        finishAction: function ($dialogId) {
+            $.get(Routing.generate('dp_workflow_dialog_finish', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder,
+                dialogId: $dialogId
+            }), function( data ) {
+                if(data.success == true){
+                    OjsWorkflow.loadDialogs();
+                    swal(
+                        Translator.trans('successful'),
+                        Translator.trans('successful.finished.action'), "success"
+                    );
+                }
+            });
+        },
         showHistoryLog: function ($this) {
             $.fancybox({
                 type: 'ajax',

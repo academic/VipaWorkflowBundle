@@ -1,7 +1,12 @@
 {% for dialog in dialogs %}
     <div class="row">
         <div class="col-md-12">
-            <div class="panel panel-default panel-dialog">
+            {% if dialog.status == dialogStatus('CLOSED') %}
+                {% set panelClass = 'success' %}
+            {% else %}
+                {% set panelClass = 'default' %}
+            {% endif %}
+            <div class="panel panel-{{ panelClass }} panel-dialog">
                 <div class="panel-heading">
                     <span class="glyphicon glyphicon-comment"></span>
                     <b>{{ actionAlias(dialog.dialogType)~'.dialog.header'|trans }}</b>
@@ -11,16 +16,26 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li>
-                                <a onclick="OjsWorkflow.loadPosts({{ dialog.id }})">
-                                    {{ 'refresh.posts'|trans }}
-                                </a>
-                            </li>
+                            {% if dialog.status == dialogStatus('ACTIVE') %}
+                                <li>
+                                    <a onclick="OjsWorkflow.loadPosts({{ dialog.id }})">
+                                        {{ 'refresh.posts'|trans }}
+                                    </a>
+                                </li>
+                            {% endif %}
                             <li>
                                 <a data-toggle="collapse" href="#collapse-panel-{{ dialog.id }}">
                                     {{ 'collapse.dialog'|trans }}
                                 </a>
                             </li>
+                            {% if dialog.status == dialogStatus('ACTIVE') %}
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a onclick="OjsWorkflow.finishAction({{ dialog.id }})">
+                                        {{ 'finish.action'|trans }}
+                                    </a>
+                                </li>
+                            {% endif %}
                         </ul>
                     </div>
                     <br>
@@ -48,7 +63,7 @@
                         {% endif %}
                     </a>
                 </div>
-                <div id="collapse-panel-{{ dialog.id }}" class="collapse in">
+                <div id="collapse-panel-{{ dialog.id }}" class="collapse {% if dialog.status == dialogStatus('ACTIVE') %}in{% endif %}">
                     <div class="panel-body panel-dialog-body">
                         <ul class="dialog-box" id="dialog-posts-{{ dialog.id }}">
                             {{ 'loading.posts'|trans }}...
@@ -57,21 +72,23 @@
                             </script>
                         </ul>
                     </div>
-                    <div class="panel-footer">
-                        <div class="input-group">
-                            <input type="text" class="form-control input-sm dialog-comment-input" placeholder="{{ 'type.comment.here'|trans }}" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-warning btn-sm" onclick="OjsWorkflow.sendComment(this, {{ dialog.id }})">
-                                    <i class="fa fa-comment"></i>
-                                    {{ 'add.comment'|trans }}
-                                </button>
-                                <button class="btn btn-default btn-sm" onclick="OjsWorkflow.browseFiles(this, {{ dialog.id }})">
-                                    <i class="fa fa-file-archive-o"></i>
-                                    {{ 'workflow.send.file'|trans }}
-                                </button>
-                            </span>
+                    {% if dialog.status == dialogStatus('ACTIVE') %}
+                        <div class="panel-footer">
+                            <div class="input-group">
+                                <input type="text" class="form-control input-sm dialog-comment-input" placeholder="{{ 'type.comment.here'|trans }}" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-warning btn-sm" onclick="OjsWorkflow.sendComment(this, {{ dialog.id }})">
+                                        <i class="fa fa-comment"></i>
+                                        {{ 'add.comment'|trans }}
+                                    </button>
+                                    <button class="btn btn-default btn-sm" onclick="OjsWorkflow.browseFiles(this, {{ dialog.id }})">
+                                        <i class="fa fa-file-archive-o"></i>
+                                        {{ 'workflow.send.file'|trans }}
+                                    </button>
+                                </span>
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
