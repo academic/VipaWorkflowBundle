@@ -49,6 +49,7 @@ $(document).ready(function() {
                 workflowId: workflowId,
                 stepOrder: $stepOrder
             }), function( data ) {
+                var stepOrder = $stepOrder;
                 $.each($('.btn-breadcrumb a'), function(index,value){
                     $(value).removeClass('btn-primary');
                 });
