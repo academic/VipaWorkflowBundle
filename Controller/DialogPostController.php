@@ -59,6 +59,7 @@ class DialogPostController extends Controller
         if(!$permissionService->isGrantedForDialogPost($dialog)){
             throw new AccessDeniedException;
         }
+        $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($dialog->getStep()->getArticleWorkflow());
 
         $post = new DialogPost();
         $post
@@ -69,6 +70,9 @@ class DialogPostController extends Controller
             ->setSendedBy($user)
             ;
         $em->persist($post);
+
+        //log action
+        $wfLogger->log('post.comment.to.dialog', ['%user%' => '@'.$user->getUsername()]);
         $em->flush();
 
         return new JsonResponse([
@@ -112,6 +116,7 @@ class DialogPostController extends Controller
         if(!$permissionService->isGrantedForDialogPost($dialog)){
             throw new AccessDeniedException;
         }
+        $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($dialog->getStep()->getArticleWorkflow());
         foreach($files as $file){
             $filePost = new DialogPost();
             $filePost
@@ -124,6 +129,9 @@ class DialogPostController extends Controller
                 ;
             $em->persist($filePost);
         }
+        //log action
+        $wfLogger->log('post.file.to.dialog', ['%user%' => '@'.$user->getUsername()]);
+
         $em->flush();
 
         return new JsonResponse([

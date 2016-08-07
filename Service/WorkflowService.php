@@ -108,10 +108,10 @@ class WorkflowService
 
         //log workflow events
         $this->wfLogger->setArticleWorkflow($articleWorkflow);
-        $this->wfLogger->log('Article Submitted By -> '. $user->getUsername());
-        $this->wfLogger->log('Article Workflow Started');
-        $this->wfLogger->log('Setted up all Workflow Steps');
-        $this->wfLogger->log('Give permissions for journal specified users');
+        $this->wfLogger->log('article.submitted.by', ['%user%' => '@'.$user->getUsername()]);
+        $this->wfLogger->log('article.workflow.started');
+        $this->wfLogger->log('setted.up.all.workflow.steps');
+        $this->wfLogger->log('give.permission.for.journal.specified.users');
 
         $this->em->flush();
 

@@ -42,6 +42,7 @@ services:
     arguments:
       - "@doctrine.orm.entity_manager"
       - "@ojs.journal_service"
+      - "@translator"
 
   dp.workflow.article_submit_event_listener:
     class: Dergipark\WorkflowBundle\EventListener\ArticleSubmitEventListener

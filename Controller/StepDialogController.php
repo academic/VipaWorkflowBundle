@@ -57,9 +57,12 @@ class StepDialogController extends Controller
 
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
+        $wfLogger = $this->get('dp.wf_logger_service');
+        $logUsers = [];
         $workflowService = $this->get('dp.workflow_service');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $wfLogger->setArticleWorkflow($workflow);
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
@@ -86,17 +89,23 @@ class StepDialogController extends Controller
         $form->handleRequest($request);
 
         if($request->getMethod() == 'POST' && $form->isValid()){
-            foreach($dialog->getUsers() as $user){
-                $workflow->addRelatedUser($user);
+            foreach($dialog->getUsers() as $dialogUser){
+                $logUsers[] = $dialogUser->getUsername();
+                $workflow->addRelatedUser($dialogUser);
                 //if action like section editor add to step granted users
                 if($actionType == StepActionTypes::ASSIGN_SECTION_EDITOR){
-                    $step->addGrantedUser($user);
+                    $step->addGrantedUser($dialogUser);
                 }
             }
             $em->persist($step);
             $em->persist($workflow);
-
             $em->persist($dialog);
+
+            //log action
+            $wfLogger->log($actionAlias.'_log.action', [
+                '%users%' => implode(',', $logUsers),
+                '%by_user%' => $user->getUsername(),
+            ]);
             $em->flush();
 
             return $workflowService->getMessageBlock('successful_create'.$actionAlias);
@@ -127,6 +136,7 @@ class StepDialogController extends Controller
         $workflowService = $this->get('dp.workflow_service');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
@@ -148,6 +158,12 @@ class StepDialogController extends Controller
             ->addUser($articleSubmitter)
         ;
         $em->persist($dialog);
+
+        //log action
+        $wfLogger->log('assign.issue.to.author_log', [
+            '%author%' => $articleSubmitter->getUsername(),
+            '%by_user%' => $user->getUsername(),
+        ]);
         $em->flush();
 
         return $workflowService->getMessageBlock('successful_create'.$actionAlias);
@@ -172,6 +188,7 @@ class StepDialogController extends Controller
         $workflowService = $this->get('dp.workflow_service');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
@@ -199,11 +216,19 @@ class StepDialogController extends Controller
         $form->handleRequest($request);
 
         if($request->getMethod() == 'POST' && $form->isValid()){
-            foreach($dialog->getUsers() as $user){
-                $workflow->addRelatedUser($user);
+            foreach($dialog->getUsers() as $issueUser){
+                $issueUsers[] = $issueUser->getUsername();
+                $workflow->addRelatedUser($issueUser);
             }
             $em->persist($workflow);
             $em->persist($dialog);
+
+            //log action
+            $wfLogger->log('create.issue_log', [
+                '%issue_users%' => implode(',', $issueUsers),
+                '%by_user%' => $user->getUsername(),
+            ]);
+
             $em->flush();
 
             return $workflowService->getMessageBlock('successful_create'.$actionAlias);
@@ -229,6 +254,7 @@ class StepDialogController extends Controller
         $workflowService = $this->get('dp.workflow_service');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
@@ -249,6 +275,11 @@ class StepDialogController extends Controller
         $this->throw404IfNotFound($arrangementStep);
         $workflow->setCurrentStep($arrangementStep);
         $em->persist($workflow);
+
+        //log action
+        $wfLogger->log('accept.article.and.goto.arrangement', [
+            '%by_user%' => $this->getUser()->getUsername(),
+        ]);
         $em->flush();
 
         return new JsonResponse([
@@ -270,6 +301,7 @@ class StepDialogController extends Controller
         $workflowService = $this->get('dp.workflow_service');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
@@ -290,6 +322,11 @@ class StepDialogController extends Controller
         $this->throw404IfNotFound($reviewStep);
         $workflow->setCurrentStep($reviewStep);
         $em->persist($workflow);
+
+        //log action
+        $wfLogger->log('goto.review_log', [
+            '%by_user%' => $this->getUser()->getUsername(),
+        ]);
         $em->flush();
 
         return new JsonResponse([
@@ -312,7 +349,11 @@ class StepDialogController extends Controller
         }
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
         $workflowService->acceptSubmission($workflow, true);
+
+        //log action
+        $wfLogger->log('accept.submission_log', ['%by_user%' => $this->getUser()->getUsername()]);
 
         return new JsonResponse([
             'success' => true,
@@ -337,6 +378,7 @@ class StepDialogController extends Controller
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $wfLogger = $this->get('dp.wf_logger_service');
         //fetch step
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
@@ -349,6 +391,9 @@ class StepDialogController extends Controller
 
         //decline submission
         $workflowService->declineSubmission($workflow, true);
+
+        //log action
+        $wfLogger->log('decline.submission_log', ['%by_user%' => $this->getUser()->getUsername()]);
 
         return new JsonResponse([
             'success' => true,

@@ -7,6 +7,7 @@ use Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog;
 use Doctrine\ORM\EntityManager;
 use JMS\Serializer\Exception\LogicException;
 use Ojs\JournalBundle\Service\JournalService;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class WorkflowLoggerService
 {
@@ -26,12 +27,24 @@ class WorkflowLoggerService
     private $articleWorkflow = null;
 
     /**
-     * @param EntityManager $em
+     * @var TranslatorInterface
      */
-    public function __construct(EntityManager $em, JournalService $journalService)
+    private $translator;
+
+    /**
+     * WorkflowLoggerService constructor.
+     * @param EntityManager $em
+     * @param JournalService $journalService
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(
+        EntityManager $em,
+        JournalService $journalService,
+        TranslatorInterface $translator)
     {
         $this->em               = $em;
         $this->journalService   = $journalService;
+        $this->translator       = $translator;
     }
 
     /**
@@ -47,11 +60,12 @@ class WorkflowLoggerService
 
     /**
      * @param $message
-     * @param ArticleWorkflow $articleWorkflow
+     * @param array $parameters
+     * @param ArticleWorkflow|null $articleWorkflow
      * @param bool $flush
      * @return WorkflowHistoryLog
      */
-    public function log($message , ArticleWorkflow $articleWorkflow = null,$flush = false)
+    public function log($message , $parameters = [], ArticleWorkflow $articleWorkflow = null, $flush = false)
     {
         if(!$this->articleWorkflow && !$articleWorkflow){
             throw new LogicException('one of article workflow must be filled. use set or give as arg');
@@ -59,6 +73,7 @@ class WorkflowLoggerService
         if(!$articleWorkflow){
             $articleWorkflow = $this->articleWorkflow;
         }
+        $message = $this->translator->trans($message, $parameters);
         $log = new WorkflowHistoryLog();
         $log
             ->setLogText($message)
