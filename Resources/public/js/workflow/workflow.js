@@ -304,6 +304,33 @@ $(document).ready(function() {
                 });
             });
         },
+        finishWorkflow: function($this){
+            swal({
+                title: Translator.trans('workflow.are.you.sure.finish.workflow'),
+                text: Translator.trans('workflow.finish.warnings'),
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#5fba7d',
+                confirmButtonText: Translator.trans('workflow.yes.finish.workflow'),
+                closeOnConfirm: false
+            }, function() {
+                $.get( Routing.generate('dp_workflow_finish_workflow', {
+                    journalId: journalId,
+                    workflowId: workflowId,
+                    stepOrder: stepOrder
+                }), function( data ) {
+                    if(data.success == true){
+                        swal(
+                            Translator.trans('successful'),
+                            Translator.trans('successful.go.to.article.page'), "success"
+                        );
+                        window.location = data.data.redirectUrl;
+                    }else{
+                        alert('Some error occured');
+                    }
+                });
+            });
+        },
         sendComment: function ($this, $dialogId) {
             var $comment = $($this).parent().parent().find('.dialog-comment-input').val();
             if($comment == ''){

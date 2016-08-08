@@ -61,6 +61,7 @@ wrong.file: 'wrong.file'
 select.another.file.type: 'select.another.file.type'
 your.files.sended: 'your.files.sended'
 workflow.basic_settings: 'Temel Ayarlar'
+finish.workflow: 'Süreci Bitir'
 
 #action log translations
 article.submitted.by: 'Article Submitted by -> %user%'
@@ -83,3 +84,4 @@ _assign_proof_reader_log.action: 'Assigned proof reader (%users%) by %by_user%'
 post.comment.to.dialog: 'Commented a dialog by %user%'
 post.file.to.dialog: 'Posted File a dialog by %user%'
 finish.dialog_log: 'Dialog closed by %by_user%'
+finish_workflow_log: 'Workflow finished by %by_user%'

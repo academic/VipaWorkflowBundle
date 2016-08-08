@@ -39,6 +39,13 @@
                             {{ 'create.issue'|trans }}
                         </a>
                     </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a onclick="OjsWorkflow.finishWorkflow(this)"
+                           data-action-type="{{ actionType('FINISH_WORKFLOW') }}">
+                            {{ 'finish.workflow'|trans }}
+                        </a>
+                    </li>
                 </ul>
             </div>
         {% endif %}

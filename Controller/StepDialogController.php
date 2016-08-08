@@ -369,6 +369,46 @@ class StepDialogController extends Controller
      * @param $stepOrder
      * @return JsonResponse
      */
+    public function finishWorkflowAction($workflowId, $stepOrder)
+    {
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $this->throw404IfNotFound($journal);
+        $em = $this->getDoctrine()->getManager();
+        $workflowService = $this->get('dp.workflow_service');
+        $permissionService = $this->get('dp.workflow_permission_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
+        $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => $stepOrder,
+        ]);
+        //#permissioncheck
+        if(!$permissionService->isGrantedForStep($step)){
+            throw new AccessDeniedException;
+        }
+        $workflowService->finishWorkflow($workflow);
+        //log action
+        $wfLogger->log('finish_workflow_log', [
+            '%by_user%' => $this->getUser()->getUsername(),
+        ]);
+        $em->flush();
+
+        return new JsonResponse([
+            'success' => true,
+            'data' => [
+                'redirectUrl' => $this->generateUrl('ojs_journal_article_show', [
+                    'journalId' => $workflow->getArticle()->getJournal()->getId(),
+                    'id' => $workflow->getArticle()->getId(),
+                ])
+            ]
+        ]);
+    }
+
+    /**
+     * @param $workflowId
+     * @param $stepOrder
+     * @return JsonResponse
+     */
     public function declineSubmissionAction($workflowId, $stepOrder)
     {
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();

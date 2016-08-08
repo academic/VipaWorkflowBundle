@@ -54,6 +54,13 @@ dp_workflow_decline_submission:
   options:
       expose: true
 
+dp_workflow_finish_workflow:
+  path:     /finish-workflow
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:finishWorkflow" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
 dp_workflow_dialog_finish:
   path:     /finish-dialog/{dialogId}
   defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:finishDialog" }

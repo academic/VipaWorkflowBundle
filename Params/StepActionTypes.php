@@ -17,6 +17,7 @@ class StepActionTypes
     const ASSIGN_LAYOUT_EDITOR = 11;
     const ASSIGN_COPY_EDITOR = 12;
     const ASSIGN_PROOF_READER = 13;
+    const FINISH_WORKFLOW = 14;
 
     static $typeAlias = [
         self::ASSIGN_GRAMMER_EDITOR => '_assign_grammer_editor',
@@ -31,5 +32,6 @@ class StepActionTypes
         self::ASSIGN_LAYOUT_EDITOR => '_assign_layout_editor',
         self::ASSIGN_COPY_EDITOR => '_assign_copy_editor',
         self::ASSIGN_PROOF_READER => '_assign_proof_reader',
+        self::FINISH_WORKFLOW => '_finish_workflow',
     ];
 }

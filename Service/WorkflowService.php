@@ -448,6 +448,33 @@ class WorkflowService
 
     /**
      * @param ArticleWorkflow $workflow
+     * @param bool $flush
+     * @return JsonResponse
+     * @throws AccessDeniedException
+     */
+    public function finishWorkflow(ArticleWorkflow $workflow, $flush = false)
+    {
+        $article = $workflow->getArticle();
+        $currentStep = $workflow->getCurrentStep();
+        if($currentStep->getOrder() !== JournalWorkflowSteps::ARRANGEMENT_ORDER){
+            throw new \LogicException('current step must be arrangement');
+        }
+        // deactive current step
+        $currentStep->setStatus(StepStatus::CLOSED);
+        $this->closeStepDialogs($currentStep);
+        $this->em->persist($currentStep);
+        $article->setStatus(ArticleStatuses::STATUS_PUBLISHED);
+        $this->em->persist($article);
+
+        if($flush){
+            $this->flush();
+        }
+
+        return true;
+    }
+
+    /**
+     * @param ArticleWorkflow $workflow
      * @return array
      */
     public function getUserRelatedFiles(ArticleWorkflow $workflow)
