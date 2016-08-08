@@ -11,6 +11,7 @@ use Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog;
 use Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus;
 use Dergipark\WorkflowBundle\Params\DialogPostTypes;
 use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
+use Dergipark\WorkflowBundle\Params\StepDialogStatus;
 use Dergipark\WorkflowBundle\Params\StepStatus;
 use Doctrine\ORM\EntityManager;
 use Ojs\CoreBundle\Params\ArticleStatuses;
@@ -254,6 +255,8 @@ class WorkflowService
 
         foreach($steps as $step){
             $step->setStatus(StepStatus::CLOSED);
+            //close all dialogs
+            $this->closeStepDialogs($step);
             $this->em->persist($step);
         }
         $workflow->setStatus(ArticleWorkflowStatus::HISTORY);
@@ -261,10 +264,9 @@ class WorkflowService
         $this->em->persist($workflow);
         $this->em->persist($article);
 
-        if(!$flush){
-            return true;
+        if($flush){
+            $this->em->flush();
         }
-        $this->em->flush();
 
         return true;
     }
@@ -284,6 +286,8 @@ class WorkflowService
 
         foreach($steps as $step){
             $step->setStatus(StepStatus::CLOSED);
+            //close all step dialogs
+            $this->closeStepDialogs($step);
             $this->em->persist($step);
         }
         $workflow->setStatus(ArticleWorkflowStatus::HISTORY);
@@ -292,10 +296,9 @@ class WorkflowService
         $this->em->persist($workflow);
         $this->em->persist($article);
 
-        if(!$flush){
-            return true;
+        if($flush){
+            $this->em->flush();
         }
-        $this->em->flush();
 
         return true;
     }
@@ -314,6 +317,7 @@ class WorkflowService
         }
         // deactive current step
         $currentStep->setStatus(StepStatus::CLOSED);
+        $this->closeStepDialogs($currentStep);
         $this->em->persist($currentStep);
 
         $reviewStep = $this->em->getRepository(ArticleWorkflowStep::class)->findOneBy([
@@ -331,9 +335,7 @@ class WorkflowService
             $this->flush();
         }
 
-        return new JsonResponse([
-            'success' => true,
-        ]);
+        return true;
     }
 
     /**
@@ -350,6 +352,7 @@ class WorkflowService
         }
         // deactive current step
         $currentStep->setStatus(StepStatus::CLOSED);
+        $this->closeStepDialogs($currentStep);
         $this->em->persist($currentStep);
 
         $arrangementStep = $this->em->getRepository(ArticleWorkflowStep::class)->findOneBy([
@@ -367,9 +370,7 @@ class WorkflowService
             $this->flush();
         }
 
-        return new JsonResponse([
-            'success' => true,
-        ]);
+        return true;
     }
 
     /**
@@ -484,6 +485,23 @@ class WorkflowService
         ]);
 
         return new Response($template);
+    }
+
+    /**
+     * @param ArticleWorkflowStep $step
+     * @return bool
+     */
+    public function closeStepDialogs(ArticleWorkflowStep $step)
+    {
+        $dialogs = $this->em->getRepository(StepDialog::class)->findBy([
+            'step' => $step,
+        ]);
+        foreach($dialogs as $dialog){
+            $dialog->setStatus(StepDialogStatus::CLOSED);
+            $this->em->persist($dialog);
+        }
+
+        return true;
     }
 
     /**

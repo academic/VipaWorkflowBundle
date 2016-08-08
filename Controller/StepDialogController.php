@@ -326,13 +326,16 @@ class StepDialogController extends Controller
         if(!$permissionService->isHaveEditorRole()){
             throw new AccessDeniedException;
         }
+        $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
-        $workflowService->acceptSubmission($workflow, true);
+        $workflowService->acceptSubmission($workflow);
 
         //log action
         $wfLogger->log('accept.submission_log', ['%by_user%' => $this->getUser()->getUsername()]);
+
+        $em->flush();
 
         return new JsonResponse([
             'success' => true,
@@ -354,6 +357,7 @@ class StepDialogController extends Controller
     {
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
+        $em = $this->getDoctrine()->getManager();
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
@@ -369,10 +373,12 @@ class StepDialogController extends Controller
         }
 
         //decline submission
-        $workflowService->declineSubmission($workflow, true);
+        $workflowService->declineSubmission($workflow);
 
         //log action
         $wfLogger->log('decline.submission_log', ['%by_user%' => $this->getUser()->getUsername()]);
+
+        $em->flush();
 
         return new JsonResponse([
             'success' => true,
