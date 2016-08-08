@@ -99,9 +99,25 @@ class StepDialogController extends Controller
                     $step->addGrantedUser($dialogUser);
                 }
             }
+            //if action type is assin review, then persist seperate dialog for each of them
+            if($actionType == StepActionTypes::ASSIGN_REVIEWER && $dialog->users->count()>1){
+                foreach($dialog->users as $reviewerUser){
+                    $reviewDialog = new StepDialog();
+                    $reviewDialog
+                        ->setDialogType(StepActionTypes::ASSIGN_REVIEWER)
+                        ->setOpenedAt(new \DateTime())
+                        ->setStatus(StepDialogStatus::ACTIVE)
+                        ->setStep($step)
+                        ->setCreatedDialogBy($user)
+                        ->addUser($reviewerUser)
+                    ;
+                    $em->persist($reviewDialog);
+                }
+            }else{
+                $em->persist($dialog);
+            }
             $em->persist($step);
             $em->persist($workflow);
-            $em->persist($dialog);
 
             //log action
             $wfLogger->log($actionAlias.'_log.action', [
