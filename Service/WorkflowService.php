@@ -10,17 +10,19 @@ use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog;
 use Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus;
 use Dergipark\WorkflowBundle\Params\DialogPostTypes;
+use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
 use Dergipark\WorkflowBundle\Params\StepStatus;
 use Doctrine\ORM\EntityManager;
-use JMS\Serializer\Exception\LogicException;
 use Ojs\CoreBundle\Params\ArticleStatuses;
 use Ojs\JournalBundle\Entity\ArticleFile;
 use Ojs\JournalBundle\Entity\Journal;
 use Ojs\JournalBundle\Service\JournalService;
 use Ojs\UserBundle\Entity\User;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Ojs\JournalBundle\Entity\Article;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class WorkflowService
 {
@@ -55,6 +57,7 @@ class WorkflowService
      * @param JournalService $journalService
      * @param TokenStorageInterface $tokenStorage
      * @param WorkflowLoggerService $wfLogger
+     * @param \Twig_Environment $twig
      */
     public function __construct(
         EntityManager $em,
@@ -140,7 +143,7 @@ class WorkflowService
         if(!$journal){
             $journal = $this->journalService->getSelectedJournal();
             if(!$journal){
-                throw new LogicException('i can not find current journal');
+                throw new \LogicException('i can not find current journal');
             }
         }
 
@@ -299,6 +302,78 @@ class WorkflowService
 
     /**
      * @param ArticleWorkflow $workflow
+     * @param bool $flush
+     * @return JsonResponse
+     * @throws AccessDeniedException
+     */
+    public function gotoReview(ArticleWorkflow $workflow, $flush = false)
+    {
+        $currentStep = $workflow->getCurrentStep();
+        if($currentStep->getOrder() !== JournalWorkflowSteps::PRE_CONTROL_ORDER){
+            throw new \LogicException('current step must be pre control');
+        }
+        // deactive current step
+        $currentStep->setStatus(StepStatus::CLOSED);
+        $this->em->persist($currentStep);
+
+        $reviewStep = $this->em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => JournalWorkflowSteps::REVIEW_ORDER,
+        ]);
+
+        $workflow->setCurrentStep($reviewStep);
+        $this->em->persist($workflow);
+
+        $reviewStep->setStatus(StepStatus::ACTIVE);
+        $this->em->persist($reviewStep);
+
+        if($flush){
+            $this->flush();
+        }
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
+    }
+
+    /**
+     * @param ArticleWorkflow $workflow
+     * @param bool $flush
+     * @return JsonResponse
+     * @throws AccessDeniedException
+     */
+    public function gotoArrangement(ArticleWorkflow $workflow, $flush = false)
+    {
+        $currentStep = $workflow->getCurrentStep();
+        if($currentStep->getOrder() !== JournalWorkflowSteps::REVIEW_ORDER){
+            throw new \LogicException('current step must be aggrangement');
+        }
+        // deactive current step
+        $currentStep->setStatus(StepStatus::CLOSED);
+        $this->em->persist($currentStep);
+
+        $arrangementStep = $this->em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => JournalWorkflowSteps::ARRANGEMENT_ORDER,
+        ]);
+
+        $workflow->setCurrentStep($arrangementStep);
+        $this->em->persist($workflow);
+
+        $arrangementStep->setStatus(StepStatus::ACTIVE);
+        $this->em->persist($arrangementStep);
+
+        if($flush){
+            $this->flush();
+        }
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
+    }
+
+    /**
+     * @param ArticleWorkflow $workflow
      * @return array
      */
     public function getUserRelatedFiles(ArticleWorkflow $workflow)
@@ -418,7 +493,7 @@ class WorkflowService
     {
         $token = $this->tokenStorage->getToken();
         if(!$token){
-            throw new LogicException('i can not find current user token :/');
+            throw new \LogicException('i can not find current user token :/');
         }
         return $token->getUser();
     }

@@ -265,20 +265,8 @@ class StepDialogController extends Controller
         if(!$permissionService->isHaveEditorRole()){
             throw new AccessDeniedException;
         }
-
-        // deactive current step
-        $step->setStatus(StepStatus::CLOSED);
-        $em->persist($step);
-
-        $arrangementStep = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
-            'articleWorkflow' => $workflow,
-            'order' => 3,
-        ]);
-        $this->throw404IfNotFound($arrangementStep);
-        $workflow->setCurrentStep($arrangementStep);
-        $arrangementStep->setStatus(StepStatus::ACTIVE);
-        $em->persist($arrangementStep);
-        $em->persist($workflow);
+        //do action
+        $workflowService->gotoArrangement($workflow);
 
         //log action
         $wfLogger->log('accept.article.and.goto.arrangement', [
@@ -299,7 +287,6 @@ class StepDialogController extends Controller
     public function gotoReviewingAction($workflowId, $stepOrder)
     {
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
-
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
@@ -314,21 +301,7 @@ class StepDialogController extends Controller
         if(!$permissionService->isGrantedForStep($step)){
             throw new AccessDeniedException;
         }
-
-        // deactive current step
-        $step->setStatus(StepStatus::CLOSED);
-        $em->persist($step);
-
-        $reviewStep = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
-            'articleWorkflow' => $workflow,
-            'order' => 2,
-        ]);
-        $this->throw404IfNotFound($reviewStep);
-        $workflow->setCurrentStep($reviewStep);
-        $em->persist($workflow);
-        $reviewStep->setStatus(StepStatus::ACTIVE);
-        $em->persist($reviewStep);
-
+        $workflowService->gotoReview($workflow);
         //log action
         $wfLogger->log('goto.review_log', [
             '%by_user%' => $this->getUser()->getUsername(),
