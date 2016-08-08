@@ -94,11 +94,12 @@ class WorkflowService
             foreach($step->getGrantedUsers() as $stepUser){
                 $articleWorkflow->addRelatedUser($stepUser);
             }
-            $this->em->persist($articleWorkflowStep);
-
             if($step->getOrder() == 1){
                 $articleWorkflow->setCurrentStep($articleWorkflowStep);
+            }else{
+                $articleWorkflowStep->setStatus(StepStatus::NOT_OPENED);
             }
+            $this->em->persist($articleWorkflowStep);
         }
         $articleWorkflow->addRelatedUser($article->getSubmitterUser());
 
@@ -194,6 +195,9 @@ class WorkflowService
         $timeline['workflow'] = $articleWorkflow;
         $timeline['journal'] = $articleWorkflow->getJournal();
         $timeline['article'] = $articleWorkflow->getArticle();
+        $timeline['steps'] = $this->em->getRepository(ArticleWorkflowStep::class)->findBy([
+            'articleWorkflow' => $articleWorkflow,
+        ], ['order' => 'ASC']);
 
         return $timeline;
     }

@@ -12,8 +12,10 @@
             <a href="{{ path('dergipark_workflow_flow_active', {
                 'journalId': timeline.journal.id
             }) }}" class="btn btn-default" data-toggle="tooltip" title="{{ 'workflow.actives'|trans }}"><i class="glyphicon glyphicon-flag"></i></a>
-            {% for step in ['wf.step.pre.control','wf.step.review','wf.step.arrangement'] %}
-                <a onclick="OjsWorkflow.loadStep({{ loop.index }})" class="btn btn-default" id="workflow-step-{{ loop.index }}">{{ step|trans }}</a>
+            {% for step in timeline.steps %}
+                <a onclick="OjsWorkflow.loadStep({{ step.order }})" class="btn btn-default" id="workflow-step-{{ step.order }}">
+                    {{ ('wf.step.'~journalStepAlias(step.order))|trans }}
+                </a>
             {% endfor %}
         </div>
     </div>

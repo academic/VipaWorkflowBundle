@@ -4,6 +4,7 @@ namespace Dergipark\WorkflowBundle\Params;
 
 class StepStatus
 {
-    const ACTIVE = 1;
     const CLOSED = 0;
+    const ACTIVE = 1;
+    const NOT_OPENED = 2;
 }

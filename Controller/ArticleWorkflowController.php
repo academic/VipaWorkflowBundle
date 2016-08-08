@@ -4,6 +4,7 @@ namespace Dergipark\WorkflowBundle\Controller;
 
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Dergipark\WorkflowBundle\Params\StepStatus;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\JournalBundle\Entity\Journal;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,6 +47,9 @@ class ArticleWorkflowController extends Controller
         //#permissioncheck
         if(!$this->get('dp.workflow_permission_service')->isInWorkflowRelatedUsers($workflow)){
             throw new AccessDeniedException;
+        }
+        if($step->getStatus() == StepStatus::NOT_OPENED){
+            return $this->render('DergiparkWorkflowBundle:ArticleWorkflow/steps:_not_opened.html.twig');
         }
 
         return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:steps/_step_'.$stepOrder.'.html.twig', [

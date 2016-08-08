@@ -22,6 +22,7 @@ class StepDialogController extends Controller
     {
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
+        $translator = $this->get('translator');
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
         $permissionService = $this->get('dp.workflow_permission_service');
@@ -38,6 +39,7 @@ class StepDialogController extends Controller
 
         return $this->render('DergiparkWorkflowBundle:StepDialog:_step_dialogs.html.twig', [
             'dialogs' => $dialogs,
+            'step' => $step,
         ]);
     }
 
@@ -274,6 +276,8 @@ class StepDialogController extends Controller
         ]);
         $this->throw404IfNotFound($arrangementStep);
         $workflow->setCurrentStep($arrangementStep);
+        $arrangementStep->setStatus(StepStatus::ACTIVE);
+        $em->persist($arrangementStep);
         $em->persist($workflow);
 
         //log action
@@ -322,6 +326,8 @@ class StepDialogController extends Controller
         $this->throw404IfNotFound($reviewStep);
         $workflow->setCurrentStep($reviewStep);
         $em->persist($workflow);
+        $reviewStep->setStatus(StepStatus::ACTIVE);
+        $em->persist($reviewStep);
 
         //log action
         $wfLogger->log('goto.review_log', [
