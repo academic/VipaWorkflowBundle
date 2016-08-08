@@ -26,27 +26,43 @@
                 <th>{{ 'author'|trans }}</th>
             </tr>
             <tbody class="list" id="flow-list">
-            {% for workflow in workflows %}
+            {% for dataContainer in dataContainers %}
                 <tr>
-                    <td>{{ workflow.article.id }}</td>
+                    <td>{{ dataContainer.workflow.article.id }}</td>
                     <td>
                         <a href="{{ path('dergipark_workflow_article_workflow', {
-                            journalId: workflow.journal.id,
-                            workflowId: workflow.id,
+                            journalId: dataContainer.workflow.journal.id,
+                            workflowId: dataContainer.workflow.id,
                         }) }}" class="title">
-                            {{ workflow.article.title }}
+                            {{ dataContainer.article.title }}
                         </a>
                         <hr>
                         <span>
-                            {# put workflow stats here #}
+                            <span class="badge {% if dataContainer.active_dialog>0 %}badge-success{% else %}badge-default{% endif %}">
+                                {{ dataContainer.active_dialog }}
+                            </span>
+                            {{ 'active.dialog'|trans }}
                         </span>
                         <span>
-                            {# put last post related staff here #}
+                            <span class="badge badge-default">
+                                {{ dataContainer.closed_dialog }}
+                            </span>
+                            {{ 'closed.dialog'|trans }}
                         </span>
                     </td>
-                    <td class="stepTitle">{# put last active step here title and details #}</td>
-                    <td class="author">
-                        {# expose article username here if user is not granted show not granted message #}
+                    <td class="stepTitle">
+                        {{ ('wf.step.'~journalStepAlias(dataContainer.workflow.currentStep.order))|trans }}
+                    </td>
+                    <td class="author text-center">
+                        {% if dataContainer.author is defined %}
+                            {% if dataContainer.author.username == app.user.username %}
+                                {{ 'you'|trans }}
+                            {% else %}
+                                @{{ dataContainer.author.username }}
+                            {% endif %}
+                        {% else %}
+                            {{ 'you.can.not.see.author'|trans }}
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}

@@ -11,6 +11,7 @@ use Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog;
 use Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus;
 use Dergipark\WorkflowBundle\Params\DialogPostTypes;
 use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
+use Dergipark\WorkflowBundle\Params\StepActionTypes;
 use Dergipark\WorkflowBundle\Params\StepDialogStatus;
 use Dergipark\WorkflowBundle\Params\StepStatus;
 use Doctrine\ORM\EntityManager;
@@ -129,6 +130,78 @@ class WorkflowService
     public function currentJournalWorkflowSteps()
     {
         return $this->em->getRepository(JournalWorkflowStep::class)->findAll();
+    }
+
+    public function getUserRelatedActiveWorkflowsContainer()
+    {
+        $wfContainers = [];
+        $workflows = $this->getUserRelatedActiveWorkflows();
+        foreach($workflows as $workflow){
+            $wfContainer = [];
+            $wfContainer['workflow'] = $workflow;
+            $wfContainer['article'] = $workflow->getArticle();
+            if(!$this->hasReviewerRoleOnWorkflow($workflow)){
+                $wfContainer['author'] = $workflow->getArticle()->getSubmitterUser();
+            }
+            $wfContainer['active_dialog'] = $this->getUserBasedDialogCount($workflow, StepDialogStatus::ACTIVE);
+            $wfContainer['closed_dialog'] = $this->getUserBasedDialogCount($workflow, StepDialogStatus::CLOSED);
+            $wfContainers[] = $wfContainer;
+        }
+
+        return $wfContainers;
+    }
+
+    /**
+     * @param ArticleWorkflow $workflow
+     * @param $status
+     * @return int
+     */
+    private function getUserBasedDialogCount(ArticleWorkflow $workflow, $status)
+    {
+        $journal = $this->journalService->getSelectedJournal();
+        $fetchAll = false;
+        $userJournalRoles = $this->getUser()->getJournalRolesBag($journal);
+        $specialRoles = ['ROLE_EDITOR', 'ROLE_CO_EDITOR'];
+        if(count(array_intersect($specialRoles, $userJournalRoles)) > 0 || $this->getUser()->isAdmin()){
+            $fetchAll = true;
+        }
+        $dialogRepo = $this->em->getRepository(StepDialog::class);
+        $dialogQuery = $dialogRepo
+            ->createQueryBuilder('stepDialog')
+            ->join('stepDialog.step', 'dialogStep')
+            ->andWhere('stepDialog.status = :status')
+            ->setParameter('status', $status)
+            ->andWhere('dialogStep.articleWorkflow = :workflow')
+            ->setParameter('workflow', $workflow)
+        ;
+        if(!$fetchAll){
+            $dialogQuery
+                ->andWhere(':user MEMBER OF stepDialog.users OR stepDialog.createdDialogBy = :user')
+                ->setParameter('user', $this->getUser())
+            ;
+        }
+        $dialogs = $dialogQuery->getQuery()->getResult();
+
+        return count($dialogs);
+    }
+
+    private function hasReviewerRoleOnWorkflow(ArticleWorkflow $workflow)
+    {
+        $dialogRepo = $this->em->getRepository(StepDialog::class);
+        $dialogs = $dialogRepo
+            ->createQueryBuilder('stepDialog')
+            ->join('stepDialog.step', 'dialogStep')
+            ->andWhere(':user MEMBER OF stepDialog.users')
+            ->setParameter('user', $this->getUser())
+            ->andWhere('stepDialog.dialogType = :dialogType')
+            ->setParameter('dialogType', StepActionTypes::ASSIGN_REVIEWER)
+            ->andWhere('dialogStep.articleWorkflow = :workflow')
+            ->setParameter('workflow', $workflow)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return count($dialogs)>0;
     }
 
     /**

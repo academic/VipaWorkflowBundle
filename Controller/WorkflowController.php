@@ -15,7 +15,14 @@ class WorkflowController extends Controller
         $workflowService = $this->get('dp.workflow_service');
 
         return $this->render('DergiparkWorkflowBundle:Workflow:_actives.html.twig', [
-            'workflows' => $workflowService->getUserRelatedActiveWorkflows(),
+            'dataContainers' => $workflowService->getUserRelatedActiveWorkflowsContainer(),
         ]);
+    }
+
+    /**
+     * @return Response
+     */
+    public function historyAction()
+    {
     }
 }
