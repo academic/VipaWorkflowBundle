@@ -417,7 +417,7 @@ class StepDialogController extends Controller
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
-        $wfLogger = $this->get('dp.wf_logger_service');
+        $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
         //fetch step
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
