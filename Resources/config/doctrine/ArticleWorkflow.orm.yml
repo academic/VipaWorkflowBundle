@@ -36,6 +36,16 @@ Dergipark\WorkflowBundle\Entity\ArticleWorkflow:
         name: current_step_id
         referencedColumnName: id
   manyToMany:
+    grantedUsers:
+      targetEntity: Ojs\UserBundle\Entity\User
+      joinTable:
+        name: bc_article_wf_user
+        joinColumns:
+          step_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          user_id:
+            referencedColumnName: id
     relatedUsers:
       targetEntity: Ojs\UserBundle\Entity\User
       joinTable:

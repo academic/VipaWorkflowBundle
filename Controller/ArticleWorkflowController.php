@@ -79,6 +79,24 @@ class ArticleWorkflowController extends Controller
      * @param $workflowId
      * @return Response
      */
+    public function permissionTableAction($workflowId)
+    {
+        //#permissioncheck
+        if(!$this->get('dp.workflow_permission_service')->isHaveEditorRole()){
+            throw new AccessDeniedException;
+        }
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+
+        return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:_permission_table.html.twig', [
+            'permissions' => $workflowService->getPermissionsContainer($workflow),
+        ]);
+    }
+
+    /**
+     * @param $workflowId
+     * @return Response
+     */
     public function articleDetailAction($workflowId)
     {
         $workflowService = $this->get('dp.workflow_service');

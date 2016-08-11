@@ -38,6 +38,11 @@ class ArticleWorkflow
     public $currentStep;
 
     /**
+     * @var ArrayCollection|User[]
+     */
+    public $grantedUsers;
+
+    /**
      * @var int
      */
     protected $status = ArticleWorkflowStatus::ACTIVE;
@@ -49,6 +54,7 @@ class ArticleWorkflow
     public function __construct()
     {
         $this->relatedUsers = new ArrayCollection();
+        $this->grantedUsers = new ArrayCollection();
     }
 
     /**
@@ -59,6 +65,64 @@ class ArticleWorkflow
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return ArrayCollection|User[]
+     */
+    public function getGrantedUsers()
+    {
+        return $this->grantedUsers;
+    }
+
+    /**
+     * @param User[] $users
+     * @return $this
+     */
+    public function setGrantedUsers($users)
+    {
+        $this->grantedUsers = $users;
+
+        return $this;
+    }
+
+    /**
+     * @param  User $user
+     * @return $this
+     */
+    public function addGrantedUser(User $user)
+    {
+        if (!$this->grantedUsers->contains($user)) {
+            $this->grantedUsers->add($user);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  User $user
+     * @return $this
+     */
+    public function removeGrantedUser(User $user)
+    {
+        if ($this->grantedUsers->contains($user)) {
+            $this->grantedUsers->removeElement($user);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function hasGrantedUser(User $user)
+    {
+        if ($this->grantedUsers->contains($user)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

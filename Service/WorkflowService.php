@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Ojs\JournalBundle\Entity\Article;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class WorkflowService
 {
@@ -54,11 +55,17 @@ class WorkflowService
     public $twig;
 
     /**
+     * @var TranslatorInterface
+     */
+    public $translator;
+
+    /**
      * WorkflowService constructor.
      * @param EntityManager $em
      * @param JournalService $journalService
      * @param TokenStorageInterface $tokenStorage
      * @param WorkflowLoggerService $wfLogger
+     * @param TranslatorInterface $translator
      * @param \Twig_Environment $twig
      */
     public function __construct(
@@ -66,6 +73,7 @@ class WorkflowService
         JournalService $journalService,
         TokenStorageInterface $tokenStorage,
         WorkflowLoggerService $wfLogger,
+        TranslatorInterface $translator,
         \Twig_Environment $twig
     ) {
         $this->em               = $em;
@@ -73,6 +81,7 @@ class WorkflowService
         $this->tokenStorage     = $tokenStorage;
         $this->wfLogger         = $wfLogger;
         $this->twig             = $twig;
+        $this->translator       = $translator;
     }
 
     /**
@@ -288,6 +297,86 @@ class WorkflowService
         return $this->em->getRepository(WorkflowHistoryLog::class)->findBy([
             'articleWorkflow' => $articleWorkflow,
         ]);
+    }
+
+    /**
+     * @param ArticleWorkflow $workflow
+     * @return array
+     */
+    public function getPermissionsContainer(ArticleWorkflow $workflow)
+    {
+        $permissions = [];
+
+        //set role editor and role co-editor full permission
+        $permission[0] = $this->translator->trans('have.role.editor.or.co.editor');
+        //pre control step
+        $permission[1] = true;
+        //review step
+        $permission[2] = true;
+        //arrangement step
+        $permission[3] = true;
+        //full permission
+        $permission[4] = true;
+        $permissions[] = $permission;
+
+        foreach($workflow->getGrantedUsers() as $user){
+            $permission[0] = (string)$user;
+            $permission[1] = true;
+            $permission[2] = true;
+            $permission[3] = true;
+            $permission[4] = false;
+            $permissions[] = $permission;
+        }
+
+        $preControlStep = $this->em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => JournalWorkflowSteps::PRE_CONTROL_ORDER,
+        ]);
+        foreach($preControlStep->getGrantedUsers() as $user){
+            if($this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($workflow->getJournal()))){
+                continue;
+            }
+            $permission[0] = (string)$user;
+            $permission[1] = true;
+            $permission[2] = false;
+            $permission[3] = false;
+            $permission[4] = false;
+            $permissions[] = $permission;
+        }
+
+        $reviewStep = $this->em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => JournalWorkflowSteps::REVIEW_ORDER,
+        ]);
+        foreach($reviewStep->getGrantedUsers() as $user){
+            if($this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($workflow->getJournal()))){
+                continue;
+            }
+            $permission[0] = (string)$user;
+            $permission[1] = false;
+            $permission[2] = true;
+            $permission[3] = false;
+            $permission[4] = false;
+            $permissions[] = $permission;
+        }
+
+        $arrangementStep = $this->em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => JournalWorkflowSteps::ARRANGEMENT_ORDER,
+        ]);
+        foreach($arrangementStep->getGrantedUsers() as $user){
+            if($this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($workflow->getJournal()))){
+                continue;
+            }
+            $permission[0] = (string)$user;
+            $permission[1] = false;
+            $permission[2] = false;
+            $permission[3] = true;
+            $permission[4] = false;
+            $permissions[] = $permission;
+        }
+
+        return $permissions;
     }
 
     /**

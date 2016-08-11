@@ -30,6 +30,7 @@ services:
       - "@ojs.journal_service"
       - "@security.token_storage"
       - "@dp.wf_logger_service"
+      - "@translator"
       - "@twig"
 
   dp.workflow_permission_service:

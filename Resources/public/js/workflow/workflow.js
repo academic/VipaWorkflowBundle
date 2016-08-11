@@ -110,6 +110,15 @@ $(document).ready(function() {
                 })
             });
         },
+        showPermissionTable: function ($this) {
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dergipark_workflow_permission_table', {
+                    journalId: journalId,
+                    workflowId: workflowId
+                })
+            });
+        },
         getActionType: function($this){
             return $($this).attr('data-action-type');
         },

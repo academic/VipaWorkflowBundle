@@ -16,6 +16,13 @@ dergipark_workflow_history_log:
   options:
       expose: true
 
+dergipark_workflow_permission_table:
+  path:     /{workflowId}/permission/table
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:permissionTable" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
 dergipark_workflow_article_detail:
   path:     /{workflowId}/article/detail
   defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:articleDetail" }
