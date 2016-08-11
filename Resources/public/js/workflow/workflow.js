@@ -37,6 +37,32 @@ $(document).ready(function() {
                 });
             });
         },
+        setupWorkflowGrantedUsers: function($this) {
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dergipark_article_workflow_granted_users_setup', {
+                    journalId: journalId,
+                    workflowId: workflowId
+                }),
+                autoSize: false,
+                width: '600px',
+                maxWidth: '600px',
+                height: 'auto'
+            });
+        },
+        updateWorkflowGrantedUsers: function() {
+            var articleWfGrantedUsersForm = $('form[name="article_wf_granted_users"]');
+            $.post( articleWfGrantedUsersForm.attr('action'), articleWfGrantedUsersForm.serialize(), function( data ) {
+                $.fancybox({
+                    content: data,
+                    type: 'inline',
+                    autoSize: false,
+                    width: '600px',
+                    maxWidth: '600px',
+                    height: 'auto'
+                });
+            });
+        },
         showStepDetail: function($this, $stepOrder) {
             $.fancybox({
                 type: 'inline',

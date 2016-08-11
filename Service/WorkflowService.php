@@ -320,7 +320,7 @@ class WorkflowService
         $permissions[] = $permission;
 
         foreach($workflow->getGrantedUsers() as $user){
-            $permission[0] = (string)$user;
+            $permission[0] = $user->getUsername().'['.$this->translator->trans('article.editor').']';
             $permission[1] = true;
             $permission[2] = true;
             $permission[3] = true;
@@ -336,7 +336,7 @@ class WorkflowService
             if($this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($workflow->getJournal()))){
                 continue;
             }
-            $permission[0] = (string)$user;
+            $permission[0] = $user->getUsername();
             $permission[1] = true;
             $permission[2] = false;
             $permission[3] = false;
@@ -352,7 +352,7 @@ class WorkflowService
             if($this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($workflow->getJournal()))){
                 continue;
             }
-            $permission[0] = (string)$user;
+            $permission[0] = $user->getUsername();
             $permission[1] = false;
             $permission[2] = true;
             $permission[3] = false;
@@ -368,7 +368,7 @@ class WorkflowService
             if($this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($workflow->getJournal()))){
                 continue;
             }
-            $permission[0] = (string)$user;
+            $permission[0] = $user->getUsername();
             $permission[1] = false;
             $permission[2] = false;
             $permission[3] = true;

@@ -23,6 +23,13 @@ dergipark_workflow_permission_table:
   options:
       expose: true
 
+dergipark_article_workflow_granted_users_setup:
+  path:     /{workflowId}/granted/users/setup
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:grantedUsersSetup" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
 dergipark_workflow_article_detail:
   path:     /{workflowId}/article/detail
   defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:articleDetail" }

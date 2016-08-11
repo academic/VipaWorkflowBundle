@@ -4,9 +4,11 @@ namespace Dergipark\WorkflowBundle\Controller;
 
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Dergipark\WorkflowBundle\Form\Type\ArticleWfGrantedUsersType;
 use Dergipark\WorkflowBundle\Params\StepStatus;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\JournalBundle\Entity\Journal;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -107,5 +109,42 @@ class ArticleWorkflowController extends Controller
         }
 
         return $workflowService->getArticleDetail($workflow);
+    }
+
+    /**
+     * @param Request $request
+     * @param $workflowId
+     * @return Response
+     */
+    public function grantedUsersSetupAction(Request $request, $workflowId)
+    {
+        $permissionService = $this->get('dp.workflow_permission_service');
+        //#permissioncheck
+        if(!$permissionService->isHaveEditorRole()){
+            throw new AccessDeniedException;
+        }
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $this->throw404IfNotFound($journal);
+        $em = $this->getDoctrine()->getManager();
+
+        $workflow = $em->getRepository(ArticleWorkflow::class)->find($workflowId);
+
+        $form = $this->createForm(new ArticleWfGrantedUsersType(), $workflow, [
+            'action' => $this->generateUrl('dergipark_article_workflow_granted_users_setup', [
+                'journalId' => $journal->getId(),
+                'workflowId' => $workflowId,
+            ])
+        ]);
+        $form->handleRequest($request);
+
+        if($request->getMethod() == 'POST' && $form->isValid()){
+            $em->persist($workflow);
+            $em->flush();
+            $this->successFlashBag('successful.update');
+        }
+
+        return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:_article_workflow_granted_users_setup.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
