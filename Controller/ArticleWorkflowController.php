@@ -138,6 +138,9 @@ class ArticleWorkflowController extends Controller
         $form->handleRequest($request);
 
         if($request->getMethod() == 'POST' && $form->isValid()){
+            foreach($workflow->getGrantedUsers() as $grantedUser){
+                $workflow->addRelatedUser($grantedUser);
+            }
             $em->persist($workflow);
             $em->flush();
             $this->successFlashBag('successful.update');
