@@ -2,30 +2,30 @@
 
 namespace Dergipark\WorkflowBundle\Service;
 
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
-use Dergipark\WorkflowBundle\Entity\DialogPost;
-use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
-use Dergipark\WorkflowBundle\Entity\StepDialog;
-use Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog;
-use Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus;
-use Dergipark\WorkflowBundle\Params\DialogPostTypes;
-use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
-use Dergipark\WorkflowBundle\Params\StepActionTypes;
-use Dergipark\WorkflowBundle\Params\StepDialogStatus;
-use Dergipark\WorkflowBundle\Params\StepStatus;
-use Doctrine\ORM\EntityManager;
-use Ojs\CoreBundle\Params\ArticleStatuses;
-use Ojs\JournalBundle\Entity\ArticleFile;
-use Ojs\JournalBundle\Entity\Journal;
-use Ojs\JournalBundle\Service\JournalService;
 use Ojs\UserBundle\Entity\User;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Doctrine\ORM\EntityManager;
 use Ojs\JournalBundle\Entity\Article;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Ojs\JournalBundle\Entity\Journal;
+use Ojs\JournalBundle\Entity\ArticleFile;
+use Ojs\CoreBundle\Params\ArticleStatuses;
+use Ojs\JournalBundle\Service\JournalService;
+use Symfony\Component\HttpFoundation\Response;
+use Dergipark\WorkflowBundle\Entity\StepDialog;
+use Dergipark\WorkflowBundle\Entity\DialogPost;
+use Dergipark\WorkflowBundle\Params\StepStatus;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Dergipark\WorkflowBundle\Params\StepActionTypes;
+use Dergipark\WorkflowBundle\Params\DialogPostTypes;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
+use Dergipark\WorkflowBundle\Params\StepDialogStatus;
 use Symfony\Component\Translation\TranslatorInterface;
+use Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
+use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
+use Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class WorkflowService
 {
@@ -61,12 +61,13 @@ class WorkflowService
 
     /**
      * WorkflowService constructor.
-     * @param EntityManager $em
-     * @param JournalService $journalService
+     *
+     * @param EntityManager         $em
+     * @param JournalService        $journalService
      * @param TokenStorageInterface $tokenStorage
      * @param WorkflowLoggerService $wfLogger
-     * @param TranslatorInterface $translator
-     * @param \Twig_Environment $twig
+     * @param TranslatorInterface   $translator
+     * @param \Twig_Environment     $twig
      */
     public function __construct(
         EntityManager $em,
@@ -86,6 +87,7 @@ class WorkflowService
 
     /**
      * @param Article $article
+     *
      * @return ArticleWorkflow
      */
     public function prepareArticleWorkflow(Article $article)
@@ -98,19 +100,19 @@ class WorkflowService
             ->setStartDate(new \DateTime())
             ;
 
-        foreach($this->currentJournalWorkflowSteps() as $step){
+        foreach ($this->currentJournalWorkflowSteps() as $step) {
             $articleWorkflowStep = new ArticleWorkflowStep();
             $articleWorkflowStep
                 ->setOrder($step->getOrder())
                 ->setGrantedUsers($step->getGrantedUsers())
                 ->setArticleWorkflow($articleWorkflow)
                 ;
-            foreach($step->getGrantedUsers() as $stepUser){
+            foreach ($step->getGrantedUsers() as $stepUser) {
                 $articleWorkflow->addRelatedUser($stepUser);
             }
-            if($step->getOrder() == 1){
+            if ($step->getOrder() == 1) {
                 $articleWorkflow->setCurrentStep($articleWorkflowStep);
-            }else{
+            } else {
                 $articleWorkflowStep->setStatus(StepStatus::NOT_OPENED);
             }
             $this->em->persist($articleWorkflowStep);
@@ -145,11 +147,11 @@ class WorkflowService
     {
         $wfContainers = [];
         $workflows = $this->getUserRelatedActiveWorkflows();
-        foreach($workflows as $workflow){
+        foreach ($workflows as $workflow) {
             $wfContainer = [];
             $wfContainer['workflow'] = $workflow;
             $wfContainer['article'] = $workflow->getArticle();
-            if(!$this->hasReviewerRoleOnWorkflow($workflow)){
+            if (!$this->hasReviewerRoleOnWorkflow($workflow)) {
                 $wfContainer['author'] = $workflow->getArticle()->getSubmitterUser();
             }
             $wfContainer['active_dialog'] = $this->getUserBasedDialogCount($workflow, StepDialogStatus::ACTIVE);
@@ -163,6 +165,7 @@ class WorkflowService
     /**
      * @param ArticleWorkflow $workflow
      * @param $status
+     *
      * @return int
      */
     private function getUserBasedDialogCount(ArticleWorkflow $workflow, $status)
@@ -171,7 +174,7 @@ class WorkflowService
         $fetchAll = false;
         $userJournalRoles = $this->getUser()->getJournalRolesBag($journal);
         $specialRoles = ['ROLE_EDITOR', 'ROLE_CO_EDITOR'];
-        if(count(array_intersect($specialRoles, $userJournalRoles)) > 0 || $this->getUser()->isAdmin()){
+        if (count(array_intersect($specialRoles, $userJournalRoles)) > 0 || $this->getUser()->isAdmin()) {
             $fetchAll = true;
         }
         $dialogRepo = $this->em->getRepository(StepDialog::class);
@@ -183,7 +186,7 @@ class WorkflowService
             ->andWhere('dialogStep.articleWorkflow = :workflow')
             ->setParameter('workflow', $workflow)
         ;
-        if(!$fetchAll){
+        if (!$fetchAll) {
             $dialogQuery
                 ->andWhere(':user MEMBER OF stepDialog.users OR stepDialog.createdDialogBy = :user')
                 ->setParameter('user', $this->getUser())
@@ -210,22 +213,23 @@ class WorkflowService
             ->getResult()
         ;
 
-        return count($dialogs)>0;
+        return count($dialogs) > 0;
     }
 
     /**
-     * @param User|null $user
+     * @param User|null    $user
      * @param Journal|null $journal
+     *
      * @return array|ArticleWorkflow[]
      */
     public function getUserRelatedActiveWorkflows(User $user = null, Journal $journal = null)
     {
-        if(!$user){
+        if (!$user) {
             $user = $this->getUser();
         }
-        if(!$journal){
+        if (!$journal) {
             $journal = $this->journalService->getSelectedJournal();
-            if(!$journal){
+            if (!$journal) {
                 throw new \LogicException('i can not find current journal');
             }
         }
@@ -233,16 +237,16 @@ class WorkflowService
         $fetchAll = false;
         $userJournalRoles = $user->getJournalRolesBag($journal);
         $specialRoles = ['ROLE_EDITOR', 'ROLE_CO_EDITOR'];
-        if(count(array_intersect($specialRoles, $userJournalRoles)) > 0 || $user->isAdmin()){
+        if (count(array_intersect($specialRoles, $userJournalRoles)) > 0 || $user->isAdmin()) {
             $fetchAll = true;
         }
 
-        if($fetchAll){
+        if ($fetchAll) {
             $userRelatedWorkflows = $this->em->getRepository(ArticleWorkflow::class)->findBy([
-                'status'    => ArticleWorkflowStatus::ACTIVE,
-                'journal'   => $journal,
+                'status' => ArticleWorkflowStatus::ACTIVE,
+                'journal' => $journal,
             ], ['id' => 'DESC']);
-        }else{
+        } else {
             $userRelatedWorkflows = $this->em->getRepository(ArticleWorkflow::class)
                 ->createQueryBuilder('aw')
                 ->andWhere('aw.status = '.ArticleWorkflowStatus::ACTIVE)
@@ -260,6 +264,7 @@ class WorkflowService
     /**
      * @param $articleWorkflowId
      * @param int $status
+     *
      * @return ArticleWorkflow
      */
     public function getArticleWorkflow($articleWorkflowId, $status = ArticleWorkflowStatus::ACTIVE)
@@ -273,6 +278,7 @@ class WorkflowService
 
     /**
      * @param ArticleWorkflow $articleWorkflow
+     *
      * @return array
      */
     public function getWorkflowTimeline(ArticleWorkflow $articleWorkflow)
@@ -290,6 +296,7 @@ class WorkflowService
 
     /**
      * @param ArticleWorkflow $articleWorkflow
+     *
      * @return array
      */
     public function getWorkflowLogs(ArticleWorkflow $articleWorkflow)
@@ -301,6 +308,7 @@ class WorkflowService
 
     /**
      * @param ArticleWorkflow $workflow
+     *
      * @return array
      */
     public function getPermissionsContainer(ArticleWorkflow $workflow)
@@ -319,7 +327,7 @@ class WorkflowService
         $permission[4] = true;
         $permissions[] = $permission;
 
-        foreach($workflow->getGrantedUsers() as $user){
+        foreach ($workflow->getGrantedUsers() as $user) {
             $permission[0] = $user->getUsername().'['.$this->translator->trans('article.editor').']';
             $permission[1] = true;
             $permission[2] = true;
@@ -332,8 +340,8 @@ class WorkflowService
             'articleWorkflow' => $workflow,
             'order' => JournalWorkflowSteps::PRE_CONTROL_ORDER,
         ]);
-        foreach($preControlStep->getGrantedUsers() as $user){
-            if($this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($workflow->getJournal()))){
+        foreach ($preControlStep->getGrantedUsers() as $user) {
+            if ($this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($workflow->getJournal()))) {
                 continue;
             }
             $permission[0] = $user->getUsername();
@@ -348,8 +356,8 @@ class WorkflowService
             'articleWorkflow' => $workflow,
             'order' => JournalWorkflowSteps::REVIEW_ORDER,
         ]);
-        foreach($reviewStep->getGrantedUsers() as $user){
-            if($this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($workflow->getJournal()))){
+        foreach ($reviewStep->getGrantedUsers() as $user) {
+            if ($this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($workflow->getJournal()))) {
                 continue;
             }
             $permission[0] = $user->getUsername();
@@ -364,8 +372,8 @@ class WorkflowService
             'articleWorkflow' => $workflow,
             'order' => JournalWorkflowSteps::ARRANGEMENT_ORDER,
         ]);
-        foreach($arrangementStep->getGrantedUsers() as $user){
-            if($this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($workflow->getJournal()))){
+        foreach ($arrangementStep->getGrantedUsers() as $user) {
+            if ($this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($workflow->getJournal()))) {
                 continue;
             }
             $permission[0] = $user->getUsername();
@@ -381,6 +389,7 @@ class WorkflowService
 
     /**
      * @param $block
+     *
      * @return Response
      */
     public function getMessageBlock($block, $params = [])
@@ -393,6 +402,7 @@ class WorkflowService
     /**
      * @param $block
      * @param array $params
+     *
      * @return Response
      */
     public function getFormBlock($block, $params = [])
@@ -404,7 +414,8 @@ class WorkflowService
 
     /**
      * @param ArticleWorkflow $workflow
-     * @param bool $flush
+     * @param bool            $flush
+     *
      * @return bool
      */
     public function declineSubmission(ArticleWorkflow $workflow, $flush = false)
@@ -415,7 +426,7 @@ class WorkflowService
             'status' => StepStatus::ACTIVE,
         ]);
 
-        foreach($steps as $step){
+        foreach ($steps as $step) {
             $step->setStatus(StepStatus::CLOSED);
             //close all dialogs
             $this->closeStepDialogs($step);
@@ -426,7 +437,7 @@ class WorkflowService
         $this->em->persist($workflow);
         $this->em->persist($article);
 
-        if($flush){
+        if ($flush) {
             $this->em->flush();
         }
 
@@ -435,7 +446,8 @@ class WorkflowService
 
     /**
      * @param ArticleWorkflow $workflow
-     * @param bool $flush
+     * @param bool            $flush
+     *
      * @return bool
      */
     public function acceptSubmission(ArticleWorkflow $workflow, $flush = false)
@@ -446,7 +458,7 @@ class WorkflowService
             'status' => StepStatus::ACTIVE,
         ]);
 
-        foreach($steps as $step){
+        foreach ($steps as $step) {
             $step->setStatus(StepStatus::CLOSED);
             //close all step dialogs
             $this->closeStepDialogs($step);
@@ -458,7 +470,7 @@ class WorkflowService
         $this->em->persist($workflow);
         $this->em->persist($article);
 
-        if($flush){
+        if ($flush) {
             $this->em->flush();
         }
 
@@ -467,14 +479,16 @@ class WorkflowService
 
     /**
      * @param ArticleWorkflow $workflow
-     * @param bool $flush
+     * @param bool            $flush
+     *
      * @return JsonResponse
+     *
      * @throws AccessDeniedException
      */
     public function gotoReview(ArticleWorkflow $workflow, $flush = false)
     {
         $currentStep = $workflow->getCurrentStep();
-        if($currentStep->getOrder() !== JournalWorkflowSteps::PRE_CONTROL_ORDER){
+        if ($currentStep->getOrder() !== JournalWorkflowSteps::PRE_CONTROL_ORDER) {
             throw new \LogicException('current step must be pre control');
         }
         // deactive current step
@@ -493,7 +507,7 @@ class WorkflowService
         $reviewStep->setStatus(StepStatus::ACTIVE);
         $this->em->persist($reviewStep);
 
-        if($flush){
+        if ($flush) {
             $this->flush();
         }
 
@@ -502,14 +516,16 @@ class WorkflowService
 
     /**
      * @param ArticleWorkflow $workflow
-     * @param bool $flush
+     * @param bool            $flush
+     *
      * @return JsonResponse
+     *
      * @throws AccessDeniedException
      */
     public function gotoArrangement(ArticleWorkflow $workflow, $flush = false)
     {
         $currentStep = $workflow->getCurrentStep();
-        if($currentStep->getOrder() !== JournalWorkflowSteps::REVIEW_ORDER){
+        if ($currentStep->getOrder() !== JournalWorkflowSteps::REVIEW_ORDER) {
             throw new \LogicException('current step must be aggrangement');
         }
         // deactive current step
@@ -528,7 +544,7 @@ class WorkflowService
         $arrangementStep->setStatus(StepStatus::ACTIVE);
         $this->em->persist($arrangementStep);
 
-        if($flush){
+        if ($flush) {
             $this->flush();
         }
 
@@ -537,15 +553,17 @@ class WorkflowService
 
     /**
      * @param ArticleWorkflow $workflow
-     * @param bool $flush
+     * @param bool            $flush
+     *
      * @return JsonResponse
+     *
      * @throws AccessDeniedException
      */
     public function finishWorkflow(ArticleWorkflow $workflow, $flush = false)
     {
         $article = $workflow->getArticle();
         $currentStep = $workflow->getCurrentStep();
-        if($currentStep->getOrder() !== JournalWorkflowSteps::ARRANGEMENT_ORDER){
+        if ($currentStep->getOrder() !== JournalWorkflowSteps::ARRANGEMENT_ORDER) {
             throw new \LogicException('current step must be arrangement');
         }
         // deactive current step
@@ -562,7 +580,7 @@ class WorkflowService
         $article->setStatus(ArticleStatuses::STATUS_PUBLISHED);
         $this->em->persist($article);
 
-        if($flush){
+        if ($flush) {
             $this->flush();
         }
 
@@ -571,6 +589,7 @@ class WorkflowService
 
     /**
      * @param ArticleWorkflow $workflow
+     *
      * @return array
      */
     public function getUserRelatedFiles(ArticleWorkflow $workflow)
@@ -600,13 +619,14 @@ class WorkflowService
 
     /**
      * @param array $files
+     *
      * @return array
      */
     private function normalizeBrowseFiles($files = array())
     {
         $normalizeFile = [];
-        foreach($files as $file){
-            if($file instanceof ArticleFile){
+        foreach ($files as $file) {
+            if ($file instanceof ArticleFile) {
                 $normalizeFile[] = [
                     'originalname' => $file->getFile(),
                     'filename' => $file->getFile(),
@@ -619,8 +639,9 @@ class WorkflowService
     }
 
     /**
-     * @param ArticleWorkflow $workflow
+     * @param ArticleWorkflow     $workflow
      * @param ArticleWorkflowStep $step
+     *
      * @return array|StepDialog[]
      */
     public function getUserRelatedStepDialogs(ArticleWorkflow $workflow, ArticleWorkflowStep $step)
@@ -630,17 +651,17 @@ class WorkflowService
         $dialogRepo = $this->em->getRepository(StepDialog::class);
         $fetchAll = false;
         //if user have admin role or related roles
-        if($user->isAdmin()
-            || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
+        if ($user->isAdmin()
+            || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))) {
             $fetchAll = true;
         }
         //if user in step granted users
-        if($step->grantedUsers->contains($user)){
+        if ($step->grantedUsers->contains($user)) {
             $fetchAll = true;
         }
-        if($fetchAll){
+        if ($fetchAll) {
             $dialogs = $dialogRepo->findBy(['step' => $step]);
-        }else{
+        } else {
             $dialogs = $dialogRepo
                 ->createQueryBuilder('sd')
                 ->andWhere(':user MEMBER OF sd.users')
@@ -658,11 +679,12 @@ class WorkflowService
     /**
      * @param array $searchRoles
      * @param array $roleBag
+     *
      * @return bool
      */
     public function haveLeastRole($searchRoles = [], $roleBag = [])
     {
-        if(count(array_intersect($searchRoles, $roleBag)) > 0){
+        if (count(array_intersect($searchRoles, $roleBag)) > 0) {
             return true;
         }
 
@@ -671,6 +693,7 @@ class WorkflowService
 
     /**
      * @param ArticleWorkflow $workflow
+     *
      * @return Response
      */
     public function getArticleDetail(ArticleWorkflow $workflow)
@@ -686,6 +709,7 @@ class WorkflowService
 
     /**
      * @param ArticleWorkflowStep $step
+     *
      * @return bool
      */
     public function closeStepDialogs(ArticleWorkflowStep $step)
@@ -693,7 +717,7 @@ class WorkflowService
         $dialogs = $this->em->getRepository(StepDialog::class)->findBy([
             'step' => $step,
         ]);
-        foreach($dialogs as $dialog){
+        foreach ($dialogs as $dialog) {
             $dialog->setStatus(StepDialogStatus::CLOSED);
             $this->em->persist($dialog);
         }
@@ -707,9 +731,10 @@ class WorkflowService
     public function getUser()
     {
         $token = $this->tokenStorage->getToken();
-        if(!$token){
+        if (!$token) {
             throw new \LogicException('i can not find current user token :/');
         }
+
         return $token->getUser();
     }
 }
