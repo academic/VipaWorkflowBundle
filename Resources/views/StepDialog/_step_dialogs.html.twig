@@ -28,7 +28,7 @@
                                         {{ 'close.dialog.action'|trans }}
                                     </a>
                                 </li>
-                                {% if dialog.dialogType == actionType('ASSIGN_REVIEWER') %}
+                                {% if dialog.dialogType == actionType('ASSIGN_REVIEWER') and permissionCheck().isGrantedForStep(dialog.step) %}
                                     <li role="separator" class="divider"></li>
                                     <li>
                                         <a onclick="OjsWorkflow.removeDialog({{ dialog.id }})">
