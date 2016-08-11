@@ -5,22 +5,33 @@ namespace Dergipark\WorkflowBundle\Service;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
+use Ojs\JournalBundle\Service\JournalService;
+use Ojs\UserBundle\Entity\User;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class WorkflowPermissionService
 {
     /**
-     * @var WorkflowService
+     * @var JournalService
      */
-    private $workflowService;
+    private $journalService;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
 
     /**
      * WorkflowPermissionService constructor.
-     * @param WorkflowService $workflowService
+     * @param JournalService $journalService
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
-        WorkflowService $workflowService
+        JournalService $journalService,
+        TokenStorageInterface $tokenStorage
     ) {
-        $this->workflowService  = $workflowService;
+        $this->journalService   = $journalService;
+        $this->tokenStorage     = $tokenStorage;
     }
 
     /**
@@ -28,8 +39,8 @@ class WorkflowPermissionService
      */
     public function isHaveEditorRole()
     {
-        $user = $this->workflowService->getUser();
-        $journal = $this->workflowService->journalService->getSelectedJournal();
+        $user = $this->getUser();
+        $journal = $this->journalService->getSelectedJournal();
 
         if($user->isAdmin()
             || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
@@ -45,8 +56,8 @@ class WorkflowPermissionService
      */
     public function isInWorkflowRelatedUsers(ArticleWorkflow $workflow)
     {
-        $user = $this->workflowService->getUser();
-        $journal = $this->workflowService->journalService->getSelectedJournal();
+        $user = $this->getUser();
+        $journal = $this->journalService->getSelectedJournal();
 
         if($user->isAdmin()
             || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
@@ -65,8 +76,8 @@ class WorkflowPermissionService
      */
     public function isGrantedForStep(ArticleWorkflowStep $step)
     {
-        $user = $this->workflowService->getUser();
-        $journal = $this->workflowService->journalService->getSelectedJournal();
+        $user = $this->getUser();
+        $journal = $this->journalService->getSelectedJournal();
 
         if($user->isAdmin()
             || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
@@ -88,8 +99,8 @@ class WorkflowPermissionService
      */
     public function isGrantedForDialogPost(StepDialog $dialog)
     {
-        $user = $this->workflowService->getUser();
-        $journal = $this->workflowService->journalService->getSelectedJournal();
+        $user = $this->getUser();
+        $journal = $this->journalService->getSelectedJournal();
 
         if($user->isAdmin()
             || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
@@ -120,5 +131,17 @@ class WorkflowPermissionService
         }
 
         return false;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        $token = $this->tokenStorage->getToken();
+        if(!$token){
+            throw new \LogicException('i can not find current user token :/');
+        }
+        return $token->getUser();
     }
 }

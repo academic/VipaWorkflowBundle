@@ -36,7 +36,8 @@ services:
   dp.workflow_permission_service:
     class: Dergipark\WorkflowBundle\Service\WorkflowPermissionService
     arguments:
-      - "@dp.workflow_service"
+      - "@ojs.journal_service"
+      - "@security.token_storage"
 
   dp.wf_logger_service:
     class: Dergipark\WorkflowBundle\Service\WorkflowLoggerService
