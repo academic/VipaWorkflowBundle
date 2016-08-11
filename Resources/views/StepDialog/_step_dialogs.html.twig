@@ -28,7 +28,7 @@
                                         {{ 'close.dialog.action'|trans }}
                                     </a>
                                 </li>
-                            {% elseif dialog.status == dialogStatus('CLOSED') %}
+                            {% elseif dialog.status == dialogStatus('CLOSED') and dialog.step.status == stepStatus('ACTIVE') %}
                                 {% if permissionCheck().isGrantedForStep(dialog.step) %}
                                     <li>
                                         <a onclick="OjsWorkflow.reopenDialog({{ dialog.id }})">
