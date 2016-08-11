@@ -95,14 +95,28 @@
                             <div class="input-group">
                                 <input type="text" class="form-control input-sm dialog-comment-input" placeholder="{{ 'type.comment.here'|trans }}" />
                                 <span class="input-group-btn">
-                                    <button class="btn btn-warning btn-sm" onclick="OjsWorkflow.sendComment(this, {{ dialog.id }})">
+                                    <button class="btn btn-info btn-sm" onclick="OjsWorkflow.sendComment(this, {{ dialog.id }})">
                                         <i class="fa fa-comment"></i>
                                         {{ 'add.comment'|trans }}
                                     </button>
-                                    <button class="btn btn-default btn-sm" onclick="OjsWorkflow.browseFiles(this, {{ dialog.id }})">
-                                        <i class="fa fa-file-archive-o"></i>
-                                        {{ 'workflow.send.file'|trans }}
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
                                     </button>
+                                    <ul class="dropdown-menu">
+                                        <li onclick="OjsWorkflow.browseFiles(this, {{ dialog.id }})">
+                                            <a>
+                                                <i class="fa fa-file-archive-o"></i>
+                                                {{ 'workflow.send.file'|trans }}
+                                            </a>
+                                        </li>
+                                        <li onclick="OjsWorkflow.sendReviewForm(this, {{ dialog.id }})">
+                                            <a>
+                                                <i class="fa fa-comments-o"></i>
+                                                {{ 'workflow.send.review.form'|trans }}
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </span>
                             </div>
                         </div>
