@@ -676,8 +676,9 @@ class WorkflowService
     public function getArticleDetail(ArticleWorkflow $workflow)
     {
         $article = $workflow->getArticle();
-        $template = $this->twig->render('DergiparkWorkflowBundle:ArticleWorkflow:_article_detail.html.twig', [
+        $template = $this->twig->render('DergiparkWorkflowBundle:ArticleWorkflow/article_detail:_article_detail.html.twig', [
             'article' => $article,
+            'workflow' => $workflow,
         ]);
 
         return new Response($template);

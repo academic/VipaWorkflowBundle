@@ -22,7 +22,7 @@
                 {% endif %}
             </div>
         {% endfor %}
-        {% if article.articleSubmissionFiles|length > 0 %}
+        {% if article.articleSubmissionFiles|length > 0 and permissionCheck().isGrantedForStep(workflow.currentStep) %}
             <div class="well">
                 <h5>{{ 'title.submission_files'|trans }}</h5>
                 <ul>
@@ -34,19 +34,7 @@
                 </ul>
             </div>
         {% endif %}
-        {% if article.articleSubmissionFiles|length > 0 %}
-            <div class="well">
-                <h5>{{ 'title.submission_files'|trans }}</h5>
-                <ul>
-                    {% for submissionFile in article.articleSubmissionFiles %}
-                        <li>
-                            <a href="{{ asset('uploads/submissionfiles/'~submissionFile.file) }}" target="_blank"> {{ submissionFile.title }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-        {% if article.articleFiles|length > 0 %}
+        {% if article.articleFiles|length > 0 and permissionCheck().isGrantedForStep(workflow.currentStep) %}
             <div class="well">
                 <h5>{{ 'title.article_files'|trans }}</h5>
                 <ul>
@@ -63,7 +51,6 @@
                 {{ 'title.article_show_and_edit'|trans }}
             </a>
         {% endif %}
-
     </div>
     <div class="clearfix">
     </div>
