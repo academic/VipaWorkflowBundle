@@ -72,6 +72,9 @@ class WorkflowPermissionService
             || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
             return true;
         }
+        if($step->getArticleWorkflow()->getGrantedUsers()->contains($user)){
+            return true;
+        }
         if($step->grantedUsers->contains($user)){
             return true;
         }
@@ -90,6 +93,9 @@ class WorkflowPermissionService
 
         if($user->isAdmin()
             || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
+            return true;
+        }
+        if($dialog->getStep()->getArticleWorkflow()->getGrantedUsers()->contains($user)){
             return true;
         }
         if($dialog->getStep()->grantedUsers->contains($user)){
