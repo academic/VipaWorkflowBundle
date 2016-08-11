@@ -550,8 +550,15 @@ class WorkflowService
         }
         // deactive current step
         $currentStep->setStatus(StepStatus::CLOSED);
+        //close step dialogs
         $this->closeStepDialogs($currentStep);
         $this->em->persist($currentStep);
+
+        //close workflow
+        $workflow->setStatus(ArticleWorkflowStatus::HISTORY);
+        $this->em->persist($workflow);
+
+        //publish article
         $article->setStatus(ArticleStatuses::STATUS_PUBLISHED);
         $this->em->persist($article);
 
