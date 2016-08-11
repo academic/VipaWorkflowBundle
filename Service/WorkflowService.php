@@ -2,6 +2,7 @@
 
 namespace Dergipark\WorkflowBundle\Service;
 
+use Ojs\JournalBundle\Entity\ArticleSubmissionFile;
 use Ojs\UserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Ojs\JournalBundle\Entity\Article;
@@ -50,6 +51,11 @@ class WorkflowService
     public $wfLogger;
 
     /**
+     * @var WorkflowPermissionService
+     */
+    public $wfPermissionCheck;
+
+    /**
      * @var \Twig_Environment
      */
     public $twig;
@@ -62,27 +68,30 @@ class WorkflowService
     /**
      * WorkflowService constructor.
      *
-     * @param EntityManager         $em
-     * @param JournalService        $journalService
-     * @param TokenStorageInterface $tokenStorage
-     * @param WorkflowLoggerService $wfLogger
-     * @param TranslatorInterface   $translator
-     * @param \Twig_Environment     $twig
+     * @param EntityManager             $em
+     * @param JournalService            $journalService
+     * @param TokenStorageInterface     $tokenStorage
+     * @param WorkflowLoggerService     $wfLogger
+     * @param WorkflowPermissionService $wfPermissionCheck
+     * @param TranslatorInterface       $translator
+     * @param \Twig_Environment         $twig
      */
     public function __construct(
         EntityManager $em,
         JournalService $journalService,
         TokenStorageInterface $tokenStorage,
         WorkflowLoggerService $wfLogger,
+        WorkflowPermissionService $wfPermissionCheck,
         TranslatorInterface $translator,
         \Twig_Environment $twig
     ) {
-        $this->em               = $em;
-        $this->journalService   = $journalService;
-        $this->tokenStorage     = $tokenStorage;
-        $this->wfLogger         = $wfLogger;
-        $this->twig             = $twig;
-        $this->translator       = $translator;
+        $this->em                   = $em;
+        $this->journalService       = $journalService;
+        $this->tokenStorage         = $tokenStorage;
+        $this->wfLogger             = $wfLogger;
+        $this->twig                 = $twig;
+        $this->wfPermissionCheck    = $wfPermissionCheck;
+        $this->translator           = $translator;
     }
 
     /**
@@ -594,11 +603,17 @@ class WorkflowService
      */
     public function getUserRelatedFiles(ArticleWorkflow $workflow)
     {
-        //collect article files
-        $articleFiles = $workflow->getArticle()->getArticleFiles()->toArray();
+        $collectFiles = [];
 
-        //collect article submission files
-        $articleSubmissionFiles = $workflow->getArticle()->getArticleSubmissionFiles()->toArray();
+        if($this->wfPermissionCheck->isGrantedForStep($workflow->getCurrentStep())){
+            //collect article files
+            $articleFiles = $workflow->getArticle()->getArticleFiles()->toArray();
+            $collectFiles = array_merge($collectFiles, $articleFiles);
+
+            //collect article submission files
+            $articleSubmissionFiles = $workflow->getArticle()->getArticleSubmissionFiles()->toArray();
+            $collectFiles = array_merge($collectFiles, $articleSubmissionFiles);
+        }
 
         //collect post files
         $workflowPostFiles = $this->em->getRepository(DialogPost::class)
@@ -609,10 +624,17 @@ class WorkflowService
             ->setParameter('articleWorkflow', $workflow)
             ->andWhere('dialogPost.type = :fileType')
             ->setParameter('fileType', DialogPostTypes::TYPE_FILE)
-            ->getQuery()
-            ->getResult();
-        $files = array_merge($articleFiles, $articleSubmissionFiles, $workflowPostFiles);
-        $files = $this->normalizeBrowseFiles($files);
+        ;
+        if(!$this->wfPermissionCheck->isGrantedForStep($workflow->getCurrentStep())){
+            $workflowPostFiles
+                ->andWhere(':user MEMBER OF stepDialog.users')
+                ->setParameter('user', $this->getUser())
+                ;
+        }
+        $workflowPostFiles = $workflowPostFiles->getQuery()->getResult();
+
+        $collectFiles = array_merge($collectFiles, $workflowPostFiles);
+        $files = $this->normalizeBrowseFiles($collectFiles);
 
         return $files;
     }
@@ -628,9 +650,23 @@ class WorkflowService
         foreach ($files as $file) {
             if ($file instanceof ArticleFile) {
                 $normalizeFile[] = [
-                    'originalname' => $file->getFile(),
+                    'originalname' => $file->getTitle(),
                     'filename' => $file->getFile(),
                     'filepath' => '/uploads/articlefiles/'.$file->getFile(),
+                ];
+            }
+            if ($file instanceof ArticleSubmissionFile) {
+                $normalizeFile[] = [
+                    'originalname' => $file->getTitle(),
+                    'filename' => $file->getFile(),
+                    'filepath' => '/uploads/submissionfiles/'.$file->getFile(),
+                ];
+            }
+            if ($file instanceof DialogPost) {
+                $normalizeFile[] = [
+                    'originalname' => $file->getFileOriginalName(),
+                    'filename' => $file->getFileName(),
+                    'filepath' => '/uploads/articlefiles/'.$file->getFileName(),
                 ];
             }
         }
