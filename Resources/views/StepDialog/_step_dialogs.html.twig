@@ -22,20 +22,26 @@
                                         {{ 'refresh.posts'|trans }}
                                     </a>
                                 </li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a onclick="OjsWorkflow.finishDialogAction({{ dialog.id }})">
+                                        {{ 'close.dialog.action'|trans }}
+                                    </a>
+                                </li>
+                            {% elseif dialog.status == dialogStatus('CLOSED') %}
+                                {% if permissionCheck().isGrantedForStep(dialog.step) %}
+                                    <li>
+                                        <a onclick="OjsWorkflow.reopenDialog({{ dialog.id }})">
+                                            {{ 'reopen.dialog'|trans }}
+                                        </a>
+                                    </li>
+                                {% endif %}
                             {% endif %}
                             <li>
                                 <a data-toggle="collapse" href="#collapse-panel-{{ dialog.id }}">
                                     {{ 'collapse.dialog'|trans }}
                                 </a>
                             </li>
-                            {% if dialog.status == dialogStatus('ACTIVE') %}
-                                <li role="separator" class="divider"></li>
-                                <li>
-                                    <a onclick="OjsWorkflow.finishAction({{ dialog.id }})">
-                                        {{ 'finish.action'|trans }}
-                                    </a>
-                                </li>
-                            {% endif %}
                         </ul>
                     </div>
                     <br>

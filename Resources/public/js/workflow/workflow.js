@@ -111,7 +111,7 @@ $(document).ready(function() {
                 $('#dialog-posts-'+$dialogId).html(data);
             });
         },
-        finishAction: function ($dialogId) {
+        finishDialogAction: function ($dialogId) {
             $.get(Routing.generate('dp_workflow_dialog_finish', {
                 journalId: journalId,
                 workflowId: workflowId,
@@ -123,6 +123,22 @@ $(document).ready(function() {
                     swal(
                         Translator.trans('successful'),
                         Translator.trans('successful.finished.action'), "success"
+                    );
+                }
+            });
+        },
+        reopenDialog: function ($dialogId) {
+            $.get(Routing.generate('dp_workflow_dialog_reopen', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder,
+                dialogId: $dialogId
+            }), function( data ) {
+                if(data.success == true){
+                    OjsWorkflow.loadDialogs();
+                    swal(
+                        Translator.trans('successful'),
+                        Translator.trans('successful.reopen.action'), "success"
                     );
                 }
             });

@@ -67,3 +67,10 @@ dp_workflow_dialog_finish:
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
+
+dp_workflow_dialog_reopen:
+  path:     /reopen-dialog/{dialogId}
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:reopenDialog" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
