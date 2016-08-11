@@ -9,7 +9,11 @@
             <div class="panel panel-{{ panelClass }} panel-dialog">
                 <div class="panel-heading">
                     <span class="glyphicon glyphicon-comment"></span>
-                    <b>{{ actionAlias(dialog.dialogType)~'.dialog.header'|trans }}</b>
+                    {% if dialog.dialogType == actionType('CREATE_ISSUE') %}
+                        <b>{{ dialog.title }}</b>
+                    {% else %}
+                        <b>{{ actionAlias(dialog.dialogType)~'.dialog.header'|trans }}</b>
+                    {% endif %}
                     <div class="btn-group pull-right">
                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
                             {{ 'select.action'|trans }}
