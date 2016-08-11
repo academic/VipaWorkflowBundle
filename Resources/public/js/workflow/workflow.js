@@ -143,6 +143,22 @@ $(document).ready(function() {
                 }
             });
         },
+        removeDialog: function ($dialogId) {
+            $.get(Routing.generate('dp_workflow_dialog_remove', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder,
+                dialogId: $dialogId
+            }), function( data ) {
+                if(data.success == true){
+                    OjsWorkflow.loadDialogs();
+                    swal(
+                        Translator.trans('successful'),
+                        Translator.trans('successful.remove.action'), "success"
+                    );
+                }
+            });
+        },
         showHistoryLog: function ($this) {
             $.fancybox({
                 type: 'ajax',

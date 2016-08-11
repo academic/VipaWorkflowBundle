@@ -510,6 +510,46 @@ class StepDialogController extends Controller
     }
 
     /**
+     * @param $workflowId
+     * @param $stepOrder
+     * @return JsonResponse
+     */
+    public function removeDialogAction($workflowId, $stepOrder, $dialogId)
+    {
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $this->throw404IfNotFound($journal);
+        $em = $this->getDoctrine()->getManager();
+        $permissionService = $this->get('dp.workflow_permission_service');
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
+        //fetch dialog
+        /** @var StepDialog $dialog */
+        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
+        $this->throw404IfNotFound($dialog);
+        //#permissioncheck
+        if(!$permissionService->isGrantedForDialogPost($dialog)){
+            throw new AccessDeniedException;
+        }
+        /**
+         * remove dialog
+         * and we can remove dialog users from workflow related users
+         * but maybe user have another dialog or role on workflow
+         * we can check this stitution but it will take much time
+         * we can do apply this logic some time later
+         */
+        $em->remove($dialog);
+
+        //log action
+        $wfLogger->log('remove.dialog_log', ['%by_user%' => $this->getUser()->getUsername()]);
+        $em->flush();
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
+    }
+
+    /**
      * @param FormInterface $form
      * @return FormInterface
      */

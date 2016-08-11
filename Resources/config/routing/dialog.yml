@@ -74,3 +74,10 @@ dp_workflow_dialog_reopen:
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
+
+dp_workflow_dialog_remove:
+  path:     /remove-dialog/{dialogId}
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:removeDialog" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
