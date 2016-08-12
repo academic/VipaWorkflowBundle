@@ -1,0 +1,12 @@
+dp_workflow_dialog_posts_browse_review_forms:
+  path:     /
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleReviewForm:reviewForms" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
+dp_workflow_dialog_posts_show_review_form:
+  path:     /show/{id}
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleReviewForm:showForm" }
+  options:
+      expose: true

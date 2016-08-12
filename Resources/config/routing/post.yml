@@ -26,9 +26,7 @@ dp_workflow_dialog_posts_new_file:
   options:
       expose: true
 
-dp_workflow_dialog_posts_browse_review_forms:
-  path:     /review-files
-  defaults: { _controller: "DergiparkWorkflowBundle:DialogPost:reviewForms" }
-  condition: "request.isXmlHttpRequest()"
-  options:
-      expose: true
+# dialog post review form related routing
+dp_workflow_dialog_post_review_form:
+    resource: "article_review_form.yml"
+    prefix:   /review-forms

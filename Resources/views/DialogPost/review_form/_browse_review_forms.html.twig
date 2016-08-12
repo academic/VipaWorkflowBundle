@@ -19,7 +19,13 @@
                 </th>
                 <th>{{ form.name  }}</th>
                 <th>
-                    <a href="#{{ form.id }}" target="_blank">
+                    <a href="{{ path('dp_workflow_dialog_posts_show_review_form', {
+                        journalId: form.step.articleWorkflow.journal.id,
+                        workflowId: form.step.articleWorkflow.id,
+                        stepOrder: form.step.order,
+                        dialogId: dialogId,
+                        id: form.id
+                    }) }}" target="_blank">
                         <i class="fa fa-external-link"></i>
                     </a>
                 </th>
