@@ -28,7 +28,9 @@
                     {{ reviewForm.content }}
                 </textarea>
             </div>
-            <div class="render-wrap well"></div>
+            <form id="form-render-wrap">
+                <div class="render-wrap well"></div>
+            </form>
         </div>
     </div>
 {% endblock %}
@@ -42,6 +44,12 @@
             $(template).formRender({
                 container: renderWrap
             });
+            var form = document.getElementById("form-render-wrap");
+            var elements = form.elements;
+            for (var i = 0, len = elements.length; i < len; ++i) {
+                elements[i].readOnly = true;
+                elements[i].disabled = true;
+            }
         });
     </script>
 {% endblock %}
