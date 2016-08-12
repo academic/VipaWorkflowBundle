@@ -2,6 +2,8 @@
 
 namespace Dergipark\WorkflowBundle\Service;
 
+use Dergipark\WorkflowBundle\Entity\JournalReviewForm;
+use Dergipark\WorkflowBundle\Entity\StepReviewForm;
 use Ojs\JournalBundle\Entity\ArticleSubmissionFile;
 use Ojs\UserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
@@ -102,34 +104,54 @@ class WorkflowService
     public function prepareArticleWorkflow(Article $article)
     {
         $user = $this->getUser();
+        //create new article workflow object
         $articleWorkflow = new ArticleWorkflow();
         $articleWorkflow
             ->setArticle($article)
             ->setJournal($this->journalService->getSelectedJournal())
             ->setStartDate(new \DateTime())
             ;
-
-        foreach ($this->currentJournalWorkflowSteps() as $step) {
+        //fetch each journal workflow step
+        foreach ($this->currentJournalWorkflowSteps() as $journalWorkflowStep) {
+            //clone journal workflow steps to article workflow
             $articleWorkflowStep = new ArticleWorkflowStep();
             $articleWorkflowStep
-                ->setOrder($step->getOrder())
-                ->setGrantedUsers($step->getGrantedUsers())
+                ->setOrder($journalWorkflowStep->getOrder())
+                ->setGrantedUsers($journalWorkflowStep->getGrantedUsers())
                 ->setArticleWorkflow($articleWorkflow)
                 ;
-            foreach ($step->getGrantedUsers() as $stepUser) {
+            //add each granted user to workflow related users
+            foreach ($journalWorkflowStep->getGrantedUsers() as $stepUser) {
                 $articleWorkflow->addRelatedUser($stepUser);
             }
-            if ($step->getOrder() == 1) {
+            //if current step order is pre control then set current step to this step
+            if ($journalWorkflowStep->getOrder() == JournalWorkflowSteps::PRE_CONTROL_ORDER) {
                 $articleWorkflow->setCurrentStep($articleWorkflowStep);
             } else {
+                //if not pre control then set step status as not opened
                 $articleWorkflowStep->setStatus(StepStatus::NOT_OPENED);
             }
             $this->em->persist($articleWorkflowStep);
+
+            $journalWorkflowStepReviewForms = $this->getJournalStepReviewForms($journalWorkflowStep, true);
+
+            //clone all journal workflow step review forms to article workflow step
+            foreach($journalWorkflowStepReviewForms as $journalReviewForm) {
+                $articleStepReviewForm = new StepReviewForm();
+                $articleStepReviewForm
+                    ->setContent($journalReviewForm->getContent())
+                    ->setName($journalReviewForm->getName())
+                    ->setStep($articleWorkflowStep)
+                    ;
+                $this->em->persist($articleStepReviewForm);
+            }
         }
+        //add submitter user to workflow related user too
         $articleWorkflow->addRelatedUser($article->getSubmitterUser());
 
         $this->em->persist($articleWorkflow);
 
+        //set submission article status as inreview
         $article->setStatus(ArticleStatuses::STATUS_INREVIEW);
 
         //log workflow events
@@ -150,6 +172,22 @@ class WorkflowService
     public function currentJournalWorkflowSteps()
     {
         return $this->em->getRepository(JournalWorkflowStep::class)->findAll();
+    }
+
+    /**
+     * @param JournalWorkflowStep $journalWorkflowStep
+     * @param bool $isActive
+     *
+     * @return array|JournalReviewForm[]
+     */
+    public function getJournalStepReviewForms(JournalWorkflowStep $journalWorkflowStep, $isActive = true)
+    {
+        $forms = $this->em->getRepository(JournalReviewForm::class)->findBy([
+            'step' => $journalWorkflowStep,
+            'active' => $isActive,
+        ]);
+
+        return $forms;
     }
 
     public function getUserRelatedActiveWorkflowsContainer()
