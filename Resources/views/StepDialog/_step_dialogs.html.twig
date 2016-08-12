@@ -94,12 +94,14 @@
                                                 {{ 'workflow.send.file'|trans }}
                                             </a>
                                         </li>
-                                        <li onclick="OjsWorkflow.sendReviewForm(this, {{ dialog.id }})">
-                                            <a>
-                                                <i class="fa fa-comments-o"></i>
-                                                {{ 'workflow.send.review.form'|trans }}
-                                            </a>
-                                        </li>
+                                        {% if permissionCheck().isGrantedForStep(dialog.step) %}
+                                            <li onclick="OjsWorkflow.browseReviewForms(this, {{ dialog.id }})">
+                                                <a>
+                                                    <i class="fa fa-comments-o"></i>
+                                                    {{ 'workflow.send.review.form'|trans }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
                                     </ul>
                                 </span>
                             </div>

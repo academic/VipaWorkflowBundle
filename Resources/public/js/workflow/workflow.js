@@ -472,6 +472,21 @@ $(document).ready(function() {
                     swal(Translator.trans('excellent'), Translator.trans('your.files.sended'), "success");
                 }
             });
-        }
+        },
+        browseReviewForms: function ($this, $dialogId) {
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dp_workflow_dialog_posts_browse_review_forms', {
+                    journalId: journalId,
+                    workflowId: workflowId,
+                    stepOrder: stepOrder,
+                    dialogId: $dialogId
+                }),
+                autoSize: false,
+                width: '600px',
+                maxWidth: '600px',
+                height: 'auto'
+            });
+        },
     };
 });

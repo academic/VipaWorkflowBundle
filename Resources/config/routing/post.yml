@@ -25,3 +25,10 @@ dp_workflow_dialog_posts_new_file:
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
+
+dp_workflow_dialog_posts_browse_review_forms:
+  path:     /review-files
+  defaults: { _controller: "DergiparkWorkflowBundle:DialogPost:reviewForms" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true

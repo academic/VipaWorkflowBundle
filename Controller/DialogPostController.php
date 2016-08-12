@@ -4,6 +4,7 @@ namespace Dergipark\WorkflowBundle\Controller;
 
 use Dergipark\WorkflowBundle\Entity\DialogPost;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
+use Dergipark\WorkflowBundle\Entity\StepReviewForm;
 use Dergipark\WorkflowBundle\Params\DialogPostTypes;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Pagerfanta\Exception\LogicException;
@@ -81,12 +82,11 @@ class DialogPostController extends Controller
     }
 
     /**
-     * @param Request $request
      * @param $workflowId
      * @param $dialogId
      * @return Response
      */
-    public function browseFilesAction(Request $request, $workflowId, $dialogId)
+    public function browseFilesAction($workflowId, $dialogId)
     {
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
@@ -136,6 +136,26 @@ class DialogPostController extends Controller
 
         return new JsonResponse([
             'success' => true,
+        ]);
+    }
+
+    /**
+     * @param $workflowId
+     * @param $dialogId
+     * @return Response
+     */
+    public function reviewFormsAction($workflowId, $dialogId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
+        $step  = $dialog->getStep();
+        $forms = $em->getRepository(StepReviewForm::class)->findBy([
+            'step' => $step,
+        ]);
+
+        return $this->render('DergiparkWorkflowBundle:DialogPost:_browse_review_forms.html.twig', [
+            'forms' => $forms,
+            'dialogId' => $dialogId,
         ]);
     }
 }
