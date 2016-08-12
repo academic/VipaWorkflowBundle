@@ -13,11 +13,6 @@ Dergipark\WorkflowBundle\Entity\StepReviewForm:
     name:
       type: string
       length: 255
-    active:
-      type: boolean
-      nullable: true
-      options:
-        default: true
     content:
       type: text
   manyToOne:

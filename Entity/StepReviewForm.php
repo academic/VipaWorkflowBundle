@@ -19,11 +19,6 @@ class StepReviewForm
     private $name;
 
     /**
-     * @var bool
-     */
-    private $active = true;
-
-    /**
      * @var string
      */
     private $content;
@@ -34,7 +29,7 @@ class StepReviewForm
     private $step;
 
     /**
-     * DialogPost constructor.
+     * StepReviewForm constructor.
      */
     public function __construct()
     {
@@ -71,26 +66,6 @@ class StepReviewForm
     }
 
     /**
-     * @return boolean
-     */
-    public function isActive()
-    {
-        return $this->active;
-    }
-
-    /**
-     * @param boolean $active
-     *
-     * @return $this
-     */
-    public function setActive($active)
-    {
-        $this->active = $active;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getContent()
@@ -119,7 +94,7 @@ class StepReviewForm
     }
 
     /**
-     * @param JournalWorkflowStep $step
+     * @param ArticleWorkflowStep $step
      *
      * @return $this
      */
