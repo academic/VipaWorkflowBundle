@@ -488,5 +488,26 @@ $(document).ready(function() {
                 height: 'auto'
             });
         },
+        sendSelectedReviewForms: function($dialogId){
+            var reviewForms = [];
+            var findCheckedReviewFormInputs = $('#browse-review-forms-table').find('input:checked');
+            $.each(findCheckedReviewFormInputs, function (index, value) {
+                reviewForms.push($(value).val());
+            });
+            $.post(Routing.generate('dp_workflow_dialog_posts_new_review_form', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder,
+                dialogId: $dialogId
+            }), {
+                reviewForms: reviewForms
+            }, function( data ) {
+                if(data.success == true){
+                    $.fancybox.close();
+                    OjsWorkflow.loadPosts($dialogId);
+                    swal(Translator.trans('excellent'), Translator.trans('your.review.forms.sended'), "success");
+                }
+            });
+        }
     };
 });
