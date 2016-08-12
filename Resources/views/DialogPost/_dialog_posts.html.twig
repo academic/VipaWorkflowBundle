@@ -11,7 +11,7 @@
                         <abbr title="{{ post.sendedAt|date('Y-m-d H:i:s') }}" class="ago">{{ post.sendedAt|date('Y-m-d H:i:s') }}</abbr>
                     </small>
                     <strong class="pull-right primary-font">
-                        {{ 'you'|trans }}
+                        {{ profileLink(post.sendedBy) }}
                     </strong>
                 </div>
                 <p>
@@ -33,7 +33,7 @@
             <div class="dialog-box-body clearfix">
                 <div class="header">
                     <strong class="primary-font">
-                        {{ post.sendedBy.username }}
+                        {{ profileLink(post.sendedBy) }}
                     </strong>
                     <small class="pull-right text-muted">
                         <span class="glyphicon glyphicon-time"></span>

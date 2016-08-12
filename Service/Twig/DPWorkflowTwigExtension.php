@@ -7,6 +7,7 @@ use Dergipark\WorkflowBundle\Params\StepActionTypes;
 use Dergipark\WorkflowBundle\Service\WorkflowPermissionService;
 use Doctrine\ORM\EntityManager;
 use Ojs\JournalBundle\Service\JournalService;
+use Ojs\UserBundle\Entity\User;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -104,6 +105,7 @@ class DPWorkflowTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('journalStepAlias', array($this, 'getJournalStepAlias')),
             new \Twig_SimpleFunction('dialogStatus', array($this, 'getDialogStatus')),
             new \Twig_SimpleFunction('stepStatus', array($this, 'getStepStatus')),
+            new \Twig_SimpleFunction('profileLink', array($this, 'getProfileLink'), ['is_safe' => ['html']]),
         );
     }
 
@@ -140,5 +142,32 @@ class DPWorkflowTwigExtension extends \Twig_Extension
     public function getPermissionCheck()
     {
         return $this->wfPermissionService;
+    }
+
+    public function getProfileLink(User $user)
+    {
+        $currentUser = $this->getUser();
+        if($currentUser->getUsername() == $user->getUsername()){
+            $username = $this->translator->trans('you');
+        }else{
+            $username = $user->getUsername();
+        }
+        $link = $this->router->generate('ojs_user_profile', ['slug' => $user->getUsername()]);
+        $tooltip = (string)$user;
+        $template = '<a target="_blank" data-toggle="tooltip" title="'.$tooltip.'" href="'.$link.'">@'.$username.'</a>';
+
+        return $template;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        $token = $this->tokenStorage->getToken();
+        if(!$token){
+            throw new \LogicException('i can not find current user token :/');
+        }
+        return $token->getUser();
     }
 }

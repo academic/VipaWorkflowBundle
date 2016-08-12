@@ -59,27 +59,11 @@
                     <br>
                     {{ 'assigned.to'|trans }}:
                     {% for user in dialog.users %}
-                        <a data-toggle="tooltip" title="{{ user }}"
-                           href="{{ path('ojs_user_profile', {slug: user.username}) }}"
-                           target="_blank">
-                            {% if user.username == app.user.username %}
-                                {{ 'you'|trans }}
-                            {% else %}
-                                @{{ user.username }}
-                            {% endif %}
-                        </a>
+                        {{ profileLink(user) }} {% if not loop.last %},{% endif %}
                     {% endfor %}
                     <br>
                     {{ 'created.by'|trans }}:
-                    <a data-toggle="tooltip" title="{{ dialog.createdDialogBy }}"
-                       href="{{ path('ojs_user_profile', {slug: dialog.createdDialogBy.username}) }}"
-                       target="_blank">
-                        {% if dialog.createdDialogBy.username == app.user.username %}
-                            {{ 'you'|trans }}
-                        {% else %}
-                            @{{ dialog.createdDialogBy.username }}
-                        {% endif %}
-                    </a>
+                    {{ profileLink(dialog.createdDialogBy) }}
                 </div>
                 <div id="collapse-panel-{{ dialog.id }}" class="collapse {% if dialog.status == dialogStatus('ACTIVE') %}in{% endif %}">
                     <div class="panel-body panel-dialog-body">
