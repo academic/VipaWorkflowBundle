@@ -47,6 +47,11 @@ class DialogPost
     private $dialog;
 
     /**
+     * @var StepReviewForm
+     */
+    private $reviewForm;
+
+    /**
      * @var User
      */
     private $sendedBy;
@@ -184,6 +189,26 @@ class DialogPost
     public function setDialog($dialog)
     {
         $this->dialog = $dialog;
+
+        return $this;
+    }
+
+    /**
+     * @return StepReviewForm
+     */
+    public function getReviewForm()
+    {
+        return $this->reviewForm;
+    }
+
+    /**
+     * @param StepReviewForm $reviewForm
+     *
+     * @return $this
+     */
+    public function setReviewForm($reviewForm)
+    {
+        $this->reviewForm = $reviewForm;
 
         return $this;
     }
