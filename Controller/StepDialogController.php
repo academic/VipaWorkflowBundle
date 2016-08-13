@@ -4,6 +4,8 @@ namespace Dergipark\WorkflowBundle\Controller;
 
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
+use Dergipark\WorkflowBundle\Event\WorkflowEvent;
+use Dergipark\WorkflowBundle\Event\WorkflowEvents;
 use Dergipark\WorkflowBundle\Form\Type\DialogType;
 use Dergipark\WorkflowBundle\Params\StepActionTypes;
 use Dergipark\WorkflowBundle\Params\StepDialogStatus;
@@ -61,6 +63,7 @@ class StepDialogController extends Controller
         $em = $this->getDoctrine()->getManager();
         $wfLogger = $this->get('dp.wf_logger_service');
         $logUsers = [];
+        $dispatcher = $this->get('event_dispatcher');
         $workflowService = $this->get('dp.workflow_service');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
@@ -126,6 +129,11 @@ class StepDialogController extends Controller
             ]);
             $em->flush();
 
+            //dispatch event
+            $workflowEvent = new WorkflowEvent();
+            $workflowEvent->setDialog($dialog);
+            $dispatcher->dispatch(WorkflowEvents::CREATE_SPESIFIC_DIALOG, $workflowEvent);
+
             return $workflowService->getMessageBlock('successful_create'.$actionAlias);
         }
 
@@ -151,6 +159,7 @@ class StepDialogController extends Controller
 
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
+        $dispatcher = $this->get('event_dispatcher');
         $workflowService = $this->get('dp.workflow_service');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
@@ -184,6 +193,11 @@ class StepDialogController extends Controller
         ]);
         $em->flush();
 
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setDialog($dialog);
+        $dispatcher->dispatch(WorkflowEvents::CREATE_DIALOG_WITH_AUTHOR, $workflowEvent);
+
         return $workflowService->getMessageBlock('successful_create'.$actionAlias);
     }
 
@@ -204,6 +218,7 @@ class StepDialogController extends Controller
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
+        $dispatcher = $this->get('event_dispatcher');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
@@ -249,6 +264,11 @@ class StepDialogController extends Controller
 
             $em->flush();
 
+            //dispatch event
+            $workflowEvent = new WorkflowEvent();
+            $workflowEvent->setDialog($dialog);
+            $dispatcher->dispatch(WorkflowEvents::CREATE_BASIC_DIALOG, $workflowEvent);
+
             return $workflowService->getMessageBlock('successful_create'.$actionAlias);
         }
 
@@ -270,6 +290,7 @@ class StepDialogController extends Controller
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
+        $dispatcher = $this->get('event_dispatcher');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
@@ -290,6 +311,11 @@ class StepDialogController extends Controller
         ]);
         $em->flush();
 
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setWorkflow($workflow);
+        $dispatcher->dispatch(WorkflowEvents::STEP_GOTO_ARRANGEMET, $workflowEvent);
+
         return new JsonResponse([
             'success' => true,
         ]);
@@ -306,6 +332,7 @@ class StepDialogController extends Controller
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
+        $dispatcher = $this->get('event_dispatcher');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
@@ -323,6 +350,11 @@ class StepDialogController extends Controller
             '%by_user%' => $this->getUser()->getUsername(),
         ]);
         $em->flush();
+
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setWorkflow($workflow);
+        $dispatcher->dispatch(WorkflowEvents::STEP_GOTO_REVIEWING, $workflowEvent);
 
         return new JsonResponse([
             'success' => true,
@@ -343,6 +375,7 @@ class StepDialogController extends Controller
             throw new AccessDeniedException;
         }
         $em = $this->getDoctrine()->getManager();
+        $dispatcher = $this->get('event_dispatcher');
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
@@ -352,6 +385,11 @@ class StepDialogController extends Controller
         $wfLogger->log('accept.submission_log', ['%by_user%' => $this->getUser()->getUsername()]);
 
         $em->flush();
+
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setWorkflow($workflow);
+        $dispatcher->dispatch(WorkflowEvents::ACCEPT_SUBMISSION_DIRECTLY, $workflowEvent);
 
         return new JsonResponse([
             'success' => true,
@@ -374,6 +412,7 @@ class StepDialogController extends Controller
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
+        $dispatcher = $this->get('event_dispatcher');
         $workflowService = $this->get('dp.workflow_service');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
@@ -392,6 +431,11 @@ class StepDialogController extends Controller
             '%by_user%' => $this->getUser()->getUsername(),
         ]);
         $em->flush();
+
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setWorkflow($workflow);
+        $dispatcher->dispatch(WorkflowEvents::WORKFLOW_FINISH_ACTION, $workflowEvent);
 
         return new JsonResponse([
             'success' => true,
@@ -414,6 +458,7 @@ class StepDialogController extends Controller
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
+        $dispatcher = $this->get('event_dispatcher');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
@@ -436,6 +481,11 @@ class StepDialogController extends Controller
 
         $em->flush();
 
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setWorkflow($workflow);
+        $dispatcher->dispatch(WorkflowEvents::DECLINE_SUBMISSION, $workflowEvent);
+
         return new JsonResponse([
             'success' => true,
         ]);
@@ -451,6 +501,7 @@ class StepDialogController extends Controller
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
+        $dispatcher = $this->get('event_dispatcher');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
@@ -470,6 +521,11 @@ class StepDialogController extends Controller
         $wfLogger->log('finish.dialog_log', ['%by_user%' => $this->getUser()->getUsername()]);
         $em->flush();
 
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setDialog($dialog);
+        $dispatcher->dispatch(WorkflowEvents::CLOSE_DIALOG, $workflowEvent);
+
         return new JsonResponse([
             'success' => true,
         ]);
@@ -485,6 +541,7 @@ class StepDialogController extends Controller
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
+        $dispatcher = $this->get('event_dispatcher');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
@@ -504,6 +561,11 @@ class StepDialogController extends Controller
         $wfLogger->log('reopen.dialog_log', ['%by_user%' => $this->getUser()->getUsername()]);
         $em->flush();
 
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setDialog($dialog);
+        $dispatcher->dispatch(WorkflowEvents::REOPEN_DIALOG, $workflowEvent);
+
         return new JsonResponse([
             'success' => true,
         ]);
@@ -521,6 +583,7 @@ class StepDialogController extends Controller
         $em = $this->getDoctrine()->getManager();
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflowService = $this->get('dp.workflow_service');
+        $dispatcher = $this->get('event_dispatcher');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
         //fetch dialog
@@ -543,6 +606,11 @@ class StepDialogController extends Controller
         //log action
         $wfLogger->log('remove.dialog_log', ['%by_user%' => $this->getUser()->getUsername()]);
         $em->flush();
+
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setDialog($dialog);
+        $dispatcher->dispatch(WorkflowEvents::CLOSE_DIALOG, $workflowEvent);
 
         return new JsonResponse([
             'success' => true,

@@ -5,6 +5,8 @@ namespace Dergipark\WorkflowBundle\Controller;
 use Dergipark\WorkflowBundle\Entity\DialogPost;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Dergipark\WorkflowBundle\Entity\StepReviewForm;
+use Dergipark\WorkflowBundle\Event\WorkflowEvent;
+use Dergipark\WorkflowBundle\Event\WorkflowEvents;
 use Dergipark\WorkflowBundle\Params\DialogPostTypes;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Pagerfanta\Exception\LogicException;
@@ -83,6 +85,7 @@ class ArticleReviewFormController extends Controller
      */
     private function persistSubmittedForm(Request $request, StepReviewForm $reviewForm, $dialogId)
     {
+        $dispatcher = $this->get('event_dispatcher');
         $em = $this->getDoctrine()->getManager();
         $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
         $formContent = $request->request->get('formContent');
@@ -97,6 +100,11 @@ class ArticleReviewFormController extends Controller
             ;
         $em->persist($reviewFormResponse);
         $em->flush();
+
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setPost($reviewFormResponse);
+        $dispatcher->dispatch(WorkflowEvents::REVIEW_FORM_RESPONSE, $workflowEvent);
 
         return new JsonResponse([
             'success' => true,
@@ -115,6 +123,7 @@ class ArticleReviewFormController extends Controller
         if(!$reviewForms){
             return new LogicException('reviewForms param must be!');
         }
+        $dispatcher = $this->get('event_dispatcher');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
@@ -134,6 +143,11 @@ class ArticleReviewFormController extends Controller
                 ->setType(DialogPostTypes::TYPE_FORM_REQUEST)
             ;
             $em->persist($reviewFormPost);
+
+            //dispatch event
+            $workflowEvent = new WorkflowEvent();
+            $workflowEvent->setPost($reviewFormPost);
+            $dispatcher->dispatch(WorkflowEvents::REVIEW_FORM_RESPONSE, $workflowEvent);
         }
         //log action
         $wfLogger->log('post.review.form.to.dialog', ['%user%' => '@'.$user->getUsername()]);

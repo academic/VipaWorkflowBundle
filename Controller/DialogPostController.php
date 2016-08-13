@@ -4,6 +4,8 @@ namespace Dergipark\WorkflowBundle\Controller;
 
 use Dergipark\WorkflowBundle\Entity\DialogPost;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
+use Dergipark\WorkflowBundle\Event\WorkflowEvent;
+use Dergipark\WorkflowBundle\Event\WorkflowEvents;
 use Dergipark\WorkflowBundle\Params\DialogPostTypes;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Pagerfanta\Exception\LogicException;
@@ -45,6 +47,7 @@ class DialogPostController extends Controller
      */
     public function postCommentAction(Request $request, $dialogId)
     {
+        $dispatcher = $this->get('event_dispatcher');
         $permissionService = $this->get('dp.workflow_permission_service');
         $comment = $request->get('comment');
         if(!$comment){
@@ -72,6 +75,11 @@ class DialogPostController extends Controller
         //log action
         $wfLogger->log('post.comment.to.dialog', ['%user%' => '@'.$user->getUsername()]);
         $em->flush();
+
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setPost($post);
+        $dispatcher->dispatch(WorkflowEvents::DIALOG_POST_COMMENT, $workflowEvent);
 
         return new JsonResponse([
             'success' => true,
@@ -113,6 +121,7 @@ class DialogPostController extends Controller
         if(!$permissionService->isGrantedForDialogPost($dialog)){
             throw new AccessDeniedException;
         }
+        $dispatcher = $this->get('event_dispatcher');
         $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($dialog->getStep()->getArticleWorkflow());
         foreach($files as $file){
             $filePost = new DialogPost();
@@ -125,6 +134,11 @@ class DialogPostController extends Controller
                 ->setType(DialogPostTypes::TYPE_FILE)
                 ;
             $em->persist($filePost);
+
+            //dispatch event
+            $workflowEvent = new WorkflowEvent();
+            $workflowEvent->setPost($filePost);
+            $dispatcher->dispatch(WorkflowEvents::DIALOG_POST_FILE, $workflowEvent);
         }
         //log action
         $wfLogger->log('post.file.to.dialog', ['%user%' => '@'.$user->getUsername()]);

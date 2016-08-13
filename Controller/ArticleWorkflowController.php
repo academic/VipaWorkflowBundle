@@ -4,6 +4,8 @@ namespace Dergipark\WorkflowBundle\Controller;
 
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Dergipark\WorkflowBundle\Event\WorkflowEvent;
+use Dergipark\WorkflowBundle\Event\WorkflowEvents;
 use Dergipark\WorkflowBundle\Form\Type\ArticleWfGrantedUsersType;
 use Dergipark\WorkflowBundle\Params\StepStatus;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
@@ -126,8 +128,10 @@ class ArticleWorkflowController extends Controller
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
+        $dispatcher = $this->get('event_dispatcher');
 
         $workflow = $em->getRepository(ArticleWorkflow::class)->find($workflowId);
+        $oldWorkflowGrantedusers = $workflow->getGrantedUsers();
 
         $form = $this->createForm(new ArticleWfGrantedUsersType(), $workflow, [
             'action' => $this->generateUrl('dergipark_article_workflow_granted_users_setup', [
@@ -144,6 +148,15 @@ class ArticleWorkflowController extends Controller
             $em->persist($workflow);
             $em->flush();
             $this->successFlashBag('successful.update');
+
+            //dispatch events
+            foreach($workflow->getGrantedUsers() as $user){
+                if(!$oldWorkflowGrantedusers->contains($user)){
+                    $workflowEvent = new WorkflowEvent();
+                    $workflowEvent->setUser($user);
+                    $dispatcher->dispatch(WorkflowEvents::WORKFLOW_GRANT_USER, $workflowEvent);
+                }
+            }
         }
 
         return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:_article_workflow_granted_users_setup.html.twig', [
