@@ -105,6 +105,7 @@ class DPWorkflowTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('journalStepAlias', array($this, 'getJournalStepAlias')),
             new \Twig_SimpleFunction('dialogStatus', array($this, 'getDialogStatus')),
             new \Twig_SimpleFunction('stepStatus', array($this, 'getStepStatus')),
+            new \Twig_SimpleFunction('postType', array($this, 'getPostType')),
             new \Twig_SimpleFunction('profileLink', array($this, 'getProfileLink'), ['is_safe' => ['html']]),
         );
     }
@@ -122,6 +123,11 @@ class DPWorkflowTwigExtension extends \Twig_Extension
     public function getStepStatus($const)
     {
         return constant('Dergipark\WorkflowBundle\Params\StepStatus::'.$const);
+    }
+
+    public function getPostType($const)
+    {
+        return constant('Dergipark\WorkflowBundle\Params\DialogPostTypes::'.$const);
     }
 
     public function getJournalStepAlias($stepOrder)
