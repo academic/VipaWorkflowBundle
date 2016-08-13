@@ -4,7 +4,6 @@ namespace Dergipark\WorkflowBundle\Controller;
 
 use Dergipark\WorkflowBundle\Entity\DialogPost;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
-use Dergipark\WorkflowBundle\Entity\StepReviewForm;
 use Dergipark\WorkflowBundle\Params\DialogPostTypes;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Pagerfanta\Exception\LogicException;

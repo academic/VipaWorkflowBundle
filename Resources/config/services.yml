@@ -52,3 +52,8 @@ services:
     arguments: ["@dp.workflow_service"]
     tags:
       - { name: kernel.event_subscriber }
+
+  dp_workflow.workflow_events:
+    class: Dergipark\WorkflowBundle\Event\WorkflowEvents
+    tags:
+      - { name: ojs.mail.event}
