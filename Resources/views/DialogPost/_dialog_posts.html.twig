@@ -14,14 +14,8 @@
                         {{ profileLink(post.sendedBy) }}
                     </strong>
                 </div>
-                <p>
-                    {% if post.type == filePostType %}
-                        <a href="/uploads/articlefiles/{{ post.fileName }}" target="_blank">
-                            {{ post.fileOriginalName }}
-                        </a>
-                    {% elseif post.type == textPostType %}
-                        {{ post.text }}
-                    {% endif %}
+                <p class="text-right">
+                    {% include 'DergiparkWorkflowBundle:DialogPost:_post_content.html.twig' %}
                 </p>
             </div>
         </li>
@@ -41,13 +35,7 @@
                     </small>
                 </div>
                 <p>
-                    {% if post.type == filePostType %}
-                        <a href="/uploads/articlefiles/{{ post.fileName }}" target="_blank">
-                            {{ post.fileOriginalName }}
-                        </a>
-                    {% elseif post.type == textPostType %}
-                        {{ post.text }}
-                    {% endif %}
+                    {% include 'DergiparkWorkflowBundle:DialogPost:_post_content.html.twig' %}
                 </p>
             </div>
         </li>

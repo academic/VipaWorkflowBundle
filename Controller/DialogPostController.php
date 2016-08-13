@@ -36,8 +36,6 @@ class DialogPostController extends Controller
 
         return $this->render('DergiparkWorkflowBundle:DialogPost:_dialog_posts.html.twig', [
             'posts' => $posts,
-            'filePostType' => DialogPostTypes::TYPE_FILE,
-            'textPostType' => DialogPostTypes::TYPE_TEXT,
         ]);
     }
 
@@ -136,26 +134,6 @@ class DialogPostController extends Controller
 
         return new JsonResponse([
             'success' => true,
-        ]);
-    }
-
-    /**
-     * @param $workflowId
-     * @param $dialogId
-     * @return Response
-     */
-    public function reviewFormsAction($workflowId, $dialogId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
-        $step  = $dialog->getStep();
-        $forms = $em->getRepository(StepReviewForm::class)->findBy([
-            'step' => $step,
-        ]);
-
-        return $this->render('DergiparkWorkflowBundle:DialogPost:_browse_review_forms.html.twig', [
-            'forms' => $forms,
-            'dialogId' => $dialogId,
         ]);
     }
 }
