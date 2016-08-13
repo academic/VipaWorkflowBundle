@@ -1,0 +1,61 @@
+{% set hideleft = true %}
+{% extends '::ojsbase.html.twig' %}
+{% block title %}{{ 'title.review_form_show'|trans }} {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets '@DergiparkWorkflowBundle/Resources/public/css/review-form/*'  output="assets/prod/css/review_form.css" %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    <style>
+        .render-wrap {
+            display: block;
+        }
+        .build-wrap{
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1 class="text-center">{{ reviewForm.name }}</h1>
+    {% include '::flashbag.html.twig' %}
+
+    <div class="row">
+        <div class="col-lg-8 col-md-push-2 well">
+            <div class="build-wrap well col-lg-8 push-left-2">
+                <textarea id="journal_review_form_content">
+                    {{ reviewForm.content }}
+                </textarea>
+            </div>
+            <div id="form-render-div-wrap">
+                <form id="form-render-wrap">
+                    <div class="render-wrap"></div>
+                </form>
+            </div>
+            <button class="btn btn-primary pull-right" onclick="OjsWorkflow.submitReviewForm({{ dialogId }}, {{ reviewForm.id }})">{{ 'submit.review'|trans }}</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var journalId = {{ reviewForm.step.articleWorkflow.journal.id }};
+        var workflowId = {{ reviewForm.step.articleWorkflow.id }};
+        var stepOrder = {{ reviewForm.step.order }};
+    </script>
+    <script src="{{ url('bazinga_jstranslation_js') }}"></script>
+    {% javascripts '@DergiparkWorkflowBundle/Resources/public/js/workflow/*' output="assets/prod/js/article_workflow.js" %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        jQuery(document).ready(function($) {
+            var template = document.getElementById('journal_review_form_content');
+            var renderWrap = document.querySelector('.render-wrap');
+            $(template).formRender({
+                container: renderWrap
+            });
+        });
+    </script>
+{% endblock %}

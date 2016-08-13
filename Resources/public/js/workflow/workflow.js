@@ -508,6 +508,63 @@ $(document).ready(function() {
                     swal(Translator.trans('excellent'), Translator.trans('your.review.forms.sended'), "success");
                 }
             });
+        },
+        /**
+         * @link https://gist.github.com/behram/e38ffbe820b4419a270249d7893ec3e7
+         */
+        normalizeReviewSubmissionFom: function(){
+            $('#form-render-div-wrap input').each(function(){
+                $(this).attr('value',$(this).val());
+            });
+            $('#form-render-div-wrap input[type="checkbox"]').each(function(){
+                if(this.checked){
+                    $(this).attr('checked', 'checked');
+                }else{
+                    $(this).removeAttr('checked');
+                }
+            });
+            $('#form-render-div-wrap input[type="radio"]').each(function(){
+                if(this.checked){
+                    $(this).attr('checked', 'checked');
+                }else{
+                    $(this).removeAttr('checked');
+                }
+            });
+            $('#form-render-div-wrap textarea').each(function(){
+                var $textareaVal = $(this).val();
+                $(this).val($textareaVal).attr('value', $textareaVal).html($textareaVal);
+            });
+            $('#form-render-div-wrap select').each(function(){
+                $(this).find('option:selected').attr('selected', 'selected');
+                $(this).find('option:not(:selected)').removeAttr('selected');
+            });
+        },
+        submitReviewForm: function($dialogId, $id){
+            OjsWorkflow.normalizeReviewSubmissionFom();
+            var formContents = $('#form-render-div-wrap').clone().html();
+            $.post(Routing.generate('dp_workflow_dialog_posts_submit_review_form', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder,
+                dialogId: $dialogId,
+                id: $id
+            }), {
+                formContent: formContents
+            }, function( data ) {
+                if(data.success == true){
+                    swal({
+                        title: Translator.trans('excellent'),
+                        text: Translator.trans('your.submitted.review.form'),
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonColor: "#46b8da",
+                        confirmButtonText: Translator.trans('ok'),
+                        closeOnConfirm: false
+                    }, function() {
+                        window.close();
+                    });
+                }
+            });
         }
     };
 });

@@ -42,6 +42,11 @@ class DialogPost
     private $fileName;
 
     /**
+     * @var string
+     */
+    private $reviewFormResponseContent;
+
+    /**
      * @var StepDialog
      */
     private $dialog;
@@ -229,6 +234,26 @@ class DialogPost
     public function setSendedBy($sendedBy)
     {
         $this->sendedBy = $sendedBy;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReviewFormResponseContent()
+    {
+        return $this->reviewFormResponseContent;
+    }
+
+    /**
+     * @param string $reviewFormResponseContent
+     *
+     * @return $this
+     */
+    public function setReviewFormResponseContent($reviewFormResponseContent)
+    {
+        $this->reviewFormResponseContent = $reviewFormResponseContent;
 
         return $this;
     }

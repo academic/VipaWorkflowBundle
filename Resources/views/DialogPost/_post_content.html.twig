@@ -1,0 +1,46 @@
+{% if post.type == postType('TYPE_FILE') %}
+    <a href="/uploads/articlefiles/{{ post.fileName }}" target="_blank">
+        {{ post.fileOriginalName }}
+    </a>
+{% elseif post.type == postType('TYPE_TEXT') %}
+    {{ post.text }}
+{% elseif post.type == postType('TYPE_FORM_REQUEST') %}
+    {{ 'user.requested.a.form.review'|trans({'%user%': post.sendedBy.username }) }}<br>
+    {{ 'form.name'|trans }}: {{ post.reviewForm.name }}<br>
+    {% if post.dialog.users.contains(app.user) %}
+        <a href="{{ path('dp_workflow_dialog_posts_submit_review_form', {
+            journalId: post.reviewForm.step.articleWorkflow.journal.id,
+            workflowId: post.reviewForm.step.articleWorkflow.id,
+            stepOrder: post.reviewForm.step.order,
+            dialogId: post.dialog.id,
+            id: post.reviewForm.id
+        }) }}" target="_blank">
+            {{ 'fill.and.submit.form'|trans }}
+            <i class="fa fa-external-link"></i>
+        </a>
+    {% else %}
+        <a href="{{ path('dp_workflow_dialog_posts_show_review_form', {
+            journalId: post.reviewForm.step.articleWorkflow.journal.id,
+            workflowId: post.reviewForm.step.articleWorkflow.id,
+            stepOrder: post.reviewForm.step.order,
+            dialogId: post.dialog.id,
+            id: post.reviewForm.id
+        }) }}" target="_blank">
+            {{ 'look.to.form'|trans }}
+            <i class="fa fa-external-link"></i>
+        </a>
+    {% endif %}
+{% elseif post.type == postType('TYPE_FORM_RESPONSE') %}
+    {{ 'user.submitted.a.form.review'|trans({'%user%': post.sendedBy.username }) }}<br>
+    {{ 'form.name'|trans }}: {{ post.reviewForm.name }}<br>
+    <a href="{{ path('dp_workflow_dialog_posts_review_form_response_preview', {
+        journalId: post.reviewForm.step.articleWorkflow.journal.id,
+        workflowId: post.reviewForm.step.articleWorkflow.id,
+        stepOrder: post.reviewForm.step.order,
+        dialogId: post.dialog.id,
+        postId: post.id
+    }) }}" target="_blank">
+        {{ 'review.form.response.preview'|trans }}
+        <i class="fa fa-external-link"></i>
+    </a>
+{% endif %}

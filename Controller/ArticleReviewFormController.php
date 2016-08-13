@@ -46,6 +46,64 @@ class ArticleReviewFormController extends Controller
     }
 
     /**
+     * @param $postId
+     * @return Response
+     */
+    public function previewReviewFormResponseAction($postId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $responsePost = $em->getRepository(DialogPost::class)->find($postId);
+        return $this->render('DergiparkWorkflowBundle:DialogPost/review_form:_response_preview.html.twig', [
+            'post' => $responsePost,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param StepReviewForm $reviewForm
+     * @param $dialogId
+     * @return JsonResponse|Response
+     */
+    public function submitFormAction(Request $request, StepReviewForm $reviewForm, $dialogId)
+    {
+        if($request->getMethod() == 'POST'){
+            return $this->persistSubmittedForm($request, $reviewForm, $dialogId);
+        }
+        return $this->render('DergiparkWorkflowBundle:DialogPost/review_form:_submit_form.html.twig', [
+            'reviewForm' => $reviewForm,
+            'dialogId' => $dialogId,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param StepReviewForm $reviewForm
+     * @param $dialogId
+     * @return JsonResponse
+     */
+    private function persistSubmittedForm(Request $request, StepReviewForm $reviewForm, $dialogId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
+        $formContent = $request->request->get('formContent');
+        $reviewFormResponse = new DialogPost();
+        $reviewFormResponse
+            ->setReviewForm($reviewForm)
+            ->setDialog($dialog)
+            ->setSendedAt(new \DateTime())
+            ->setSendedBy($this->getUser())
+            ->setType(DialogPostTypes::TYPE_FORM_RESPONSE)
+            ->setReviewFormResponseContent($formContent)
+            ;
+        $em->persist($reviewFormResponse);
+        $em->flush();
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
+    }
+
+    /**
      * @param Request $request
      * @param $dialogId
      * @return LogicException|JsonResponse

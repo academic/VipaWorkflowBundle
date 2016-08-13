@@ -1,0 +1,28 @@
+{% set hideleft = true %}
+{% extends '::ojsbase.html.twig' %}
+{% block title %}{{ 'title.review_form_show'|trans }} {{ parent() }}{% endblock %}
+
+{% block body %}
+    <h1 class="text-center">{{ post.reviewForm.name }}</h1>
+    {% include '::flashbag.html.twig' %}
+
+    <div class="row">
+        <div class="col-lg-8 col-md-push-2 well">
+            {{ post.reviewFormResponseContent|raw }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(document).ready(function($) {
+            var form = document.getElementById("form-render-wrap");
+            var elements = form.elements;
+            for (var i = 0, len = elements.length; i < len; ++i) {
+                elements[i].readOnly = true;
+                elements[i].disabled = true;
+            }
+        });
+    </script>
+{% endblock %}

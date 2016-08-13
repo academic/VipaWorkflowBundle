@@ -28,6 +28,9 @@ Dergipark\WorkflowBundle\Entity\DialogPost:
     fileName:
       type: string
       nullable: true
+    reviewFormResponseContent:
+      type: text
+      nullable: true
   manyToOne:
     dialog:
       targetEntity: Dergipark\WorkflowBundle\Entity\StepDialog
