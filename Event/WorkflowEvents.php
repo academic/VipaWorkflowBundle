@@ -45,22 +45,22 @@ final class WorkflowEvents implements MailEventsInterface
     {
         return [
             new EventDetail(self::WORKFLOW_STARTED, 'admin', [
-                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title',
+                'article.author', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title',
             ]),
             new EventDetail(self::REVIEW_FORM_RESPONSE, 'admin', [
-                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'form.name',
+                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'dialog.title', 'form.name',
             ]),
             new EventDetail(self::REVIEW_FORM_REQUEST, 'admin', [
-                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'form.name'
+                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'dialog.title', 'form.name'
             ]),
             new EventDetail(self::WORKFLOW_GRANT_USER, 'admin', [
                 'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title',
             ]),
             new EventDetail(self::DIALOG_POST_COMMENT, 'admin', [
-                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'post.content'
+                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'dialog.title', 'post.content'
             ]),
             new EventDetail(self::DIALOG_POST_FILE, 'admin', [
-                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'file.name',
+                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'dialog.title', 'file.name',
             ]),
             new EventDetail(self::CREATE_SPESIFIC_DIALOG.'.assign.section.editor', 'admin', [
                 'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'dialog.title',
