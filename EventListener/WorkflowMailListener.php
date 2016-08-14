@@ -109,10 +109,10 @@ class WorkflowMailListener implements EventSubscriberInterface
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getId(),
+                'journal'           => $event->journal->getTitle(),
                 'receiver.username' => $user->getUsername(),
                 'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getId(),
+                'article.title'     => $event->article->getTitle(),
             ];
             $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
             $this->ojsMailer->sendToUser(
@@ -145,7 +145,7 @@ class WorkflowMailListener implements EventSubscriberInterface
                 'receiver.fullName' => $user->getFullName(),
                 'article.title'     => $event->article->getTitle(),
                 'dialog.title'     => $this->getDialogTitle($event->dialog),
-                'form.name'     => $event->article->getTitle(),
+                'form.name'     => $event->post->getReviewForm()->getName(),
             ];
             $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
             $this->ojsMailer->sendToUser(
@@ -178,7 +178,7 @@ class WorkflowMailListener implements EventSubscriberInterface
                 'receiver.fullName' => $user->getFullName(),
                 'article.title'     => $event->article->getTitle(),
                 'dialog.title'     => $this->getDialogTitle($event->dialog),
-                'form.name'     => $event->article->getTitle(),
+                'form.name'     => $event->post->getReviewForm()->getName(),
             ];
             $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
             $this->ojsMailer->sendToUser(
@@ -282,7 +282,7 @@ class WorkflowMailListener implements EventSubscriberInterface
                 'receiver.fullName' => $user->getFullName(),
                 'article.title'     => $event->article->getTitle(),
                 'dialog.title'     => $this->getDialogTitle($event->dialog),
-                'file.name'     => $event->post->getFileName(),
+                'file.name'     => $event->post->getFileOriginalName(),
             ];
             $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
             $this->ojsMailer->sendToUser(
@@ -528,6 +528,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                //@todo generate history link here
                 'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),

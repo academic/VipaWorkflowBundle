@@ -132,7 +132,7 @@ class ArticleReviewFormController extends Controller
             throw new AccessDeniedException;
         }
         $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($dialog->getStep()->getArticleWorkflow());
-        foreach($reviewForms as $reviewFormId){
+        foreach($reviewForms as $reviewFormId) {
             $stepReviewForm = $em->getRepository(StepReviewForm::class)->find($reviewFormId);
             $reviewFormPost = new DialogPost();
             $reviewFormPost
@@ -147,7 +147,7 @@ class ArticleReviewFormController extends Controller
             //dispatch event
             $workflowEvent = new WorkflowEvent();
             $workflowEvent->setPost($reviewFormPost);
-            $dispatcher->dispatch(WorkflowEvents::REVIEW_FORM_RESPONSE, $workflowEvent);
+            $dispatcher->dispatch(WorkflowEvents::REVIEW_FORM_REQUEST, $workflowEvent);
         }
         //log action
         $wfLogger->log('post.review.form.to.dialog', ['%user%' => '@'.$user->getUsername()]);

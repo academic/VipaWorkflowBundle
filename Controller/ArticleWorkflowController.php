@@ -131,7 +131,10 @@ class ArticleWorkflowController extends Controller
         $dispatcher = $this->get('event_dispatcher');
 
         $workflow = $em->getRepository(ArticleWorkflow::class)->find($workflowId);
-        $oldWorkflowGrantedusers = $workflow->getGrantedUsers();
+        $oldUsersIdBag = [];
+        foreach($workflow->grantedUsers as $oldUser){
+            $oldUsersIdBag[] = $oldUser->getId();
+        }
 
         $form = $this->createForm(new ArticleWfGrantedUsersType(), $workflow, [
             'action' => $this->generateUrl('dergipark_article_workflow_granted_users_setup', [
@@ -150,10 +153,12 @@ class ArticleWorkflowController extends Controller
             $this->successFlashBag('successful.update');
 
             //dispatch events
-            foreach($workflow->getGrantedUsers() as $user){
-                if(!$oldWorkflowGrantedusers->contains($user)){
+            foreach($workflow->getGrantedUsers() as $user) {
+                if(!in_array($user->getId(), $oldUsersIdBag)) {
                     $workflowEvent = new WorkflowEvent();
-                    $workflowEvent->setUser($user);
+                    $workflowEvent
+                        ->setUser($user)
+                        ->setWorkflow($workflow);
                     $dispatcher->dispatch(WorkflowEvents::WORKFLOW_GRANT_USER, $workflowEvent);
                 }
             }
