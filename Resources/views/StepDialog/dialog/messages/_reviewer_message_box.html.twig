@@ -1,0 +1,91 @@
+{% block send_invitation_reviewer %}
+    <div class="alert alert-warning text-center">
+        {{ 'editor.not.invited.you.yet'|trans }}
+    </div>
+{% endblock %}
+
+{% block send_invitation_editor %}
+    <div class="alert alert-warning text-center">
+        {{ 'invite.reviewer'|trans }}
+        <button class="btn btn-warning" onclick="OjsWorkflow.inviteReviewer({{ dialog.id }})">
+            {{ 'reviewer.invite'|trans }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block invitation_rejected_reviewer %}
+    <div class="alert alert-danger text-center">
+        {{ 'you.rejected.reviewing'|trans }}
+    </div>
+{% endblock %}
+
+{% block invitation_rejected_editor %}
+    <div class="alert alert-danger text-center">
+        {{ 'reviewer.rejected.invitation'|trans }}
+    </div>
+{% endblock %}
+
+{% block invitation_sended_waiting_reviewer %}
+    <div class="alert alert-warning text-center">
+        {{ 'editor.sended.you.invitation.for.rewiew.you.can.accept.or.reject'|trans }} -> left {{ leftDay }} from {{ fromDay }}
+        <br>
+        <button class="btn btn-success btn-sm" onclick="OjsWorkflow.acceptReviewRequest({{ dialog.id }})">
+            {{ 'accept.review'|trans }}
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="OjsWorkflow.rejectReviewRequest({{ dialog.id }})">
+            {{ 'reject.review'|trans }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block invitation_sended_waiting_editor %}
+    <div class="alert alert-warning text-center">
+        {{ 'waiting.for.reviewer.response.'|trans }} -> left {{ leftDay }} from {{ fromDay }}
+    </div>
+{% endblock %}
+
+{% block wait_remind_mail_reviewer %}
+    <div class="alert alert-warning text-center">
+        {{ 'finished.invitation.date.if.editor.sends.revind.mail.you.can.accept'|trans }}
+    </div>
+{% endblock %}
+
+{% block send_remind_editor %}
+    <div class="alert alert-warning text-center">
+        {{ 'finished.invitation.date.you.can.send.remind.mail'|trans }}
+        <button class="btn btn-warning" onclick="OjsWorkflow.remindReviewer({{ dialog.id }})">
+            {{ 'reviewer.remind'|trans }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block remind_sended_waiting_accept_reject_reviewer %}
+    <div class="alert alert-warning text-center">
+        {{ 'editor.sended.you.remind.rewiew.request.you.can.accept.or.reject'|trans }} -> left {{ leftDay }} from {{ fromDay }}
+        <br>
+        <button class="btn btn-success" onclick="OjsWorkflow.acceptReviewRequest({{ dialog.id }})">
+            {{ 'accept.review'|trans }}
+        </button>
+        <button class="btn btn-danger" onclick="OjsWorkflow.rejectReviewRequest({{ dialog.id }})">
+            {{ 'reject.review'|trans }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block remind_sended_waiting_editor %}
+    <div class="alert alert-warning text-center">
+        {{ 'remind.sended.lefted.some.time'|trans }} -> left {{ leftDay }} from {{ fromDay }}
+    </div>
+{% endblock %}
+
+{% block remind_time_finished_reviewer %}
+    <div class="alert alert-warning text-center">
+        {{ 'remind.date.finished.you.can.review.if.editor.resend.review.request'|trans }}
+    </div>
+{% endblock %}
+
+{% block remind_time_finished_editor %}
+    <div class="alert alert-warning text-center">
+        {{ 'reviewer.not.responsed.remind.you.can.not.do.anything'|trans }}
+    </div>
+{% endblock %}

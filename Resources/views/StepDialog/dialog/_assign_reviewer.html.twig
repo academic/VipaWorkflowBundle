@@ -1,0 +1,117 @@
+<div class="row">
+    <div class="col-md-12">
+        {% if dialog.status == dialogStatus('CLOSED') %}
+            {% set panelClass = 'success' %}
+        {% else %}
+            {% set panelClass = 'default' %}
+        {% endif %}
+        <div class="panel panel-{{ panelClass }} panel-dialog">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-comment"></span>
+                {% if dialog.dialogType == actionType('CREATE_ISSUE') %}
+                    <b>{{ dialog.title }}</b>
+                {% else %}
+                    <b>{{ actionAlias(dialog.dialogType)~'.dialog.header'|trans }}</b>
+                {% endif %}
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                        {{ 'select.action'|trans }}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% if dialog.status == dialogStatus('ACTIVE') %}
+                            {% if dialog.accepted %}
+                                <li>
+                                    <a onclick="OjsWorkflow.loadPosts({{ dialog.id }})">
+                                        {{ 'refresh.posts'|trans }}
+                                    </a>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a onclick="OjsWorkflow.finishDialogAction({{ dialog.id }})">
+                                        {{ 'close.dialog.action'|trans }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if permissionCheck().isGrantedForStep(dialog.step) and dialog.accepted == false %}
+                                <li>
+                                    <a onclick="OjsWorkflow.removeDialog({{ dialog.id }})">
+                                        {{ 'remove.dialog'|trans }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% elseif dialog.status == dialogStatus('CLOSED') and dialog.step.status == stepStatus('ACTIVE') %}
+                            {% if permissionCheck().isGrantedForStep(dialog.step) %}
+                                <li>
+                                    <a onclick="OjsWorkflow.reopenDialog({{ dialog.id }})">
+                                        {{ 'reopen.dialog'|trans }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                        <li>
+                            <a data-toggle="collapse" href="#collapse-panel-{{ dialog.id }}">
+                                {{ 'collapse.dialog'|trans }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <br>
+                {{ 'workflow.reviewer'|trans }}:
+                {% for user in dialog.users %}
+                    {{ profileLink(user) }} {% if not loop.last %},{% endif %}
+                {% endfor %}
+                <br>
+                {{ 'created.by'|trans }}:
+                {{ profileLink(dialog.createdDialogBy) }}
+            </div>
+            <div id="collapse-panel-{{ dialog.id }}" class="collapse {% if dialog.status == dialogStatus('ACTIVE') %}in{% endif %}">
+                {% if dialog.accepted %}
+                    <div class="panel-body panel-dialog-body">
+                        <ul class="dialog-box" id="dialog-posts-{{ dialog.id }}">
+                            {{ 'loading.posts'|trans }}...
+                            <script>
+                                OjsWorkflow.loadPosts({{ dialog.id }});
+                            </script>
+                        </ul>
+                    </div>
+                    {% if dialog.status == dialogStatus('ACTIVE') %}
+                        <div class="panel-footer">
+                            <div class="input-group">
+                                <input type="text" class="form-control input-sm dialog-comment-input" placeholder="{{ 'type.comment.here'|trans }}" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info btn-sm" onclick="OjsWorkflow.sendComment(this, {{ dialog.id }})">
+                                        <i class="fa fa-comment"></i>
+                                        {{ 'add.comment'|trans }}
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li onclick="OjsWorkflow.browseFiles(this, {{ dialog.id }})">
+                                            <a>
+                                                <i class="fa fa-file-archive-o"></i>
+                                                {{ 'workflow.send.file'|trans }}
+                                            </a>
+                                        </li>
+                                        {% if permissionCheck().isGrantedForStep(dialog.step) %}
+                                            <li onclick="OjsWorkflow.browseReviewForms(this, {{ dialog.id }})">
+                                                <a>
+                                                    <i class="fa fa-comments-o"></i>
+                                                    {{ 'workflow.send.review.form'|trans }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </span>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    {{ generateReviewboxContent(dialog) }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

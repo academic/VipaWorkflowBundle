@@ -25,6 +25,25 @@ Dergipark\WorkflowBundle\Entity\StepDialog:
     openedAt:
       type: datetime
       nullable: false
+    inviteTime:
+      type: datetime
+      nullable: true
+    acceptTime:
+      type: datetime
+      nullable: true
+    remindingTime:
+      type: datetime
+      nullable: true
+    rejected:
+      type: boolean
+      nullable: true
+      options:
+        default: false
+    accepted:
+      type: boolean
+      nullable: true
+      options:
+        default: false
   manyToOne:
     step:
       targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep

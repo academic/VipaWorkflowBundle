@@ -3,6 +3,7 @@
 namespace Dergipark\WorkflowBundle\Controller;
 
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Dergipark\WorkflowBundle\Entity\DialogPost;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Dergipark\WorkflowBundle\Event\WorkflowEvent;
 use Dergipark\WorkflowBundle\Event\WorkflowEvents;
@@ -589,10 +590,17 @@ class StepDialogController extends Controller
         //fetch dialog
         /** @var StepDialog $dialog */
         $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
+        $dialogPosts = $em->getRepository(DialogPost::class)->findBy([
+            'dialog' => $dialog,
+        ]);
         $this->throw404IfNotFound($dialog);
         //#permissioncheck
         if(!$permissionService->isGrantedForDialogPost($dialog)){
             throw new AccessDeniedException;
+        }
+
+        foreach($dialogPosts as $post){
+            $em->remove($post);
         }
         /**
          * remove dialog
@@ -614,6 +622,86 @@ class StepDialogController extends Controller
 
         return new JsonResponse([
             'success' => true,
+        ]);
+    }
+
+    /**
+     * @param $workflowId
+     * @param $stepOrder
+     * @param $dialogId
+     * @return JsonResponse
+     */
+    public function inviteReviewerAction($workflowId, $stepOrder, $dialogId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
+        $dialog->setInviteTime(new \DateTime());
+        $em->persist($dialog);
+        $em->flush();
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
+    }
+
+    /**
+     * @param $workflowId
+     * @param $stepOrder
+     * @return JsonResponse
+     */
+    public function remindReviewerAction($workflowId, $stepOrder, $dialogId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
+        $dialog->setRemindingTime(new \DateTime());
+        $em->persist($dialog);
+        $em->flush();
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
+    }
+
+    /**
+     * @param $workflowId
+     * @param $stepOrder
+     * @param $dialogId
+     * @return JsonResponse
+     */
+    public function acceptReviewAction($workflowId, $stepOrder, $dialogId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
+        $dialog->setAccepted(true);
+        $dialog->setAcceptTime(new \DateTime());
+        $em->persist($dialog);
+        $em->flush();
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
+    }
+
+    /**
+     * @param $workflowId
+     * @param $stepOrder
+     * @param $dialogId
+     * @return JsonResponse
+     */
+    public function rejectReviewAction($workflowId, $stepOrder, $dialogId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
+        $journal = $dialog->getStep()->getArticleWorkflow()->getJournal();
+        $dialog->setRejected(true);
+        $em->persist($dialog);
+        $em->flush();
+
+        return new JsonResponse([
+            'success' => true,
+            'redirectUrl' => $this->generateUrl('dergipark_workflow_flow_active', [
+                'journalId' => $journal->getId(),
+            ])
         ]);
     }
 

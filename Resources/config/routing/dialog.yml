@@ -81,3 +81,31 @@ dp_workflow_dialog_remove:
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
+
+dp_workflow_dialog_invite_reviewer:
+  path:     /invite-reviewer/{dialogId}
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:inviteReviewer" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
+dp_workflow_dialog_remind_reviewer:
+  path:     /remind-reviewer/{dialogId}
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:remindReviewer" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
+dp_workflow_dialog_accept_review:
+  path:     /accept-review/{dialogId}
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:acceptReview" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
+dp_workflow_dialog_reject_review:
+  path:     /reject-review/{dialogId}
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:rejectReview" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true

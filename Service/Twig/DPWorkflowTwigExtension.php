@@ -2,6 +2,9 @@
 
 namespace Dergipark\WorkflowBundle\Service\Twig;
 
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflowSetting;
+use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
 use Dergipark\WorkflowBundle\Params\StepActionTypes;
 use Dergipark\WorkflowBundle\Service\WorkflowPermissionService;
@@ -63,7 +66,13 @@ class DPWorkflowTwigExtension extends \Twig_Extension
     public $wfPermissionService;
 
     /**
+     * @var \Twig_Environment
+     */
+    public $twig;
+
+    /**
      * DPWorkflowTwigExtension constructor.
+     *
      * @param EntityManager|null $em
      * @param RouterInterface|null $router
      * @param TranslatorInterface|null $translator
@@ -73,6 +82,7 @@ class DPWorkflowTwigExtension extends \Twig_Extension
      * @param RequestStack $requestStack
      * @param EventDispatcherInterface $eventDispatcher
      * @param WorkflowPermissionService $permissionService
+     * @param \Twig_Environment $twig
      */
     public function __construct(
         EntityManager $em = null,
@@ -83,7 +93,8 @@ class DPWorkflowTwigExtension extends \Twig_Extension
         Session $session = null,
         RequestStack $requestStack,
         EventDispatcherInterface $eventDispatcher,
-        WorkflowPermissionService $permissionService
+        WorkflowPermissionService $permissionService,
+        \Twig_Environment $twig
     ) {
         $this->em                   = $em;
         $this->router               = $router;
@@ -94,6 +105,7 @@ class DPWorkflowTwigExtension extends \Twig_Extension
         $this->requestStack         = $requestStack;
         $this->eventDispatcher      = $eventDispatcher;
         $this->wfPermissionService  = $permissionService;
+        $this->twig                 = $twig;
     }
 
     public function getFunctions()
@@ -107,6 +119,9 @@ class DPWorkflowTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('stepStatus', array($this, 'getStepStatus')),
             new \Twig_SimpleFunction('postType', array($this, 'getPostType')),
             new \Twig_SimpleFunction('profileLink', array($this, 'getProfileLink'), ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('passedInviteDate', array($this, 'passedInviteDate')),
+            new \Twig_SimpleFunction('passedRemindDate', array($this, 'passedRemindDate')),
+            new \Twig_SimpleFunction('generateReviewboxContent', array($this, 'generateReviewboxContent'), ['is_safe' => ['html']]),
         );
     }
 
@@ -166,6 +181,139 @@ class DPWorkflowTwigExtension extends \Twig_Extension
     }
 
     /**
+     * @param StepDialog $dialog
+     * @return bool
+     */
+    public function passedInviteDate(StepDialog $dialog)
+    {
+        $settings = $this->getWorkflowSettings($dialog->getStep()->getArticleWorkflow());
+        $reviewerWaitDay = $settings->getReviewerWaitDay();
+        $interval = $dialog->getInviteTime()->diff(new \DateTime());
+        if($interval->days > $reviewerWaitDay){
+            return true;
+        }else{
+            return (int)$reviewerWaitDay - $interval->days;
+        }
+    }
+
+    /**
+     * @param StepDialog $dialog
+     * @return mixed
+     */
+    public function generateReviewboxContent(StepDialog $dialog)
+    {
+        $inviteTime = $dialog->getInviteTime();
+        $remindTime = $dialog->getRemindingTime();
+        $isReviewer = $dialog->users->contains($this->getUser());
+
+        //if invitation not sended yet
+        if($inviteTime === null){
+            if($isReviewer) {
+                return $this->renderReviewMessage('send_invitation_reviewer');
+            }else{
+                return $this->renderReviewMessage('send_invitation_editor', [
+                    'dialog' => $dialog,
+                ]);
+            }
+        }
+
+        //if invitation is rejected
+        if($dialog->isRejected()){
+            if($isReviewer) {
+                return $this->renderReviewMessage('invitation_rejected_reviewer');
+            }else{
+                return $this->renderReviewMessage('invitation_rejected_editor');
+            }
+        }
+
+        //if invitation sended but not passed yet
+        if($inviteTime instanceof \DateTime && $this->passedInviteDate($dialog) !== true){
+            if($isReviewer) {
+                return $this->renderReviewMessage('invitation_sended_waiting_reviewer', [
+                    'dialog' => $dialog,
+                    'leftDay' => $this->passedInviteDate($dialog),
+                    'fromDay' => $this->getWorkflowSettings($dialog->getStep()->getArticleWorkflow())->getReviewerWaitDay(),
+                ]);
+            }else{
+                return $this->renderReviewMessage('invitation_sended_waiting_editor', [
+                    'dialog' => $dialog,
+                    'leftDay' => $this->passedInviteDate($dialog),
+                    'fromDay' => $this->getWorkflowSettings($dialog->getStep()->getArticleWorkflow())->getReviewerWaitDay(),
+                ]);
+            }
+        }
+
+        //if invitation sended and finished time to response
+        if($inviteTime instanceof \DateTime
+            && $this->passedInviteDate($dialog) === true
+            && $remindTime === null){
+            if($isReviewer){
+                return $this->renderReviewMessage('wait_remind_mail_reviewer');
+            }else{
+                return $this->renderReviewMessage('send_remind_editor', [
+                    'dialog' => $dialog,
+                ]);
+            }
+        }
+
+        //if waiting for remind
+        if($remindTime instanceof \DateTime && $this->passedRemindDate($dialog) !== true) {
+            if($isReviewer) {
+                return $this->renderReviewMessage('remind_sended_waiting_accept_reject_reviewer', [
+                    'dialog' => $dialog,
+                    'leftDay' => $this->passedRemindDate($dialog),
+                    'fromDay' => 7,
+                ]);
+            }else{
+                return $this->renderReviewMessage('remind_sended_waiting_editor', [
+                    'dialog' => $dialog,
+                    'leftDay' => $this->passedRemindDate($dialog),
+                    'fromDay' => 7,
+                ]);
+            }
+        }
+
+        //remind mail sended and time has finished
+        if($remindTime instanceof \DateTime && $this->passedRemindDate($dialog) === true) {
+            if($isReviewer) {
+                return $this->renderReviewMessage('remind_time_finished_reviewer');
+            }else{
+                return $this->renderReviewMessage('remind_time_finished_editor');
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @param $block
+     * @param array $params
+     *
+     * @return mixed
+     */
+    private function renderReviewMessage($block, $params = [])
+    {
+        $template = $this->twig->loadTemplate('DergiparkWorkflowBundle:StepDialog/dialog/messages:_reviewer_message_box.html.twig');
+
+        return $template->renderBlock($block, $params);
+    }
+
+    /**
+     * @param StepDialog $dialog
+     * @return bool
+     */
+    public function passedRemindDate(StepDialog $dialog)
+    {
+        $remindWaitDay = 7;
+        $interval = $dialog->getRemindingTime()->diff(new \DateTime());
+        if($interval->days > $remindWaitDay){
+            return true;
+        }else{
+            return (int)$remindWaitDay - $interval->days;
+        }
+    }
+
+    /**
      * @return User
      */
     public function getUser()
@@ -175,5 +323,12 @@ class DPWorkflowTwigExtension extends \Twig_Extension
             throw new \LogicException('i can not find current user token :/');
         }
         return $token->getUser();
+    }
+
+    private function getWorkflowSettings(ArticleWorkflow $workflow)
+    {
+        return $this->em->getRepository(ArticleWorkflowSetting::class)->findOneBy([
+            'workflow' => $workflow,
+        ]);
     }
 }

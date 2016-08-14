@@ -2,7 +2,9 @@
 
 namespace Dergipark\WorkflowBundle\Service;
 
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflowSetting;
 use Dergipark\WorkflowBundle\Entity\JournalReviewForm;
+use Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting;
 use Dergipark\WorkflowBundle\Entity\StepReviewForm;
 use Dergipark\WorkflowBundle\Event\WorkflowEvent;
 use Dergipark\WorkflowBundle\Event\WorkflowEvents;
@@ -121,7 +123,17 @@ class WorkflowService
             ->setArticle($article)
             ->setJournal($this->journalService->getSelectedJournal())
             ->setStartDate(new \DateTime())
-            ;
+        ;
+        //clone workflow settings
+        $journalWorkflowSetting = $this->em->getRepository(JournalWorkflowSetting::class)->findOneBy([]);
+        $articleWorkflowSetting = new ArticleWorkflowSetting();
+        $articleWorkflowSetting
+            ->setDoubleBlind($journalWorkflowSetting->isDoubleBlind())
+            ->setReviewerWaitDay($journalWorkflowSetting->getReviewerWaitDay())
+            ->setWorkflow($articleWorkflow)
+        ;
+        $this->em->persist($articleWorkflowSetting);
+
         //fetch each journal workflow step
         foreach ($this->currentJournalWorkflowSteps() as $journalWorkflowStep) {
             //clone journal workflow steps to article workflow
@@ -130,7 +142,7 @@ class WorkflowService
                 ->setOrder($journalWorkflowStep->getOrder())
                 ->setGrantedUsers($journalWorkflowStep->getGrantedUsers())
                 ->setArticleWorkflow($articleWorkflow)
-                ;
+            ;
             //add each granted user to workflow related users
             foreach ($journalWorkflowStep->getGrantedUsers() as $stepUser) {
                 $articleWorkflow->addRelatedUser($stepUser);
@@ -153,7 +165,7 @@ class WorkflowService
                     ->setContent($journalReviewForm->getContent())
                     ->setName($journalReviewForm->getName())
                     ->setStep($articleWorkflowStep)
-                    ;
+                ;
                 $this->em->persist($articleStepReviewForm);
             }
         }
@@ -683,7 +695,7 @@ class WorkflowService
             $workflowPostFiles
                 ->andWhere(':user MEMBER OF stepDialog.users')
                 ->setParameter('user', $this->getUser())
-                ;
+            ;
         }
         $workflowPostFiles = $workflowPostFiles->getQuery()->getResult();
 
@@ -760,7 +772,7 @@ class WorkflowService
                 ->setParameter('step', $step)
                 ->getQuery()
                 ->getResult()
-                ;
+            ;
         }
 
         return $dialogs;

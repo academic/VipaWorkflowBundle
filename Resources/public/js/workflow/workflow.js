@@ -565,6 +565,58 @@ $(document).ready(function() {
                     });
                 }
             });
+        },
+        inviteReviewer: function($dialogId){
+            $.get(Routing.generate('dp_workflow_dialog_invite_reviewer', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder,
+                dialogId: $dialogId
+            }), function( data ) {
+                if(data.success == true){
+                    OjsWorkflow.loadStep(stepOrder);
+                    swal(Translator.trans('excellent'), Translator.trans('reviewer.invitation.mail.sended'), "success");
+                }
+            });
+        },
+        remindReviewer: function($dialogId){
+            $.get(Routing.generate('dp_workflow_dialog_remind_reviewer', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder,
+                dialogId: $dialogId
+            }), function( data ) {
+                if(data.success == true){
+                    OjsWorkflow.loadStep(stepOrder);
+                    swal(Translator.trans('excellent'), Translator.trans('reviewer.remind.mail.sended'), "success");
+                }
+            });
+        },
+        acceptReviewRequest: function($dialogId){
+            $.get(Routing.generate('dp_workflow_dialog_accept_review', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder,
+                dialogId: $dialogId
+            }), function( data ) {
+                if(data.success == true){
+                    OjsWorkflow.loadStep(stepOrder);
+                    swal(Translator.trans('excellent'), Translator.trans('you.accepted.review'), "success");
+                }
+            });
+        },
+        rejectReviewRequest: function($dialogId){
+            $.get(Routing.generate('dp_workflow_dialog_reject_review', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder,
+                dialogId: $dialogId
+            }), function( data ) {
+                if(data.success == true){
+                    window.location = data.redirectUrl;
+                    swal(Translator.trans('success'), Translator.trans('you.rejected'), "warning");
+                }
+            });
         }
     };
 });

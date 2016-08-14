@@ -56,6 +56,31 @@ class StepDialog
     protected $status = StepDialogStatus::ACTIVE;
 
     /**
+     * @var \DateTime
+     */
+    private $inviteTime = null;
+
+    /**
+     * @var \DateTime
+     */
+    private $acceptTime = null;
+
+    /**
+     * @var \DateTime
+     */
+    private $remindingTime = null;
+
+    /**
+     * @var bool
+     */
+    private $rejected = false;
+
+    /**
+     * @var bool
+     */
+    private $accepted = false;
+
+    /**
      * StepDialog constructor.
      */
     public function __construct()
@@ -236,6 +261,106 @@ class StepDialog
     public function setCreatedDialogBy($createdDialogBy)
     {
         $this->createdDialogBy = $createdDialogBy;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getInviteTime()
+    {
+        return $this->inviteTime;
+    }
+
+    /**
+     * @param \DateTime $inviteTime
+     *
+     * @return $this
+     */
+    public function setInviteTime($inviteTime)
+    {
+        $this->inviteTime = $inviteTime;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getAcceptTime()
+    {
+        return $this->acceptTime;
+    }
+
+    /**
+     * @param \DateTime $acceptTime
+     *
+     * @return $this
+     */
+    public function setAcceptTime($acceptTime)
+    {
+        $this->acceptTime = $acceptTime;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getRemindingTime()
+    {
+        return $this->remindingTime;
+    }
+
+    /**
+     * @param \DateTime $remindingTime
+     *
+     * @return $this
+     */
+    public function setRemindingTime($remindingTime)
+    {
+        $this->remindingTime = $remindingTime;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isRejected()
+    {
+        return $this->rejected;
+    }
+
+    /**
+     * @param boolean $rejected
+     *
+     * @return $this
+     */
+    public function setRejected($rejected)
+    {
+        $this->rejected = $rejected;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isAccepted()
+    {
+        return $this->accepted;
+    }
+
+    /**
+     * @param boolean $accepted
+     *
+     * @return $this
+     */
+    public function setAccepted($accepted)
+    {
+        $this->accepted = $accepted;
 
         return $this;
     }

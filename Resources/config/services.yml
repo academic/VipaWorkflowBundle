@@ -11,6 +11,7 @@ services:
       - "@request_stack"
       - "@event_dispatcher"
       - "@dp.workflow_permission_service"
+      - "@twig"
     tags:
       - { name: twig.extension }
 
