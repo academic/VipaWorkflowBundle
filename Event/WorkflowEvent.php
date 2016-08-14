@@ -7,8 +7,9 @@ use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
 use Dergipark\WorkflowBundle\Entity\DialogPost;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Ojs\UserBundle\Entity\User;
+use Symfony\Component\EventDispatcher\Event;
 
-final class WorkflowEvent
+final class WorkflowEvent extends Event
 {
     /**
      * @var User
@@ -110,6 +111,7 @@ final class WorkflowEvent
     public function setStep($step)
     {
         $this->step = $step;
+        $this->workflow = $this->step->getArticleWorkflow();
 
         return $this;
     }
@@ -122,6 +124,8 @@ final class WorkflowEvent
     public function setDialog($dialog)
     {
         $this->dialog = $dialog;
+        $this->step = $dialog->getStep();
+        $this->workflow = $this->step->getArticleWorkflow();
 
         return $this;
     }
@@ -134,6 +138,9 @@ final class WorkflowEvent
     public function setPost($post)
     {
         $this->post = $post;
+        $this->dialog = $post->getDialog();
+        $this->step = $this->dialog->getStep();
+        $this->workflow = $this->step->getArticleWorkflow();
 
         return $this;
     }
