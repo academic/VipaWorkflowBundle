@@ -161,7 +161,32 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReviewFormRequest(WorkflowEvent $event)
     {
-
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEW_FORM_REQUEST);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags($event->dialog->getUsers(), [$event->dialog->getCreatedDialogBy()]);
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+                'dialog.title'     => $this->getDialogTitle($event->dialog),
+                'form.name'     => $event->article->getTitle(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
@@ -169,7 +194,27 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onWorkflowGrantUser(WorkflowEvent $event)
     {
-
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::WORKFLOW_GRANT_USER);
+        if(!$getMailEvent){
+            return;
+        }
+        $transformParams = [
+            'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+            'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                'journalId' => $event->journal->getId(),
+                'workflowId' => $event->workflow->getId(),
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
+            'journal'           => $event->journal->getTitle(),
+            'receiver.username' => $event->user->getUsername(),
+            'receiver.fullName' => $event->user->getFullName(),
+            'article.title'     => $event->article->getTitle(),
+        ];
+        $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+        $this->ojsMailer->sendToUser(
+            $event->user,
+            $getMailEvent->getSubject(),
+            $template
+        );
     }
 
     /**
@@ -177,7 +222,37 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onDialogPostComment(WorkflowEvent $event)
     {
-
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::DIALOG_POST_COMMENT);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->dialog->getUsers(),
+            [$event->dialog->getCreatedDialogBy()],
+            $event->step->grantedUsers,
+            $event->workflow->grantedUsers
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+                'dialog.title'     => $this->getDialogTitle($event->dialog),
+                'post.content'     => $event->post->getText(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
@@ -185,7 +260,37 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onDialogPostFile(WorkflowEvent $event)
     {
-
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::DIALOG_POST_FILE);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->dialog->getUsers(),
+            [$event->dialog->getCreatedDialogBy()],
+            $event->step->grantedUsers,
+            $event->workflow->grantedUsers
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+                'dialog.title'     => $this->getDialogTitle($event->dialog),
+                'file.name'     => $event->post->getFileName(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
@@ -193,7 +298,43 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onCreateSpecificDialog(WorkflowEvent $event)
     {
-
+        if($event->dialog->getDialogType() == StepActionTypes::ASSIGN_REVIEWER){
+            return;
+        }
+        $eventName = WorkflowEvents::CREATE_SPESIFIC_DIALOG;
+        if($event->dialog->getDialogType() == StepActionTypes::ASSIGN_SECTION_EDITOR){
+            $eventName = WorkflowEvents::CREATE_SPESIFIC_DIALOG.'.assign.section.editor';
+        }
+        $getMailEvent = $this->ojsMailer->getEventByName($eventName);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->dialog->getUsers(),
+            [$event->dialog->getCreatedDialogBy()],
+            $event->step->grantedUsers,
+            $event->workflow->grantedUsers
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+                'dialog.title'     => $this->getDialogTitle($event->dialog),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
@@ -201,7 +342,35 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onCreateDialogWithAuthor(WorkflowEvent $event)
     {
-
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::CREATE_DIALOG_WITH_AUTHOR);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->dialog->getUsers(),
+            [$event->dialog->getCreatedDialogBy()],
+            $event->step->grantedUsers,
+            $event->workflow->grantedUsers
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
@@ -209,7 +378,36 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onCreateBasicDialog(WorkflowEvent $event)
     {
-
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::CREATE_BASIC_DIALOG);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->dialog->getUsers(),
+            [$event->dialog->getCreatedDialogBy()],
+            $event->step->grantedUsers,
+            $event->workflow->grantedUsers
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+                'dialog.title'      => $event->dialog->getTitle(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
@@ -217,7 +415,33 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onStepGotoArrangement(WorkflowEvent $event)
     {
-
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::STEP_GOTO_ARRANGEMET);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->workflow->relatedUsers,
+            $this->getJournalEditors()
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
@@ -225,7 +449,33 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onStepGotoReviewing(WorkflowEvent $event)
     {
-
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::STEP_GOTO_REVIEWING);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->workflow->relatedUsers,
+            $this->getJournalEditors()
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
@@ -233,7 +483,33 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onAcceptSubmissionDirectly(WorkflowEvent $event)
     {
-
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::ACCEPT_SUBMISSION_DIRECTLY);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->workflow->relatedUsers,
+            $this->getJournalEditors()
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
@@ -241,7 +517,33 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onWorkflowFinishAction(WorkflowEvent $event)
     {
-
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::WORKFLOW_FINISH_ACTION);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->workflow->relatedUsers,
+            $this->getJournalEditors()
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
@@ -249,7 +551,32 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onDeclineSubmission(WorkflowEvent $event)
     {
-
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::DECLINE_SUBMISSION);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->workflow->relatedUsers
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
@@ -257,7 +584,36 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onCloseDialog(WorkflowEvent $event)
     {
-
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::CLOSE_DIALOG);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->workflow->grantedUsers,
+            $event->step->grantedUsers,
+            $event->dialog->users,
+            [$event->dialog->createdDialogBy]
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+                'dialog.title'      => $this->getDialogTitle($event->dialog)
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
@@ -265,15 +621,48 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReopenDialog(WorkflowEvent $event)
     {
-
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REOPEN_DIALOG);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->workflow->grantedUsers,
+            $event->step->grantedUsers,
+            $event->dialog->users,
+            [$event->dialog->createdDialogBy]
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+                'dialog.title'      => $this->getDialogTitle($event->dialog)
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
+     * we won 't use this function for now because remove dialog action
+     * is only valid for invite reviewer action and we don 't want to bother
+     * reviewer after decline to invite
+     *
      * @param WorkflowEvent $event
      */
     public function onRemoveDialog(WorkflowEvent $event)
     {
-
+        return;
     }
 
     private function mergeUserBags()
