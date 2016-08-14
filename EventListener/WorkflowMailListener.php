@@ -2,12 +2,20 @@
 
 namespace Dergipark\WorkflowBundle\EventListener;
 
+use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Dergipark\WorkflowBundle\Event\WorkflowEvent;
 use Dergipark\WorkflowBundle\Event\WorkflowEvents;
+use Dergipark\WorkflowBundle\Params\StepActionTypes;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Ojs\CoreBundle\Service\OjsMailer;
+use Ojs\UserBundle\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class WorkflowMailListener implements EventSubscriberInterface
 {
@@ -27,19 +35,34 @@ class WorkflowMailListener implements EventSubscriberInterface
     private $ojsMailer;
 
     /**
-     * @param RouterInterface $router
-     * @param EntityManager $em
-     * @param OjsMailer $ojsMailer
+     * @var PropertyAccessor
+     */
+    private $accessor;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * WorkflowMailListener constructor.
      *
+     * @param RouterInterface       $router
+     * @param EntityManager         $em
+     * @param OjsMailer             $ojsMailer
+     * @param TranslatorInterface   $translator
      */
     public function __construct(
         RouterInterface $router,
         EntityManager $em,
-        OjsMailer $ojsMailer
+        OjsMailer $ojsMailer,
+        TranslatorInterface $translator
     ) {
-        $this->router = $router;
-        $this->em = $em;
-        $this->ojsMailer = $ojsMailer;
+        $this->router       = $router;
+        $this->em           = $em;
+        $this->ojsMailer    = $ojsMailer;
+        $this->accessor     = PropertyAccess::createPropertyAccessor();
+        $this->translator   = $translator;
     }
 
     /**
@@ -73,7 +96,31 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onWorkflowStarted(WorkflowEvent $event)
     {
-
+        $accessor = $this->accessor;
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::WORKFLOW_STARTED);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags($event->workflow->relatedUsers, $this->getJournalEditors());
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'article.author'    => $accessor->getValue($event, 'article.submitterUser.username'),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getId(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getId(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
@@ -81,7 +128,32 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReviewFormResponse(WorkflowEvent $event)
     {
-
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEW_FORM_RESPONSE);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags($event->dialog->getUsers(), [$event->dialog->getCreatedDialogBy()]);
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+                'dialog.title'     => $this->getDialogTitle($event->dialog),
+                'form.name'     => $event->article->getTitle(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
     }
 
     /**
@@ -202,5 +274,43 @@ class WorkflowMailListener implements EventSubscriberInterface
     public function onRemoveDialog(WorkflowEvent $event)
     {
 
+    }
+
+    private function mergeUserBags()
+    {
+        $userCollection = new ArrayCollection();
+        $userBags = func_get_args();
+        foreach($userBags as $userBag){
+            foreach($userBag as $user){
+                if(!$userCollection->contains($user)){
+                    $userCollection->add($user);
+                }
+            }
+        }
+
+        return $userCollection;
+    }
+
+    /**
+     * @param StepDialog $dialog
+     * @return string
+     */
+    private function getDialogTitle(StepDialog $dialog)
+    {
+        if($dialog->getDialogType() == StepActionTypes::CREATE_ISSUE){
+            return $dialog->getTitle();
+        }
+        $title = $this->translator->trans(StepActionTypes::$typeAlias[$dialog->getDialogType()].'.dialog.header');
+        return $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getJournalEditors()
+    {
+        return $this->em->getRepository('OjsUserBundle:User')->findUsersByJournalRole(
+            ['ROLE_EDITOR', 'ROLE_CO_EDITOR']
+        );
     }
 }

@@ -61,6 +61,6 @@ services:
 
   dp.worklfow.mail_listener:
     class: Dergipark\WorkflowBundle\EventListener\WorkflowMailListener
-    arguments: ["@router", "@doctrine.orm.entity_manager", "@ojs_mailer"]
+    arguments: ["@router", "@doctrine.orm.entity_manager", "@ojs_mailer", "@translator"]
     tags:
       - { name: kernel.event_subscriber }

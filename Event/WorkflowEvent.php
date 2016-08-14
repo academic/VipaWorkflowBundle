@@ -6,6 +6,8 @@ use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
 use Dergipark\WorkflowBundle\Entity\DialogPost;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
+use Ojs\JournalBundle\Entity\Article;
+use Ojs\JournalBundle\Entity\Journal;
 use Ojs\UserBundle\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -25,6 +27,16 @@ final class WorkflowEvent extends Event
      * @var ArticleWorkflow
      */
     public $workflow;
+
+    /**
+     * @var Journal
+     */
+    public $journal;
+
+    /**
+     * @var Article
+     */
+    public $article;
 
     /**
      * @var ArticleWorkflowStep
@@ -99,6 +111,33 @@ final class WorkflowEvent extends Event
     public function setWorkflow($workflow)
     {
         $this->workflow = $workflow;
+        $this->article = $this->workflow->getArticle();
+        $this->journal = $this->workflow->getJournal();
+
+        return $this;
+    }
+
+    /**
+     * @param Journal $journal
+     *
+     * @return $this
+     */
+    public function setJournal($journal)
+    {
+        $this->journal = $journal;
+
+        return $this;
+    }
+
+    /**
+     * @param Article $article
+     *
+     * @return $this
+     */
+    public function setArticle($article)
+    {
+        $this->article = $article;
+        $this->journal = $article->getJournal();
 
         return $this;
     }
@@ -112,6 +151,8 @@ final class WorkflowEvent extends Event
     {
         $this->step = $step;
         $this->workflow = $this->step->getArticleWorkflow();
+        $this->article = $this->workflow->getArticle();
+        $this->journal = $this->workflow->getJournal();
 
         return $this;
     }
@@ -126,6 +167,8 @@ final class WorkflowEvent extends Event
         $this->dialog = $dialog;
         $this->step = $dialog->getStep();
         $this->workflow = $this->step->getArticleWorkflow();
+        $this->article = $this->workflow->getArticle();
+        $this->journal = $this->workflow->getJournal();
 
         return $this;
     }
@@ -141,6 +184,8 @@ final class WorkflowEvent extends Event
         $this->dialog = $post->getDialog();
         $this->step = $this->dialog->getStep();
         $this->workflow = $this->step->getArticleWorkflow();
+        $this->article = $this->workflow->getArticle();
+        $this->journal = $this->workflow->getJournal();
 
         return $this;
     }
