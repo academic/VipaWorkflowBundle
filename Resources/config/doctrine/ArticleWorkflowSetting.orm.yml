@@ -1,0 +1,31 @@
+Dergipark\WorkflowBundle\Entity\ArticleWorkflowSetting:
+  type: entity
+  table: bc_wf_article_wf_setting
+  repositoryClass: Dergipark\WorkflowBundle\Entity\ArticleWorkflowSettingRepository
+  cache:
+    usage: NONSTRICT_READ_WRITE
+  id:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+  manyToOne:
+    workflow:
+      targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflow
+      joinColumn:
+        name: workflow_id
+        referencedColumnName: id
+  fields:
+    doubleBlind:
+      type: boolean
+      column: double_blind
+      options:
+          default: false
+      nullable: true
+    reviewerWaitDay:
+      type: integer
+      column: reviewer_wait_day
+      options:
+        default: 15
+      nullable: false
