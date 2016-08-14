@@ -33,6 +33,7 @@ services:
       - "@dp.workflow_permission_service"
       - "@translator"
       - "@twig"
+      - "@event_dispatcher"
 
   dp.workflow_permission_service:
     class: Dergipark\WorkflowBundle\Service\WorkflowPermissionService

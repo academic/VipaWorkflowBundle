@@ -4,6 +4,8 @@ namespace Dergipark\WorkflowBundle\Service;
 
 use Dergipark\WorkflowBundle\Entity\JournalReviewForm;
 use Dergipark\WorkflowBundle\Entity\StepReviewForm;
+use Dergipark\WorkflowBundle\Event\WorkflowEvent;
+use Dergipark\WorkflowBundle\Event\WorkflowEvents;
 use Ojs\JournalBundle\Entity\ArticleSubmissionFile;
 use Ojs\UserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
@@ -12,6 +14,7 @@ use Ojs\JournalBundle\Entity\Journal;
 use Ojs\JournalBundle\Entity\ArticleFile;
 use Ojs\CoreBundle\Params\ArticleStatuses;
 use Ojs\JournalBundle\Service\JournalService;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Dergipark\WorkflowBundle\Entity\DialogPost;
@@ -68,15 +71,21 @@ class WorkflowService
     public $translator;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    public $dispatcher;
+
+    /**
      * WorkflowService constructor.
      *
-     * @param EntityManager             $em
-     * @param JournalService            $journalService
-     * @param TokenStorageInterface     $tokenStorage
-     * @param WorkflowLoggerService     $wfLogger
+     * @param EntityManager $em
+     * @param JournalService $journalService
+     * @param TokenStorageInterface $tokenStorage
+     * @param WorkflowLoggerService $wfLogger
      * @param WorkflowPermissionService $wfPermissionCheck
-     * @param TranslatorInterface       $translator
-     * @param \Twig_Environment         $twig
+     * @param TranslatorInterface $translator
+     * @param \Twig_Environment $twig
+     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(
         EntityManager $em,
@@ -85,7 +94,8 @@ class WorkflowService
         WorkflowLoggerService $wfLogger,
         WorkflowPermissionService $wfPermissionCheck,
         TranslatorInterface $translator,
-        \Twig_Environment $twig
+        \Twig_Environment $twig,
+        EventDispatcherInterface $dispatcher
     ) {
         $this->em                   = $em;
         $this->journalService       = $journalService;
@@ -94,6 +104,7 @@ class WorkflowService
         $this->twig                 = $twig;
         $this->wfPermissionCheck    = $wfPermissionCheck;
         $this->translator           = $translator;
+        $this->dispatcher           = $dispatcher;
     }
 
     /**
@@ -162,6 +173,11 @@ class WorkflowService
         $this->wfLogger->log('give.permission.for.journal.specified.users');
 
         $this->em->flush();
+
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setWorkflow($articleWorkflow);
+        $this->dispatcher->dispatch(WorkflowEvents::WORKFLOW_STARTED, $workflowEvent);
 
         return $articleWorkflow;
     }
