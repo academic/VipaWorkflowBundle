@@ -46,6 +46,18 @@
                 </ul>
             </div>
         {% endif %}
+        {% if permissionCheck().isReviewerOnWorkflow(workflow) == false or workflowSettings.blindReview == false %}
+            <div class="well">
+                <h5>{{ 'author.details'|trans }}</h5>
+                <pre>
+{{ 'fullname'|trans }}: {{ article.submitterUser.fullName }}
+{{ 'username'|trans }}: {{ article.submitterUser.userName }}
+{{ 'profile'|trans }}: <a href="{{ path('ojs_user_profile', {slug: article.submitterUser.userName}) }}" target="_blank">{{ article.submitterUser.userName }}</a>
+{{ 'notes_to_editor'|trans }}: {{ article.note }}
+                </pre>
+
+            </div>
+        {% endif %}
         {% if permissionCheck().isHaveEditorRole() %}
             <a target="_blank" href="{{ path('ojs_journal_article_show', {journalId: selectedJournal().id, id: article.id}) }}" class="btn btn-primary">
                 {{ 'title.article_show_and_edit'|trans }}

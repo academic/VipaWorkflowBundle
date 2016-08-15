@@ -40,7 +40,8 @@ class WorkflowLoggerService
     public function __construct(
         EntityManager $em,
         JournalService $journalService,
-        TranslatorInterface $translator)
+        TranslatorInterface $translator
+    )
     {
         $this->em               = $em;
         $this->journalService   = $journalService;

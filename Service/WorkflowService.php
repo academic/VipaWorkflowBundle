@@ -804,6 +804,7 @@ class WorkflowService
         $template = $this->twig->render('DergiparkWorkflowBundle:ArticleWorkflow/article_detail:_article_detail.html.twig', [
             'article' => $article,
             'workflow' => $workflow,
+            'workflowSettings' => $this->workflowSettings($workflow),
         ]);
 
         return new Response($template);
@@ -825,6 +826,18 @@ class WorkflowService
         }
 
         return true;
+    }
+
+    /**
+     * @param ArticleWorkflow $workflow
+     *
+     * @return ArticleWorkflowSetting
+     */
+    public function workflowSettings(ArticleWorkflow $workflow)
+    {
+        return $this->em->getRepository(ArticleWorkflowSetting::class)->findOneBy([
+            'workflow' => $workflow,
+        ]);
     }
 
     /**

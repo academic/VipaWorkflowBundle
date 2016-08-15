@@ -5,6 +5,9 @@ namespace Dergipark\WorkflowBundle\Service;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
+use Dergipark\WorkflowBundle\Params\StepActionTypes;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Ojs\JournalBundle\Service\JournalService;
 use Ojs\UserBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -22,16 +25,24 @@ class WorkflowPermissionService
     private $tokenStorage;
 
     /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    /**
      * WorkflowPermissionService constructor.
      * @param JournalService $journalService
      * @param TokenStorageInterface $tokenStorage
+     * @param EntityManagerInterface $em
      */
     public function __construct(
         JournalService $journalService,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        EntityManagerInterface $em
     ) {
         $this->journalService   = $journalService;
         $this->tokenStorage     = $tokenStorage;
+        $this->em               = $em;
     }
 
     /**
@@ -117,6 +128,29 @@ class WorkflowPermissionService
         }
 
         return false;
+    }
+
+    /**
+     * @param ArticleWorkflow $workflow
+     * @return bool
+     */
+    public function isReviewerOnWorkflow(ArticleWorkflow $workflow)
+    {
+        $dialogRepo = $this->em->getRepository(StepDialog::class);
+        $dialogs = $dialogRepo
+            ->createQueryBuilder('stepDialog')
+            ->join('stepDialog.step', 'dialogStep')
+            ->andWhere(':user MEMBER OF stepDialog.users')
+            ->setParameter('user', $this->getUser())
+            ->andWhere('stepDialog.dialogType = :dialogType')
+            ->setParameter('dialogType', StepActionTypes::ASSIGN_REVIEWER)
+            ->andWhere('dialogStep.articleWorkflow = :workflow')
+            ->setParameter('workflow', $workflow)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return count($dialogs) > 0;
     }
 
     /**

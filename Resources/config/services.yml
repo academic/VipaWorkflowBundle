@@ -41,6 +41,7 @@ services:
     arguments:
       - "@ojs.journal_service"
       - "@security.token_storage"
+      - "@doctrine.orm.entity_manager"
 
   dp.wf_logger_service:
     class: Dergipark\WorkflowBundle\Service\WorkflowLoggerService
