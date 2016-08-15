@@ -88,6 +88,10 @@ class WorkflowMailListener implements EventSubscriberInterface
             WorkflowEvents::CLOSE_DIALOG                => 'onCloseDialog',
             WorkflowEvents::REOPEN_DIALOG               => 'onReopenDialog',
             WorkflowEvents::REMOVE_DIALOG               => 'onRemoveDialog',
+            WorkflowEvents::REVIEWER_INVITE             => 'onReviewerInvite',
+            WorkflowEvents::REVIEWER_REMIND             => 'onReviewerRemind',
+            WorkflowEvents::ACCEPT_REVIEW               => 'onAcceptReview',
+            WorkflowEvents::REJECT_REVIEW               => 'onRejectReview',
         );
     }
 
@@ -644,6 +648,272 @@ class WorkflowMailListener implements EventSubscriberInterface
                 'receiver.fullName' => $user->getFullName(),
                 'article.title'     => $event->article->getTitle(),
                 'dialog.title'      => $this->getDialogTitle($event->dialog)
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
+    }
+
+    /**
+     * @param WorkflowEvent $event
+     */
+    public function onReviewerInvite(WorkflowEvent $event)
+    {
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_INVITE.'.to.reviewer');
+        if(!$getMailEvent){
+            goto sendmailtoeditors;
+        }
+        $reviewerUser = $event->post->getDialog()->users->first();
+        $transformParams = [
+            'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+            'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                'journalId' => $event->journal->getId(),
+                'workflowId' => $event->workflow->getId(),
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
+            'journal'           => $event->journal->getTitle(),
+            'receiver.username' => $reviewerUser->getUsername(),
+            'receiver.fullName' => $reviewerUser->getFullName(),
+            'article.title'     => $event->article->getTitle(),
+            'accept.link'     => $this->router->generate('dp_workflow_dialog_accept_review' ,[
+                'journalId' => $event->journal->getId(),
+                'workflowId' => $event->workflow->getId(),
+                'stepOrder' => $event->step->getId(),
+                'dialogId' => $event->dialog->getId(),
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
+            'reject.link'     => $this->router->generate('dp_workflow_dialog_reject_review' ,[
+                'journalId' => $event->journal->getId(),
+                'workflowId' => $event->workflow->getId(),
+                'stepOrder' => $event->step->getId(),
+                'dialogId' => $event->dialog->getId(),
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
+        ];
+        $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+        $this->ojsMailer->sendToUser(
+            $event->user,
+            $getMailEvent->getSubject(),
+            $template
+        );
+
+        sendmailtoeditors:
+
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_INVITE.'.to.editor');
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->step->grantedUsers,
+            [$event->dialog->createdDialogBy]
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
+    }
+
+    /**
+     * @param WorkflowEvent $event
+     */
+    public function onReviewerRemind(WorkflowEvent $event)
+    {
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_REMIND.'.to.reviewer');
+        if(!$getMailEvent){
+            goto sendmailtoeditors;
+        }
+        $reviewerUser = $event->post->getDialog()->users->first();
+        $transformParams = [
+            'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+            'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                'journalId' => $event->journal->getId(),
+                'workflowId' => $event->workflow->getId(),
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
+            'journal'           => $event->journal->getTitle(),
+            'receiver.username' => $reviewerUser->getUsername(),
+            'receiver.fullName' => $reviewerUser->getFullName(),
+            'article.title'     => $event->article->getTitle(),
+            'accept.link'     => $this->router->generate('dp_workflow_dialog_accept_review' ,[
+                'journalId' => $event->journal->getId(),
+                'workflowId' => $event->workflow->getId(),
+                'stepOrder' => $event->step->getId(),
+                'dialogId' => $event->dialog->getId(),
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
+            'reject.link'     => $this->router->generate('dp_workflow_dialog_reject_review' ,[
+                'journalId' => $event->journal->getId(),
+                'workflowId' => $event->workflow->getId(),
+                'stepOrder' => $event->step->getId(),
+                'dialogId' => $event->dialog->getId(),
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
+        ];
+        $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+        $this->ojsMailer->sendToUser(
+            $event->user,
+            $getMailEvent->getSubject(),
+            $template
+        );
+
+        sendmailtoeditors:
+
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_REMIND.'.to.editor');
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->step->grantedUsers,
+            [$event->dialog->createdDialogBy]
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
+    }
+
+    /**
+     * @param WorkflowEvent $event
+     */
+    public function onAcceptReview(WorkflowEvent $event)
+    {
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::ACCEPT_REVIEW.'.to.reviewer');
+        /** @var User $reviewerUser */
+        $reviewerUser = $event->post->getDialog()->users->first();
+        if(!$getMailEvent){
+            goto sendmailtoeditors;
+        }
+        $transformParams = [
+            'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+            'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                'journalId' => $event->journal->getId(),
+                'workflowId' => $event->workflow->getId(),
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
+            'journal'           => $event->journal->getTitle(),
+            'receiver.username' => $reviewerUser->getUsername(),
+            'receiver.fullName' => $reviewerUser->getFullName(),
+            'article.title'     => $event->article->getTitle(),
+        ];
+        $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+        $this->ojsMailer->sendToUser(
+            $event->user,
+            $getMailEvent->getSubject(),
+            $template
+        );
+
+        sendmailtoeditors:
+
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::ACCEPT_REVIEW.'.to.editor');
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->step->grantedUsers,
+            [$event->dialog->createdDialogBy]
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+                'reviewer.username' => $reviewerUser->getUsername(),
+                'reviewer.fullName' => $reviewerUser->getFullName(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
+    }
+
+    /**
+     * @param WorkflowEvent $event
+     */
+    public function onRejectReview(WorkflowEvent $event)
+    {
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REJECT_REVIEW.'.to.reviewer');
+        /** @var User $reviewerUser */
+        $reviewerUser = $event->post->getDialog()->users->first();
+        if(!$getMailEvent){
+            goto sendmailtoeditors;
+        }
+        $transformParams = [
+            'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+            'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                'journalId' => $event->journal->getId(),
+                'workflowId' => $event->workflow->getId(),
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
+            'journal'           => $event->journal->getTitle(),
+            'receiver.username' => $reviewerUser->getUsername(),
+            'receiver.fullName' => $reviewerUser->getFullName(),
+            'article.title'     => $event->article->getTitle(),
+        ];
+        $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+        $this->ojsMailer->sendToUser(
+            $event->user,
+            $getMailEvent->getSubject(),
+            $template
+        );
+
+        sendmailtoeditors:
+
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REJECT_REVIEW.'.to.editor');
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags(
+            $event->step->grantedUsers,
+            [$event->dialog->createdDialogBy]
+        );
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId' => $event->journal->getId(),
+                    'workflowId' => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+                'reviewer.username' => $reviewerUser->getUsername(),
+                'reviewer.fullName' => $reviewerUser->getFullName(),
             ];
             $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
             $this->ojsMailer->sendToUser(

@@ -41,6 +41,14 @@ final class WorkflowEvents implements MailEventsInterface
 
     const REMOVE_DIALOG = 'dp.workflow.remove.dialog';
 
+    const REVIEWER_INVITE = 'dp.workflow.reviewer.invite';
+
+    const REVIEWER_REMIND = 'dp.workflow.reviewer.remind';
+
+    const ACCEPT_REVIEW = 'dp.workflow.accept.review';
+
+    const REJECT_REVIEW = 'dp.workflow.reject.review';
+
     public function getMailEventsOptions()
     {
         return [
@@ -97,6 +105,30 @@ final class WorkflowEvents implements MailEventsInterface
             ]),
             new EventDetail(self::REMOVE_DIALOG, 'admin', [
                 'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'dialog.title',
+            ]),
+            new EventDetail(self::REVIEWER_INVITE.'.to.editor', 'admin', [
+                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title',
+            ]),
+            new EventDetail(self::REVIEWER_INVITE.'.to.reviewer', 'admin', [
+                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'accept.link', 'reject.link',
+            ]),
+            new EventDetail(self::REVIEWER_REMIND.'.to.editor', 'admin', [
+                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title',
+            ]),
+            new EventDetail(self::REVIEWER_REMIND.'.to.reviewer', 'admin', [
+                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'accept.link', 'reject.link',
+            ]),
+            new EventDetail(self::ACCEPT_REVIEW.'.to.editor', 'admin', [
+                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'reviewer.username', 'reviewer.fullName',
+            ]),
+            new EventDetail(self::ACCEPT_REVIEW.'.to.reviewer', 'admin', [
+                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title',
+            ]),
+            new EventDetail(self::REJECT_REVIEW.'.to.editor', 'admin', [
+                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'reviewer.username', 'reviewer.fullName',
+            ]),
+            new EventDetail(self::REJECT_REVIEW.'.to.reviewer', 'admin', [
+                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title',
             ]),
         ];
     }

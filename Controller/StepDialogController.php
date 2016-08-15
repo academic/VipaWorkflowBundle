@@ -86,7 +86,7 @@ class StepDialogController extends Controller
             ->setStatus(StepDialogStatus::ACTIVE)
             ->setStep($step)
             ->setCreatedDialogBy($user)
-            ;
+        ;
 
         $form = $this->createForm(new DialogType(), $dialog, [
             'action' => $request->getUri(),
@@ -633,11 +633,17 @@ class StepDialogController extends Controller
      */
     public function inviteReviewerAction($workflowId, $stepOrder, $dialogId)
     {
+        $dispatcher = $this->get('event_dispatcher');
         $em = $this->getDoctrine()->getManager();
         $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
         $dialog->setInviteTime(new \DateTime());
         $em->persist($dialog);
         $em->flush();
+
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setDialog($dialog);
+        $dispatcher->dispatch(WorkflowEvents::REVIEWER_INVITE, $workflowEvent);
 
         return new JsonResponse([
             'success' => true,
@@ -647,15 +653,23 @@ class StepDialogController extends Controller
     /**
      * @param $workflowId
      * @param $stepOrder
+     * @param $dialogId
+     *
      * @return JsonResponse
      */
     public function remindReviewerAction($workflowId, $stepOrder, $dialogId)
     {
+        $dispatcher = $this->get('event_dispatcher');
         $em = $this->getDoctrine()->getManager();
         $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
         $dialog->setRemindingTime(new \DateTime());
         $em->persist($dialog);
         $em->flush();
+
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setDialog($dialog);
+        $dispatcher->dispatch(WorkflowEvents::REVIEWER_REMIND, $workflowEvent);
 
         return new JsonResponse([
             'success' => true,
@@ -670,12 +684,18 @@ class StepDialogController extends Controller
      */
     public function acceptReviewAction($workflowId, $stepOrder, $dialogId)
     {
+        $dispatcher = $this->get('event_dispatcher');
         $em = $this->getDoctrine()->getManager();
         $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
         $dialog->setAccepted(true);
         $dialog->setAcceptTime(new \DateTime());
         $em->persist($dialog);
         $em->flush();
+
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setDialog($dialog);
+        $dispatcher->dispatch(WorkflowEvents::ACCEPT_REVIEW, $workflowEvent);
 
         return new JsonResponse([
             'success' => true,
@@ -686,16 +706,23 @@ class StepDialogController extends Controller
      * @param $workflowId
      * @param $stepOrder
      * @param $dialogId
+     *
      * @return JsonResponse
      */
     public function rejectReviewAction($workflowId, $stepOrder, $dialogId)
     {
+        $dispatcher = $this->get('event_dispatcher');
         $em = $this->getDoctrine()->getManager();
         $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
         $journal = $dialog->getStep()->getArticleWorkflow()->getJournal();
         $dialog->setRejected(true);
         $em->persist($dialog);
         $em->flush();
+
+        //dispatch event
+        $workflowEvent = new WorkflowEvent();
+        $workflowEvent->setDialog($dialog);
+        $dispatcher->dispatch(WorkflowEvents::REJECT_REVIEW, $workflowEvent);
 
         return new JsonResponse([
             'success' => true,
@@ -716,10 +743,10 @@ class StepDialogController extends Controller
             ->add('title')
             ->add('users', JournalUsersFieldType::class,[
                 'attr' => [
-                'style' => 'width: 100%;',
-            ],
-            'label' => '_create_issue.users',
-        ]);
+                    'style' => 'width: 100%;',
+                ],
+                'label' => '_create_issue.users',
+            ]);
 
         return $form;
     }
