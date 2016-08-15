@@ -48,6 +48,12 @@
                             </a>
                         </li>
                     {% endif %}
+                    <li>
+                        <a onclick="OjsWorkflow.declineSubmission(this)"
+                           data-action-type="{{ actionType('DECLINE_SUBMISSION') }}">
+                            {{ 'decline.submission'|trans }}
+                        </a>
+                    </li>
                 </ul>
             </div>
         {% endif %}
