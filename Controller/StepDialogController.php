@@ -16,6 +16,7 @@ use Ojs\JournalBundle\Form\Type\JournalUsersFieldType;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -677,16 +678,19 @@ class StepDialogController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param $workflowId
      * @param $stepOrder
      * @param $dialogId
-     * @return JsonResponse
+     *
+     * @return JsonResponse|RedirectResponse
      */
-    public function acceptReviewAction($workflowId, $stepOrder, $dialogId)
+    public function acceptReviewAction(Request $request, $workflowId, $stepOrder, $dialogId)
     {
         $dispatcher = $this->get('event_dispatcher');
         $em = $this->getDoctrine()->getManager();
         $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
+        $workflow = $dialog->getStep()->getArticleWorkflow();
         $dialog->setAccepted(true);
         $dialog->setAcceptTime(new \DateTime());
         $em->persist($dialog);
@@ -697,19 +701,27 @@ class StepDialogController extends Controller
         $workflowEvent->setDialog($dialog);
         $dispatcher->dispatch(WorkflowEvents::ACCEPT_REVIEW, $workflowEvent);
 
-        return new JsonResponse([
-            'success' => true,
-        ]);
+        if($request->isXmlHttpRequest()){
+            return new JsonResponse([
+                'success' => true,
+            ]);
+        }else{
+            return $this->redirectToRoute('dergipark_workflow_article_workflow', [
+                'workflowId' => $workflow->getId(),
+                'journalId' => $workflow->getJournal()->getId(),
+            ]);
+        }
     }
 
     /**
+     * @param Request $request
      * @param $workflowId
      * @param $stepOrder
      * @param $dialogId
      *
-     * @return JsonResponse
+     * @return JsonResponse|RedirectResponse
      */
-    public function rejectReviewAction($workflowId, $stepOrder, $dialogId)
+    public function rejectReviewAction(Request $request, $workflowId, $stepOrder, $dialogId)
     {
         $dispatcher = $this->get('event_dispatcher');
         $em = $this->getDoctrine()->getManager();
@@ -724,12 +736,18 @@ class StepDialogController extends Controller
         $workflowEvent->setDialog($dialog);
         $dispatcher->dispatch(WorkflowEvents::REJECT_REVIEW, $workflowEvent);
 
-        return new JsonResponse([
-            'success' => true,
-            'redirectUrl' => $this->generateUrl('dergipark_workflow_flow_active', [
-                'journalId' => $journal->getId(),
-            ])
-        ]);
+        if($request->isXmlHttpRequest()){
+            return new JsonResponse([
+                'success' => true,
+                'redirectUrl' => $this->generateUrl('dergipark_workflow_flow_active', [
+                    'journalId' => $journal->getId(),
+                ])
+            ]);
+        }else{
+            return $this->redirectToRoute('dergipark_workflow_flow_active', [
+                'journalId' => $workflow->getJournal()->getId(),
+            ]);
+        }
     }
 
     /**
