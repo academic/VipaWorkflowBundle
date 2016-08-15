@@ -667,7 +667,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         if(!$getMailEvent){
             goto sendmailtoeditors;
         }
-        $reviewerUser = $event->post->getDialog()->users->first();
+        $reviewerUser = $event->dialog->users->first();
         $transformParams = [
             'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
             'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
@@ -693,7 +693,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         ];
         $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
         $this->ojsMailer->sendToUser(
-            $event->user,
+            $reviewerUser,
             $getMailEvent->getSubject(),
             $template
         );
@@ -738,7 +738,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         if(!$getMailEvent){
             goto sendmailtoeditors;
         }
-        $reviewerUser = $event->post->getDialog()->users->first();
+        $reviewerUser = $event->dialog->users->first();
         $transformParams = [
             'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
             'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
@@ -764,7 +764,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         ];
         $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
         $this->ojsMailer->sendToUser(
-            $event->user,
+            $reviewerUser,
             $getMailEvent->getSubject(),
             $template
         );
@@ -807,7 +807,7 @@ class WorkflowMailListener implements EventSubscriberInterface
     {
         $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::ACCEPT_REVIEW.'.to.reviewer');
         /** @var User $reviewerUser */
-        $reviewerUser = $event->post->getDialog()->users->first();
+        $reviewerUser = $event->dialog->users->first();
         if(!$getMailEvent){
             goto sendmailtoeditors;
         }
@@ -824,7 +824,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         ];
         $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
         $this->ojsMailer->sendToUser(
-            $event->user,
+            $reviewerUser,
             $getMailEvent->getSubject(),
             $template
         );
@@ -869,7 +869,7 @@ class WorkflowMailListener implements EventSubscriberInterface
     {
         $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REJECT_REVIEW.'.to.reviewer');
         /** @var User $reviewerUser */
-        $reviewerUser = $event->post->getDialog()->users->first();
+        $reviewerUser = $event->dialog->users->first();
         if(!$getMailEvent){
             goto sendmailtoeditors;
         }
@@ -886,7 +886,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         ];
         $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
         $this->ojsMailer->sendToUser(
-            $event->user,
+            $reviewerUser,
             $getMailEvent->getSubject(),
             $template
         );
