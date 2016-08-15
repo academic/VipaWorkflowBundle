@@ -218,10 +218,10 @@ class WorkflowService
         return $forms;
     }
 
-    public function getUserRelatedActiveWorkflowsContainer()
+    public function getUserRelatedWorkflowsContainer($status = ArticleWorkflowStatus::ACTIVE)
     {
         $wfContainers = [];
-        $workflows = $this->getUserRelatedActiveWorkflows();
+        $workflows = $this->getUserRelatedWorkflows(null, null, $status);
         foreach ($workflows as $workflow) {
             $wfContainer = [];
             $wfContainer['workflow'] = $workflow;
@@ -292,12 +292,13 @@ class WorkflowService
     }
 
     /**
-     * @param User|null    $user
+     * @param User|null $user
      * @param Journal|null $journal
+     * @param int $status
      *
      * @return array|ArticleWorkflow[]
      */
-    public function getUserRelatedActiveWorkflows(User $user = null, Journal $journal = null)
+    public function getUserRelatedWorkflows(User $user = null, Journal $journal = null, $status = ArticleWorkflowStatus::ACTIVE)
     {
         if (!$user) {
             $user = $this->getUser();
@@ -320,11 +321,12 @@ class WorkflowService
             $userRelatedWorkflows = $this->em->getRepository(ArticleWorkflow::class)->findBy([
                 'status' => ArticleWorkflowStatus::ACTIVE,
                 'journal' => $journal,
+                'status' => $status
             ], ['id' => 'DESC']);
         } else {
             $userRelatedWorkflows = $this->em->getRepository(ArticleWorkflow::class)
                 ->createQueryBuilder('aw')
-                ->andWhere('aw.status = '.ArticleWorkflowStatus::ACTIVE)
+                ->andWhere('aw.status = '.$status)
                 ->andWhere(':user MEMBER OF aw.relatedUsers')
                 ->setParameter(':user', $user)
                 ->orderBy('aw.id', 'DESC')
@@ -338,16 +340,14 @@ class WorkflowService
 
     /**
      * @param $articleWorkflowId
-     * @param int $status
      *
      * @return ArticleWorkflow
      */
-    public function getArticleWorkflow($articleWorkflowId, $status = ArticleWorkflowStatus::ACTIVE)
+    public function getArticleWorkflow($articleWorkflowId)
     {
         return $this->em->getRepository(ArticleWorkflow::class)->findOneBy([
             'journal' => $this->journalService->getSelectedJournal(),
             'id' => $articleWorkflowId,
-            'status' => $status,
         ]);
     }
 

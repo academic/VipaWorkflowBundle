@@ -9,7 +9,12 @@
                     {{ ('wf.step.'~journalStepAlias(step.order))|trans }}
                 </a>
             {% endfor %}
-        </div>
+        </div><br>
+        {% if timeline.workflow.status == workflowStatus('HISTORY') %}
+            <span class="label label-warning">
+                {{ 'finished.workflow'|trans }}
+            </span>
+        {% endif %}
     </div>
     <div class="col-lg-2">
         <div class="btn-group">
