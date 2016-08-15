@@ -1,5 +1,9 @@
 <div class="panel panel-default">
     <div class="panel-heading">
+        <button class="btn btn-success btn-xs" onclick="OjsWorkflow.showStepDetail(this, {{ step.order }})">
+            <i class="fa fa-info-circle" data-toggle="tooltip"  data-title="{{ 'show.step.detail'|trans }}"></i>
+            {{ 'what.i.can.do.in.this.step'|trans }}
+        </button>
         {% if permissionCheck().isGrantedForStep(step) and step.status == stepStatus('ACTIVE') %}
             <div class="btn-group pull-right">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
