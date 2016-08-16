@@ -189,7 +189,7 @@ class JournalReviewFormController extends Controller
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $em = $this->getDoctrine()->getManager();
 
-        $step = $em->getRepository(ArticleWorkflowStep::class)->find($stepId);
+        $step = $em->getRepository(JournalWorkflowStep::class)->find($stepId);
         $this->throw404IfNotFound($step);
 
         /** @var ArticleFile $entity */
