@@ -55,7 +55,17 @@
 {{ 'profile'|trans }}: <a href="{{ path('ojs_user_profile', {slug: article.submitterUser.userName}) }}" target="_blank">{{ article.submitterUser.userName }}</a>
 {{ 'notes_to_editor'|trans }}: {{ article.note }}
                 </pre>
-
+            </div>
+        {% endif %}
+        {% set articleEditors = articleEditors(workflow) %}
+        {% if articleEditors|length > 0 %}
+            <div class="well">
+                <h5>{{ 'article.editors'|trans }}</h5>
+                {% for articleEditor in articleEditors %}
+                    <a href="{{ path('ojs_user_profile', {slug: articleEditor.username}) }}" target="_blank">
+                        {{ articleEditor.fullName }}
+                    </a><br>
+                {% endfor %}
             </div>
         {% endif %}
         {% if permissionCheck().isHaveEditorRole() %}

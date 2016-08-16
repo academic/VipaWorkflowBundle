@@ -122,6 +122,7 @@ class DPWorkflowTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('profileLink', array($this, 'getProfileLink'), ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('passedInviteDate', array($this, 'passedInviteDate')),
             new \Twig_SimpleFunction('passedRemindDate', array($this, 'passedRemindDate')),
+            new \Twig_SimpleFunction('articleEditors', array($this, 'getArticleEditors')),
             new \Twig_SimpleFunction('generateReviewboxContent', array($this, 'generateReviewboxContent'), ['is_safe' => ['html']]),
         );
     }
@@ -317,6 +318,39 @@ class DPWorkflowTwigExtension extends \Twig_Extension
         }else{
             return (int)$remindWaitDay - $interval->days;
         }
+    }
+
+    /**
+     * @param ArticleWorkflow $workflow
+     *
+     * @return array
+     */
+    public function getArticleEditors(ArticleWorkflow $workflow)
+    {
+        $articleEditors = [];
+        foreach($workflow->grantedUsers as $grantedUser){
+            $articleEditors[] = $grantedUser;
+        }
+
+        $dialogRepo = $this->em->getRepository(StepDialog::class);
+        $dialogs = $dialogRepo
+            ->createQueryBuilder('stepDialog')
+            ->join('stepDialog.step', 'dialogStep')
+            ->andWhere('stepDialog.dialogType = :dialogType')
+            ->setParameter('dialogType', StepActionTypes::ASSIGN_SECTION_EDITOR)
+            ->andWhere('dialogStep.articleWorkflow = :workflow')
+            ->setParameter('workflow', $workflow)
+            ->getQuery()
+            ->getResult()
+        ;
+        /** @var StepDialog $dialog */
+        foreach($dialogs as $dialog){
+            foreach($dialog->getUsers() as $dialogUser){
+                $articleEditors[] = $dialogUser;
+            }
+        }
+
+        return $articleEditors;
     }
 
     /**
