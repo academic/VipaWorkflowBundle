@@ -664,10 +664,11 @@ class WorkflowService
 
     /**
      * @param ArticleWorkflow $workflow
+     * @param StepDialog $dialog
      *
      * @return array
      */
-    public function getUserRelatedFiles(ArticleWorkflow $workflow)
+    public function getUserRelatedFiles(ArticleWorkflow $workflow, StepDialog $dialog)
     {
         $collectFiles = [];
 
@@ -687,7 +688,9 @@ class WorkflowService
             ->join('dialogPost.dialog', 'stepDialog')
             ->join('stepDialog.step', 'articleWorkflowStep')
             ->andWhere('articleWorkflowStep.articleWorkflow = :articleWorkflow')
+            ->andWhere('stepDialog.id != :dialog')
             ->setParameter('articleWorkflow', $workflow)
+            ->setParameter('dialog', $dialog)
             ->andWhere('dialogPost.type = :fileType')
             ->setParameter('fileType', DialogPostTypes::TYPE_FILE)
         ;

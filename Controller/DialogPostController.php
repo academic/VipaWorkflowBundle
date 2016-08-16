@@ -93,11 +93,13 @@ class DialogPostController extends Controller
      */
     public function browseFilesAction($workflowId, $dialogId)
     {
+        $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
 
         return $this->render('DergiparkWorkflowBundle:DialogPost:_browse_files.html.twig', [
-            'files' => $workflowService->getUserRelatedFiles($workflow),
+            'files' => $workflowService->getUserRelatedFiles($workflow, $dialog),
             'dialogId' => $dialogId,
         ]);
     }
