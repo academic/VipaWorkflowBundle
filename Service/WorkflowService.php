@@ -722,6 +722,7 @@ class WorkflowService
                     'originalname' => $file->getTitle(),
                     'filename' => $file->getFile(),
                     'filepath' => '/uploads/articlefiles/'.$file->getFile(),
+                    'collected.from' => $this->translator->trans('article.files'),
                 ];
             }
             if ($file instanceof ArticleSubmissionFile) {
@@ -729,6 +730,7 @@ class WorkflowService
                     'originalname' => $file->getTitle(),
                     'filename' => $file->getFile(),
                     'filepath' => '/uploads/submissionfiles/'.$file->getFile(),
+                    'collected.from' => $this->translator->trans('submission.files'),
                 ];
             }
             if ($file instanceof DialogPost) {
@@ -736,6 +738,7 @@ class WorkflowService
                     'originalname' => $file->getFileOriginalName(),
                     'filename' => $file->getFileName(),
                     'filepath' => '/uploads/articlefiles/'.$file->getFileName(),
+                    'collected.from' => $this->translator->trans('action.dialog').'['.date('m.d/H:i', $file->getSendedAt()->getTimestamp()).']',
                 ];
             }
         }
