@@ -2,7 +2,11 @@
     {% if post.sendedBy.username == app.user.username %}
         <li class="right clearfix">
             <span class="dialog-img pull-right">
-                <img src="http://placehold.it/50/FA6F57/fff&text={{ 'you'|trans }}" class="img-circle"/>
+                {% if post.sendedBy.avatar %}
+                    <img class="img-circle workflow-dialog-avatar" src="{{ post.sendedBy.avatar|imagine_filter('user_croped') }}"/>
+                {% else %}
+                    <img class="img-circle workflow-dialog-avatar" src="{{ asset('assets/app/images/buddy_sample.png') }}"/>
+                {% endif %}
             </span>
             <div class="dialog-box-body clearfix">
                 <div class="header">
@@ -22,7 +26,11 @@
     {% else %}
         <li class="left clearfix">
             <span class="dialog-img pull-left">
-                <img src="http://placehold.it/50/55C1E7/fff&text={{ 'assigned'|trans }}" alt="User Avatar" class="img-circle" />
+                {% if post.sendedBy.avatar %}
+                    <img class="img-circle workflow-dialog-avatar" src="{{ post.sendedBy.avatar|imagine_filter('user_croped') }}"/>
+                {% else %}
+                    <img class="img-circle workflow-dialog-avatar" src="{{ asset('assets/app/images/buddy_sample.png') }}"/>
+                {% endif %}
             </span>
             <div class="dialog-box-body clearfix">
                 <div class="header">
