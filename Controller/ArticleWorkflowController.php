@@ -94,6 +94,7 @@ class ArticleWorkflowController extends Controller
 
         return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:_permission_table.html.twig', [
             'permissions' => $workflowService->getPermissionsContainer($workflow),
+            'workflow' => $workflow,
         ]);
     }
 

@@ -25,10 +25,12 @@
         </tbody>
     </table>
 </div>
-<button class="btn btn-primary"
-        onclick="OjsWorkflow.setupWorkflowGrantedUsers()">
-    {{ 'add.article.editor'|trans }}
-</button>
+{% if workflow.status == workflowStatus('ACTIVE') %}
+    <button class="btn btn-primary"
+            onclick="OjsWorkflow.setupWorkflowGrantedUsers()">
+        {{ 'add.article.editor'|trans }}
+    </button>
+{% endif %}
 
 <script>
     $('abbr.ago').each(function () {
