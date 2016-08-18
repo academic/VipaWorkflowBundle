@@ -22,6 +22,10 @@ class ArticleWfGrantedUsersType extends AbstractType
                 'attr' => [
                     'style' => 'width: 100%;',
                 ],
+                'remote_params' => [
+                    'journalId' => $options['journalId'],
+                    'roles' => implode(',', $options['roles']),
+                ]
             ])
             ;
     }
@@ -35,6 +39,8 @@ class ArticleWfGrantedUsersType extends AbstractType
             array(
                 'data_class' => ArticleWorkflow::class,
                 'cascade_validation' => true,
+                'journalId' => null,
+                'roles' => [],
             )
         );
     }

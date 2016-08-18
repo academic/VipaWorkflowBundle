@@ -89,9 +89,15 @@ class StepDialogController extends Controller
             ->setCreatedDialogBy($user)
         ;
 
+        $roles = [];
+        if(isset(StepActionTypes::$dialogRoles[$actionType])){
+            $roles = StepActionTypes::$dialogRoles[$actionType];
+        }
         $form = $this->createForm(new DialogType(), $dialog, [
             'action' => $request->getUri(),
             'action_alias' => $actionAlias,
+            'journalId' => $journal->getId(),
+            'roles' => $roles,
         ]);
         $form->handleRequest($request);
 

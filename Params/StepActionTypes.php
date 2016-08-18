@@ -34,4 +34,15 @@ class StepActionTypes
         self::ASSIGN_PROOF_READER => '_assign_proof_reader',
         self::FINISH_WORKFLOW => '_finish_workflow',
     ];
+
+    static $dialogRoles = [
+        self::ASSIGN_REVIEWER => [
+            'ROLE_REVIEWER'
+        ],
+        self::ASSIGN_SECTION_EDITOR => [
+            'ROLE_SECTION_EDITOR',
+            'ROLE_CO_EDITOR',
+            'ROLE_EDITOR',
+        ],
+    ];
 }

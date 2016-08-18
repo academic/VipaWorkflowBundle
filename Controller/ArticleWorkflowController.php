@@ -141,7 +141,13 @@ class ArticleWorkflowController extends Controller
             'action' => $this->generateUrl('dergipark_article_workflow_granted_users_setup', [
                 'journalId' => $journal->getId(),
                 'workflowId' => $workflowId,
-            ])
+            ]),
+            'journalId' => $journal->getId(),
+            'roles' => [
+                'ROLE_SECTION_EDITOR',
+                'ROLE_CO_EDITOR',
+                'ROLE_EDITOR',
+            ],
         ]);
         $form->handleRequest($request);
 

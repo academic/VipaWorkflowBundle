@@ -22,6 +22,10 @@ class DialogType extends AbstractType
                     'style' => 'width: 100%;',
                 ],
                 'label' => $options['action_alias'].'.users',
+                'remote_params' => [
+                    'journalId' => $options['journalId'],
+                    'roles' => implode(',', $options['roles']),
+                ]
             ])
         ;
     }
@@ -36,6 +40,8 @@ class DialogType extends AbstractType
                 'data_class' => StepDialog::class,
                 'cascade_validation' => true,
                 'action_alias' => '',
+                'roles' => [],
+                'journalId' => null,
             )
         );
     }
