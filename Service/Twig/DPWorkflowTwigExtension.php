@@ -213,6 +213,11 @@ class DPWorkflowTwigExtension extends \Twig_Extension
         $remindTime = $dialog->getRemindingTime();
         $isReviewer = $dialog->users->contains($this->getUser());
 
+        //if dialog is accepted return directly
+        if($dialog->isAccepted()){
+            return '';
+        }
+
         //if invitation not sended yet
         if($inviteTime === null){
             if($isReviewer) {

@@ -66,7 +66,7 @@
                 {{ profileLink(dialog.createdDialogBy) }}
             </div>
             <div id="collapse-panel-{{ dialog.id }}" class="collapse {% if dialog.status == dialogStatus('ACTIVE') %}in{% endif %}">
-                {% if dialog.accepted %}
+                {% if dialog.accepted or dialog.users.contains(app.user) == false %}
                     <div class="panel-body panel-dialog-body">
                         <ul class="dialog-box" id="dialog-posts-{{ dialog.id }}">
                             {{ 'loading.posts'|trans }}...
@@ -75,41 +75,40 @@
                             </script>
                         </ul>
                     </div>
-                    {% if dialog.status == dialogStatus('ACTIVE') %}
-                        <div class="panel-footer">
-                            <div class="input-group">
-                                <input type="text" class="form-control input-sm dialog-comment-input" placeholder="{{ 'type.comment.here'|trans }}" />
-                                <span class="input-group-btn">
-                                    <button class="btn btn-info btn-sm" onclick="OjsWorkflow.sendComment(this, {{ dialog.id }})">
-                                        <i class="fa fa-comment"></i>
-                                        {{ 'add.comment'|trans }}
-                                    </button>
-                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="caret"></span>
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li onclick="OjsWorkflow.browseFiles(this, {{ dialog.id }})">
+                {% endif %}
+                {{ generateReviewboxContent(dialog) }}
+                {% if dialog.status == dialogStatus('ACTIVE') and (dialog.accepted or dialog.users.contains(app.user) == false) %}
+                    <div class="panel-footer">
+                        <div class="input-group">
+                            <input type="text" class="form-control input-sm dialog-comment-input" placeholder="{{ 'type.comment.here'|trans }}" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-info btn-sm" onclick="OjsWorkflow.sendComment(this, {{ dialog.id }})">
+                                    <i class="fa fa-comment"></i>
+                                    {{ 'add.comment'|trans }}
+                                </button>
+                                <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li onclick="OjsWorkflow.browseFiles(this, {{ dialog.id }})">
+                                        <a>
+                                            <i class="fa fa-file-archive-o"></i>
+                                            {{ 'workflow.send.file'|trans }}
+                                        </a>
+                                    </li>
+                                    {% if permissionCheck().isGrantedForStep(dialog.step) %}
+                                        <li onclick="OjsWorkflow.browseReviewForms(this, {{ dialog.id }})">
                                             <a>
-                                                <i class="fa fa-file-archive-o"></i>
-                                                {{ 'workflow.send.file'|trans }}
+                                                <i class="fa fa-comments-o"></i>
+                                                {{ 'workflow.send.review.form'|trans }}
                                             </a>
                                         </li>
-                                        {% if permissionCheck().isGrantedForStep(dialog.step) %}
-                                            <li onclick="OjsWorkflow.browseReviewForms(this, {{ dialog.id }})">
-                                                <a>
-                                                    <i class="fa fa-comments-o"></i>
-                                                    {{ 'workflow.send.review.form'|trans }}
-                                                </a>
-                                            </li>
-                                        {% endif %}
-                                    </ul>
-                                </span>
-                            </div>
+                                    {% endif %}
+                                </ul>
+                            </span>
                         </div>
-                    {% endif %}
-                {% else %}
-                    {{ generateReviewboxContent(dialog) }}
+                    </div>
                 {% endif %}
             </div>
         </div>
