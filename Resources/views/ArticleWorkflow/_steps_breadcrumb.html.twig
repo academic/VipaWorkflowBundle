@@ -31,14 +31,14 @@
                             {{ 'workflow.history'|trans }}
                         </a>
                     </li>
-                    <li>
-                        <a onclick="OjsWorkflow.showPermissionTable(this)"
-                           data-toggle="tooltip"
-                           title="{{ 'browse.permission.table'|trans }}">
-                            {{ 'permission.table'|trans }}
-                        </a>
-                    </li>
                 {% endif %}
+                <li>
+                    <a onclick="OjsWorkflow.showPermissionTable(this)"
+                       data-toggle="tooltip"
+                       title="{{ 'browse.permission.table'|trans }}">
+                        {{ 'permission.table'|trans }}
+                    </a>
+                </li>
                 <li>
                     <a onclick="OjsWorkflow.showSubmissionDetail(this)">
                         {{ 'submission.detail'|trans }}

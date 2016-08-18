@@ -8,7 +8,6 @@
                 <th>{{ 'wf.step.review'|trans }}</th>
                 <th>{{ 'wf.step.arrangement'|trans }}</th>
                 <th>{{ 'full.permission'|trans }}</th>
-                <th>{{ 'actions'|trans }}</th>
             </tr>
         </thead>
         <tbody>
@@ -19,13 +18,12 @@
                     <th>{{ printYesNo(permission[2]) }}</th>
                     <th>{{ printYesNo(permission[3]) }}</th>
                     <th>{{ printYesNo(permission[4]) }}</th>
-                    <th></th>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
-{% if workflow.status == workflowStatus('ACTIVE') %}
+{% if workflow.status == workflowStatus('ACTIVE') and permissionCheck().isHaveEditorRole() %}
     <button class="btn btn-primary"
             onclick="OjsWorkflow.setupWorkflowGrantedUsers()">
         {{ 'add.article.editor'|trans }}
