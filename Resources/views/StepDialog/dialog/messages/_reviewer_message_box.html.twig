@@ -27,7 +27,7 @@
 
 {% block invitation_sended_waiting_reviewer %}
     <div class="alert alert-warning text-center">
-        {{ 'editor.sended.you.invitation.for.rewiew.you.can.accept.or.reject'|trans('%leftDay%': leftDay, '%fromDay%': fromDay) }}
+        {{ 'editor.sended.you.invitation.for.rewiew.you.can.accept.or.reject'|trans({'%leftDay%': leftDay, '%fromDay%': fromDay}) }}
         <br>
         <button class="btn btn-success btn-sm" onclick="OjsWorkflow.acceptReviewRequest({{ dialog.id }})">
             {{ 'accept.review'|trans }}
@@ -40,7 +40,7 @@
 
 {% block invitation_sended_waiting_editor %}
     <div class="alert alert-warning text-center">
-        {{ 'waiting.for.reviewer.response'|trans('%leftDay%': leftDay, '%fromDay%': fromDay) }}
+        {{ 'waiting.for.reviewer.response'|trans({'%leftDay%': leftDay, '%fromDay%': fromDay}) }}
     </div>
 {% endblock %}
 
@@ -61,7 +61,7 @@
 
 {% block remind_sended_waiting_accept_reject_reviewer %}
     <div class="alert alert-warning text-center">
-        {{ 'editor.sended.you.remind.rewiew.request.you.can.accept.or.reject'|trans('%leftDay%': leftDay, '%fromDay%': fromDay) }}
+        {{ 'editor.sended.you.remind.rewiew.request.you.can.accept.or.reject'|trans({'%leftDay%': leftDay, '%fromDay%': fromDay}) }}
         <br>
         <button class="btn btn-success" onclick="OjsWorkflow.acceptReviewRequest({{ dialog.id }})">
             {{ 'accept.review'|trans }}
@@ -74,7 +74,7 @@
 
 {% block remind_sended_waiting_editor %}
     <div class="alert alert-warning text-center">
-        {{ 'remind.sended.lefted.some.time'|trans('%leftDay%': leftDay, '%fromDay%': fromDay) }}
+        {{ 'remind.sended.lefted.some.time'|trans({'%leftDay%': leftDay, '%fromDay%': fromDay}) }}
     </div>
 {% endblock %}
 
