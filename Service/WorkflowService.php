@@ -390,6 +390,18 @@ class WorkflowService
     {
         $permissions = [];
 
+        //set admins full permission
+        $permission[0] = $this->translator->trans('have.system.admin.role');
+        //pre control step
+        $permission[1] = true;
+        //review step
+        $permission[2] = true;
+        //arrangement step
+        $permission[3] = true;
+        //full permission
+        $permission[4] = true;
+        $permissions[] = $permission;
+
         //set role editor and role co-editor full permission
         $permission[0] = $this->translator->trans('have.role.editor.or.co.editor');
         //pre control step
