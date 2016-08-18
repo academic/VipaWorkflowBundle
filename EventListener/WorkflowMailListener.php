@@ -73,10 +73,10 @@ class WorkflowMailListener implements EventSubscriberInterface
         return array(
             WorkflowEvents::WORKFLOW_STARTED            => 'onWorkflowStarted',
             WorkflowEvents::REVIEW_FORM_RESPONSE        => 'onReviewFormResponse',
-            WorkflowEvents::REVIEW_FORM_REQUEST         => 'onReviewFormRequest',
+            WorkflowEvents::REVIEW_FORM_REQUEST         => [['dialogAcceptedCheck'], ['onReviewFormRequest']],
             WorkflowEvents::WORKFLOW_GRANT_USER         => 'onWorkflowGrantUser',
-            WorkflowEvents::DIALOG_POST_COMMENT         => 'onDialogPostComment',
-            WorkflowEvents::DIALOG_POST_FILE            => 'onDialogPostFile',
+            WorkflowEvents::DIALOG_POST_COMMENT         => [['dialogAcceptedCheck'], ['onDialogPostComment']],
+            WorkflowEvents::DIALOG_POST_FILE            => [['dialogAcceptedCheck'], ['onDialogPostFile']],
             WorkflowEvents::CREATE_SPESIFIC_DIALOG      => 'onCreateSpecificDialog',
             WorkflowEvents::CREATE_DIALOG_WITH_AUTHOR   => 'onCreateDialogWithAuthor',
             WorkflowEvents::CREATE_BASIC_DIALOG         => 'onCreateBasicDialog',
@@ -93,6 +93,23 @@ class WorkflowMailListener implements EventSubscriberInterface
             WorkflowEvents::ACCEPT_REVIEW               => 'onAcceptReview',
             WorkflowEvents::REJECT_REVIEW               => 'onRejectReview',
         );
+    }
+
+    /**
+     * @param WorkflowEvent $event
+     *
+     * @return WorkflowEvent|null
+     */
+    public function dialogAcceptedCheck(WorkflowEvent $event)
+    {
+        if($event->dialog === null) {
+            return null;
+        }
+        if($event->dialog->getDialogType() == StepActionTypes::ASSIGN_REVIEWER && !$event->dialog->isAccepted()) {
+            $event->stopPropagation();
+        }
+
+        return $event;
     }
 
     /**
