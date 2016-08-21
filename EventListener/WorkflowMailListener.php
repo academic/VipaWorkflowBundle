@@ -549,7 +549,6 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                //@todo generate history link here
                 'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
