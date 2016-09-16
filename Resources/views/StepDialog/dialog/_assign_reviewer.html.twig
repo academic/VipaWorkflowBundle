@@ -5,7 +5,7 @@
         {% else %}
             {% set panelClass = 'default' %}
         {% endif %}
-        <div class="panel panel-{{ panelClass }} panel-dialog">
+        <div class="panel panel-{{ panelClass }} {% if dialog.status == dialogStatus('CLOSED') %}panel-dialog-opacity{% endif %}">
             <div class="panel-heading">
                 <span class="glyphicon glyphicon-comment"></span>
                 {% if dialog.dialogType == actionType('CREATE_ISSUE') %}

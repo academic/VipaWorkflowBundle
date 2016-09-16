@@ -1,8 +1,8 @@
-.panel-dialog{
+.panel-dialog-opacity{
     opacity: 0.5;
 }
 
-.panel-dialog:hover{
+.panel-dialog-opacity:hover{
     opacity: 1;
 }
 
