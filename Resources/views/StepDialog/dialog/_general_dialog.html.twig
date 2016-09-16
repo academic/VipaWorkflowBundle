@@ -48,12 +48,10 @@
                                 </li>
                             {% endif %}
                         {% endif %}
-                        <li>
-                            <a data-toggle="collapse" href="#collapse-panel-{{ dialog.id }}">
-                                +/- {{ 'collapse.dialog'|trans }}
-                            </a>
-                        </li>
                     </ul>
+                    <button class="btn btn-default btn-xs" data-toggle="collapse" href="#collapse-panel-{{ dialog.id }}">
+                        <i class="fa fa-expand"></i>
+                    </button>
                 </div>
                 <br>
                 {{ 'assigned.to'|trans }}:
