@@ -9,30 +9,33 @@ wf.step.granted.users.setup: 'Adım Yetkililerini Ayarla'
 show.step.detail: 'Adım Detayları'
 wf.step.review: 'Değerlendirme'
 wf.step.arrangement: 'Düzenleme'
-wf.step.pre.control.description: '<h1>Bu adımda yazardan gelen makalenin ön kontrolü yapılır. </h1> <br>
-Sekreter gibi bu adımda yetkilendirilen kullanıcılar, ön kontrol adımını yönetebilir ve daha sonra değerlendirme için editöre iletebilir.<br>
-Gönderi Detayları sağ üst menüden görüntülenebilir.<br>
-Aynı menuden, editör süreç tarihçesini makalenin gönderilmesinden, değerlendirmenin son adımına kadar görebilir.<br>
-İzin Tablosundan, bir veya daha fazla editör makalenin editörü olarak atanabilir. Bu kullanıcılar makale sürecinde tam yetkiye sahip olacaklardır.
-Sadece hakemlik sürecini yönetecek bir bölüm editörü atamak isterseniz, o kişiyi değerlendirme adımında atayabilirsiniz.<br>
-Dil Kontrolü, Yazım Kontrolü vb. işlemler bu adımda yapılabilir. Aynı zamanda, yeni bir işlem oluşturabilir, bu işleme birini atayarak ön değerlendirme işlemini tamamlayabilirsiniz.<br>
-Yazar üstveride değişiklik yapabilir, ancak adım bittikten sonra değişiklik yapamaz.<br>
-Makalede yapılması gerekli değişiklikler için yazarla bir işlem başlatılabilir.<br>
-Makalenin uygun olmadığına karar verilirse, bu adımda reddedilebilir.<br>
-Makalenin hakemlik sürecine sokulmasına gerek yok ise, editör direk kabul ederek yayına hazır durumuna alabilir.<br>
-Bu adım tamamlandıktan sonra değerlendirme adımına geçebilirsiniz<br>'
-wf.step.review.description: '<h1>Bu adımda hakem değerlendirme işlemi yerine getirilir. </h1> <br>
-Yetki verilen kullanıcılar makalenin hakem değerlendirme sürecini yönetebilirler.<br>
-Bir veya daha fazla bölüm editörü, hakem/ler atayarak süreci yönetebilirler. <br>
-Seçilen hakem atandıktan sonra, hakem değerlendirme formu ve değerlendirilecek dosya da hakeme yönlendirilir.<br>
-Davetin hakem tarafından yanıtlanması için gereken (kalan) süre gösterilir. Süre bittiğinde hatırlatma gönderilebilinir. <br>
-Bölüm Editörü ve/veya Editörler hakemden gelen değerlendirme sonucuna göre yazardan gerekli değişiklikleri yapmalarını ve revize edilmiş dosyayı yüklemelerini isterler.<br>
-Yazım Kural Kontrolü bu adımda da yapılabilir.<br>
-Editör hakem değerlendirmesinin ardından makaleyi kabul eder ve düzenlemeye geçer ya da makaleyi reddeder. <br>'
-wf.step.arrangement.description: '<h1>Bu adımda, makale düzenlenir.</h1> <br>
-Yetki verilen kullanıcılar düzenleme adımında görev alırlar.<br>
-Makale redaksiyon, mizanpaj ve son okuma işlemlerinden geçirilebilinir.<br>
-Düzenleme işlemi bittikten sonra, makale bir sayıya eklenmek üzere yayına hazır hale gelir.<br>'
+wf.step.pre.control.description: >
+  <h1>Bu adımda yazardan gelen makalenin ön kontrolü yapılır. </h1> <br>
+  Sekreter gibi bu adımda yetkilendirilen kullanıcılar, ön kontrol adımını yönetebilir ve daha sonra değerlendirme için editöre iletebilir.<br>
+  Gönderi Detayları sağ üst menüden görüntülenebilir.<br>
+  Aynı menuden, editör süreç tarihçesini makalenin gönderilmesinden, değerlendirmenin son adımına kadar görebilir.<br>
+  İzin Tablosundan, bir veya daha fazla editör makalenin editörü olarak atanabilir. Bu kullanıcılar makale sürecinde tam yetkiye sahip olacaklardır.
+  Sadece hakemlik sürecini yönetecek bir bölüm editörü atamak isterseniz, o kişiyi değerlendirme adımında atayabilirsiniz.<br>
+  Dil Kontrolü, Yazım Kontrolü vb. işlemler bu adımda yapılabilir. Aynı zamanda, yeni bir işlem oluşturabilir, bu işleme birini atayarak ön değerlendirme işlemini tamamlayabilirsiniz.<br>
+  Yazar üstveride değişiklik yapabilir, ancak adım bittikten sonra değişiklik yapamaz.<br>
+  Makalede yapılması gerekli değişiklikler için yazarla bir işlem başlatılabilir.<br>
+  Makalenin uygun olmadığına karar verilirse, bu adımda reddedilebilir.<br>
+  Makalenin hakemlik sürecine sokulmasına gerek yok ise, editör direk kabul ederek yayına hazır durumuna alabilir.<br>
+  Bu adım tamamlandıktan sonra değerlendirme adımına geçebilirsiniz<br>
+wf.step.review.description: >
+  <h1>Bu adımda hakem değerlendirme işlemi yerine getirilir. </h1> <br>
+  Yetki verilen kullanıcılar makalenin hakem değerlendirme sürecini yönetebilirler.<br>
+  Bir veya daha fazla bölüm editörü, hakem/ler atayarak süreci yönetebilirler. <br>
+  Seçilen hakem atandıktan sonra, hakem değerlendirme formu ve değerlendirilecek dosya da hakeme yönlendirilir.<br>
+  Davetin hakem tarafından yanıtlanması için gereken (kalan) süre gösterilir. Süre bittiğinde hatırlatma gönderilebilinir. <br>
+  Bölüm Editörü ve/veya Editörler hakemden gelen değerlendirme sonucuna göre yazardan gerekli değişiklikleri yapmalarını ve revize edilmiş dosyayı yüklemelerini isterler.<br>
+  Yazım Kural Kontrolü bu adımda da yapılabilir.<br>
+  Editör hakem değerlendirmesinin ardından makaleyi kabul eder ve düzenlemeye geçer ya da makaleyi reddeder. <br>
+wf.step.arrangement.description: >
+  <h1>Bu adımda, makale düzenlenir.</h1> <br>
+  Yetki verilen kullanıcılar düzenleme adımında görev alırlar.<br>
+  Makale redaksiyon, mizanpaj ve son okuma işlemlerinden geçirilebilinir.<br>
+  Düzenleme işlemi bittikten sonra, makale bir sayıya eklenmek üzere yayına hazır hale gelir.<br>
 wf.active_articles: 'Süreçteki Makaleler'
 wf.article.timeline: 'Süreç Akışı'
 select.action: 'Bir İşlem Seç'
