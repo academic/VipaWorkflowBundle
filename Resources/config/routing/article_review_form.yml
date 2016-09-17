@@ -30,3 +30,18 @@ dp_workflow_dialog_posts_new_review_form:
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
+
+#review form response send logic routes
+dp_workflow_dialog_posts_browse_review_form_responses:
+  path:     /browse/responses
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleReviewForm:reviewFormResponses" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
+dp_workflow_dialog_posts_new_review_form_response_preview:
+  path:     /new-review-form-response-preview
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleReviewForm:postReviewFormResponsePreview" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
