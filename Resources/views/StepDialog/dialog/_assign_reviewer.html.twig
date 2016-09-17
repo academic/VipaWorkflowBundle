@@ -62,6 +62,12 @@
                 <br>
                 {{ 'created.by'|trans }}:
                 {{ profileLink(dialog.createdDialogBy) }}
+                <br>
+                <small>
+                    {{ 'dialog.created.at'|trans }}:
+                    {{ dialog.openedAt|date('Y-m-d H:i') }}
+                    ( <abbr title="{{ dialog.openedAt|date('Y-m-d H:i:s') }}" class="ago">{{ dialog.openedAt|date('Y-m-d H:i:s') }}</abbr> )
+                </small>
             </div>
             <div id="collapse-panel-{{ dialog.id }}" class="collapse {% if dialog.status == dialogStatus('ACTIVE') %}in{% endif %}">
                 {% if dialog.accepted or dialog.users.contains(app.user) == false %}

@@ -131,7 +131,8 @@ workflow.basic_settings: 'Temel Ayarlar'
 workflow.are.you.sure.finish.workflow: 'Düzenlemeyi Bitirmek İstediğinize Emin misiniz?'
 workflow.finish.warnings: 'Düzenlemeyi bitirdiğinizde, makale yayına hazır olacak ve Sayılar sayfasından makaleyi bir sayıya ekleyebileceksiniz.'
 finish.workflow: 'Düzenlemeyi Bitir'
-select.submission.details: ‘Gönderi Detayları’
+select.submission.details: 'Gönderi Detayları'
+dialog.created.at: 'Oluşturulma zamanı'
 
 #action log translations
 article.submitted.by: 'Makale %user% Tarafından Gönderildi'
