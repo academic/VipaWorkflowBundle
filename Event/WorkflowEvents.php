@@ -11,6 +11,8 @@ final class WorkflowEvents implements MailEventsInterface
 
     const REVIEW_FORM_RESPONSE = 'dp.workflow.form.response';
 
+    const REVIEW_FORM_RESPONSE_PREVIEW = 'dp.workflow.form.response.preview';
+
     const REVIEW_FORM_REQUEST = 'dp.workflow.form.request';
 
     const WORKFLOW_GRANT_USER = 'dp.workflow.grant.user';
@@ -56,6 +58,9 @@ final class WorkflowEvents implements MailEventsInterface
                 'article.author', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title',
             ]),
             new EventDetail(self::REVIEW_FORM_RESPONSE, 'admin', [
+                'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'dialog.title', 'form.name',
+            ]),
+            new EventDetail(self::REVIEW_FORM_RESPONSE_PREVIEW, 'admin', [
                 'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'dialog.title', 'form.name',
             ]),
             new EventDetail(self::REVIEW_FORM_REQUEST, 'admin', [

@@ -71,27 +71,28 @@ class WorkflowMailListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            WorkflowEvents::WORKFLOW_STARTED            => 'onWorkflowStarted',
-            WorkflowEvents::REVIEW_FORM_RESPONSE        => 'onReviewFormResponse',
-            WorkflowEvents::REVIEW_FORM_REQUEST         => [['dialogAcceptedCheck'], ['onReviewFormRequest']],
-            WorkflowEvents::WORKFLOW_GRANT_USER         => 'onWorkflowGrantUser',
-            WorkflowEvents::DIALOG_POST_COMMENT         => [['dialogAcceptedCheck'], ['onDialogPostComment']],
-            WorkflowEvents::DIALOG_POST_FILE            => [['dialogAcceptedCheck'], ['onDialogPostFile']],
-            WorkflowEvents::CREATE_SPESIFIC_DIALOG      => 'onCreateSpecificDialog',
-            WorkflowEvents::CREATE_DIALOG_WITH_AUTHOR   => 'onCreateDialogWithAuthor',
-            WorkflowEvents::CREATE_BASIC_DIALOG         => 'onCreateBasicDialog',
-            WorkflowEvents::STEP_GOTO_ARRANGEMET        => 'onStepGotoArrangement',
-            WorkflowEvents::STEP_GOTO_REVIEWING         => 'onStepGotoReviewing',
-            WorkflowEvents::ACCEPT_SUBMISSION_DIRECTLY  => 'onAcceptSubmissionDirectly',
-            WorkflowEvents::WORKFLOW_FINISH_ACTION      => 'onWorkflowFinishAction',
-            WorkflowEvents::DECLINE_SUBMISSION          => 'onDeclineSubmission',
-            WorkflowEvents::CLOSE_DIALOG                => 'onCloseDialog',
-            WorkflowEvents::REOPEN_DIALOG               => 'onReopenDialog',
-            WorkflowEvents::REMOVE_DIALOG               => 'onRemoveDialog',
-            WorkflowEvents::REVIEWER_INVITE             => 'onReviewerInvite',
-            WorkflowEvents::REVIEWER_REMIND             => 'onReviewerRemind',
-            WorkflowEvents::ACCEPT_REVIEW               => 'onAcceptReview',
-            WorkflowEvents::REJECT_REVIEW               => 'onRejectReview',
+            WorkflowEvents::WORKFLOW_STARTED                => 'onWorkflowStarted',
+            WorkflowEvents::REVIEW_FORM_RESPONSE            => 'onReviewFormResponse',
+            WorkflowEvents::REVIEW_FORM_RESPONSE_PREVIEW    => 'onReviewFormResponsePreview',
+            WorkflowEvents::REVIEW_FORM_REQUEST             => [['dialogAcceptedCheck'], ['onReviewFormRequest']],
+            WorkflowEvents::WORKFLOW_GRANT_USER             => 'onWorkflowGrantUser',
+            WorkflowEvents::DIALOG_POST_COMMENT             => [['dialogAcceptedCheck'], ['onDialogPostComment']],
+            WorkflowEvents::DIALOG_POST_FILE                => [['dialogAcceptedCheck'], ['onDialogPostFile']],
+            WorkflowEvents::CREATE_SPESIFIC_DIALOG          => 'onCreateSpecificDialog',
+            WorkflowEvents::CREATE_DIALOG_WITH_AUTHOR       => 'onCreateDialogWithAuthor',
+            WorkflowEvents::CREATE_BASIC_DIALOG             => 'onCreateBasicDialog',
+            WorkflowEvents::STEP_GOTO_ARRANGEMET            => 'onStepGotoArrangement',
+            WorkflowEvents::STEP_GOTO_REVIEWING             => 'onStepGotoReviewing',
+            WorkflowEvents::ACCEPT_SUBMISSION_DIRECTLY      => 'onAcceptSubmissionDirectly',
+            WorkflowEvents::WORKFLOW_FINISH_ACTION          => 'onWorkflowFinishAction',
+            WorkflowEvents::DECLINE_SUBMISSION              => 'onDeclineSubmission',
+            WorkflowEvents::CLOSE_DIALOG                    => 'onCloseDialog',
+            WorkflowEvents::REOPEN_DIALOG                   => 'onReopenDialog',
+            WorkflowEvents::REMOVE_DIALOG                   => 'onRemoveDialog',
+            WorkflowEvents::REVIEWER_INVITE                 => 'onReviewerInvite',
+            WorkflowEvents::REVIEWER_REMIND                 => 'onReviewerRemind',
+            WorkflowEvents::ACCEPT_REVIEW                   => 'onAcceptReview',
+            WorkflowEvents::REJECT_REVIEW                   => 'onRejectReview',
         );
     }
 
@@ -167,6 +168,39 @@ class WorkflowMailListener implements EventSubscriberInterface
                 'article.title'     => $event->article->getTitle(),
                 'dialog.title'     => $this->getDialogTitle($event->dialog),
                 'form.name'     => $event->post->getReviewForm()->getName(),
+            ];
+            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+            $this->ojsMailer->sendToUser(
+                $user,
+                $getMailEvent->getSubject(),
+                $template
+            );
+        }
+    }
+
+    /**
+     * @param WorkflowEvent $event
+     */
+    public function onReviewFormResponsePreview(WorkflowEvent $event)
+    {
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEW_FORM_RESPONSE_PREVIEW);
+        if(!$getMailEvent){
+            return;
+        }
+        $mailUsers = $this->mergeUserBags($event->dialog->getUsers(), [$event->dialog->getCreatedDialogBy()]);
+        foreach ($mailUsers as $user) {
+            $transformParams = [
+                'done.by'           => $this->ojsMailer->currentUser()->getUsername(),
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
+                    'journalId'     => $event->journal->getId(),
+                    'workflowId'    => $event->workflow->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL),
+                'journal'           => $event->journal->getTitle(),
+                'receiver.username' => $user->getUsername(),
+                'receiver.fullName' => $user->getFullName(),
+                'article.title'     => $event->article->getTitle(),
+                'dialog.title'      => $this->getDialogTitle($event->dialog),
+                'form.name'         => $event->post->getReviewForm()->getName(),
             ];
             $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
             $this->ojsMailer->sendToUser(
