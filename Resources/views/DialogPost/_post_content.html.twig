@@ -43,4 +43,17 @@
         {{ 'review.form.response.preview'|trans }}
         <i class="fa fa-external-link"></i>
     </a>
+{% elseif post.type == postType('TYPE_FORM_RESPONSE_PREVIEW') %}
+    {{ 'user.submitted.a.form.review.response.preview'|trans({'%user%': post.sendedBy.username }) }}<br>
+    {{ 'form.name'|trans }}: {{ post.reviewForm.name }}<br>
+    <a href="{{ path('dp_workflow_dialog_posts_review_form_response_preview', {
+        journalId: post.reviewForm.step.articleWorkflow.journal.id,
+        workflowId: post.reviewForm.step.articleWorkflow.id,
+        stepOrder: post.reviewForm.step.order,
+        dialogId: post.dialog.id,
+        postId: post.relatedPost.id
+    }) }}" target="_blank">
+        {{ 'review.form.response.preview'|trans }}
+        <i class="fa fa-external-link"></i>
+    </a>
 {% endif %}
