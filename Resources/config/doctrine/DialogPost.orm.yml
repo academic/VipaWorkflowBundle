@@ -37,6 +37,12 @@ Dergipark\WorkflowBundle\Entity\DialogPost:
       joinColumn:
         name: dialog_id
         referencedColumnName: id
+    relatedPost:
+      targetEntity: Dergipark\WorkflowBundle\Entity\DialogPost
+      joinColumn:
+        nullable: true
+        name: related_post_id
+        referencedColumnName: id
     reviewForm:
       targetEntity: Dergipark\WorkflowBundle\Entity\StepReviewForm
       joinColumn:

@@ -62,6 +62,11 @@ class DialogPost
     private $sendedBy;
 
     /**
+     * @var DialogPost
+     */
+    private $relatedPost;
+
+    /**
      * DialogPost constructor.
      */
     public function __construct()
@@ -254,6 +259,26 @@ class DialogPost
     public function setReviewFormResponseContent($reviewFormResponseContent)
     {
         $this->reviewFormResponseContent = $reviewFormResponseContent;
+
+        return $this;
+    }
+
+    /**
+     * @return DialogPost
+     */
+    public function getRelatedPost()
+    {
+        return $this->relatedPost;
+    }
+
+    /**
+     * @param DialogPost $relatedPost
+     *
+     * @return $this
+     */
+    public function setRelatedPost($relatedPost)
+    {
+        $this->relatedPost = $relatedPost;
 
         return $this;
     }
