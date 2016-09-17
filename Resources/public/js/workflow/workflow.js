@@ -509,6 +509,42 @@ $(document).ready(function() {
                 }
             });
         },
+        browseReviewFormResponses: function ($this, $dialogId) {
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dp_workflow_dialog_posts_browse_review_form_responses', {
+                    journalId: journalId,
+                    workflowId: workflowId,
+                    stepOrder: stepOrder,
+                    dialogId: $dialogId
+                }),
+                autoSize: false,
+                width: '600px',
+                maxWidth: '600px',
+                height: 'auto'
+            });
+        },
+        sendSelectedReviewFormResponses: function($dialogId){
+            var reviewFormResponses = [];
+            var findCheckedReviewFormInputs = $('#browse-review-form-responses-table').find('input:checked');
+            $.each(findCheckedReviewFormInputs, function (index, value) {
+                reviewFormResponses.push($(value).val());
+            });
+            $.post(Routing.generate('dp_workflow_dialog_posts_new_review_form_response_preview', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder,
+                dialogId: $dialogId
+            }), {
+                reviewFormResponses: reviewFormResponses
+            }, function( data ) {
+                if(data.success == true){
+                    $.fancybox.close();
+                    OjsWorkflow.loadPosts($dialogId);
+                    swal(Translator.trans('excellent'), Translator.trans('your.review.form.responses.sended'), "success");
+                }
+            });
+        },
         /**
          * @link https://gist.github.com/behram/e38ffbe820b4419a270249d7893ec3e7
          */
