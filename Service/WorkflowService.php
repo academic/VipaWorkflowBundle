@@ -759,6 +759,25 @@ class WorkflowService
     }
 
     /**
+     * @param ArticleWorkflowStep $step
+     *
+     * @return array
+     */
+    public function getStepFormResponses(ArticleWorkflowStep $step)
+    {
+        return $this->em->getRepository(DialogPost::class)
+            ->createQueryBuilder('dialogPost')
+            ->join('dialogPost.dialog', 'stepDialog')
+            ->andWhere('stepDialog.step = :step')
+            ->setParameter('step', $step)
+            ->andWhere('dialogPost.type = :formResponseType')
+            ->setParameter('formResponseType', DialogPostTypes::TYPE_FORM_RESPONSE)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
      * @param ArticleWorkflow     $workflow
      * @param ArticleWorkflowStep $step
      *
