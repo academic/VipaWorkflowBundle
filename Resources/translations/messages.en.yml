@@ -108,6 +108,7 @@ workflow.are.you.sure.finish.workflow: 'Are you sure you want to finish Editing?
 workflow.finish.warnings: 'When you finish editing, the manuscript will be ready for publishing and it can be reachable from the Articles Page'
 finish.workflow: 'Finish Editing'
 dialog.created.at: 'Created At'
+workflow.browse.step.forms: '__workflow.browse.step.forms'
 
 #action log translations
 article.submitted.by: 'Article Submitted by -> %user%'
