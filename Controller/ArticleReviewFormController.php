@@ -158,4 +158,75 @@ class ArticleReviewFormController extends Controller
             'success' => true,
         ]);
     }
+
+    #########################################################################
+    #######  hereafter form response send to author logic begins   #########
+    #########################################################################
+
+    /**
+     * @param $dialogId
+     * @return Response
+     */
+    public function reviewFormResponsesAction($dialogId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $workflowService = $this->get('dp.workflow_service');
+        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
+        $this->throw404IfNotFound($dialog);
+        $step  = $dialog->getStep();
+
+        return $this->render('DergiparkWorkflowBundle:DialogPost/review_form:_browse_review_form_responses.html.twig', [
+            'formResponses' => $workflowService->getStepFormResponses($step),
+            'dialogId' => $dialogId,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $dialogId
+     * @return LogicException|JsonResponse
+     */
+    public function postReviewFormResponsePreviewAction(Request $request, $dialogId)
+    {
+        $permissionService = $this->get('dp.workflow_permission_service');
+        $reviewFormResponses = $request->request->get('reviewFormResponses');
+        if(!$reviewFormResponses){
+            return new LogicException('reviewFormResponses param must be exist!');
+        }
+        $dispatcher = $this->get('event_dispatcher');
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
+        //#permissioncheck
+        if(!$permissionService->isGrantedForDialogPost($dialog)){
+            throw new AccessDeniedException;
+        }
+        $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($dialog->getStep()->getArticleWorkflow());
+        foreach($reviewFormResponses as $reviewFormResponseId) {
+            $stepReviewFormResponse = $em->getRepository(DialogPost::class)->find($reviewFormResponseId);
+            $reviewFormPreviewPost = new DialogPost();
+            $reviewFormPreviewPost
+                ->setDialog($dialog)
+                ->setSendedBy($user)
+                ->setSendedAt(new \DateTime())
+                ->setRelatedPost($stepReviewFormResponse)
+                ->setReviewForm($stepReviewFormResponse->getReviewForm())
+                ->setType(DialogPostTypes::TYPE_FORM_RESPONSE_PREVIEW)
+            ;
+            $em->persist($reviewFormPreviewPost);
+
+            //dispatch event
+            $workflowEvent = new WorkflowEvent();
+            $workflowEvent->setPost($reviewFormPreviewPost);
+            $dispatcher->dispatch(WorkflowEvents::REVIEW_FORM_RESPONSE_PREVIEW, $workflowEvent);
+        }
+        //log action
+        $wfLogger->log('post.review.form.to.dialog', ['%user%' => '@'.$user->getUsername()]);
+
+        $em->flush();
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
+    }
 }
