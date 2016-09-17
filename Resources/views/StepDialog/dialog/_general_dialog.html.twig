@@ -98,12 +98,21 @@
                                             </a>
                                         </li>
                                         {% if permissionCheck().isGrantedForStep(dialog.step) %}
-                                            <li onclick="OjsWorkflow.browseReviewForms(this, {{ dialog.id }})">
-                                                <a>
-                                                    <i class="fa fa-comments-o"></i>
-                                                    {{ 'workflow.send.review.form'|trans }}
-                                                </a>
-                                            </li>
+                                            {% if dialog.dialogType == actionType('ASK_AUTHOR_FOR_CORRECTION') %}
+                                                <li onclick="OjsWorkflow.browseReviewFormResponses(this, {{ dialog.id }})">
+                                                    <a>
+                                                        <i class="fa fa-comments-o"></i>
+                                                        {{ 'workflow.send.review.form.response'|trans }}
+                                                    </a>
+                                                </li>
+                                            {% else %}
+                                                <li onclick="OjsWorkflow.browseReviewForms(this, {{ dialog.id }})">
+                                                    <a>
+                                                        <i class="fa fa-comments-o"></i>
+                                                        {{ 'workflow.send.review.form'|trans }}
+                                                    </a>
+                                                </li>
+                                            {% endif %}
                                         {% endif %}
                                     </ul>
                                 </span>
