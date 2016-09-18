@@ -134,6 +134,8 @@ finish.workflow: 'Düzenlemeyi Bitir'
 select.submission.details: 'Gönderi Detayları'
 dialog.created.at: 'Oluşturulma zamanı'
 workflow.browse.step.forms: '__workflow.browse.step.forms'
+_assign_reviewer.users: 'Hakem kullanıcısı/kullanıcıları'
+_assign_reviewer.create.button: 'Hakem(leri) Ata'
 
 #action log translations
 article.submitted.by: 'Makale %user% Tarafından Gönderildi'

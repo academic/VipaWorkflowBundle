@@ -1,5 +1,5 @@
 {% block _specific_form %}
-    <h4 class="text-center">{{ actionAlias~'.form.header'|trans }}</h4>
+    <h4 class="text-center">{{ (actionAlias~'.form.header')|trans }}</h4>
     <div class="well">
         {{ include('::flashbag.html.twig') }}
         {{ form(form) }}
@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block _basic_form %}
-    <h4 class="text-center">{{ actionAlias~'.form.header'|trans }}</h4>
+    <h4 class="text-center">{{ (actionAlias~'.form.header')|trans }}</h4>
     <div class="well">
         {{ include('::flashbag.html.twig') }}
         {{ form(form) }}
