@@ -157,6 +157,30 @@ jQuery(document).ready(function($) {
     function removeUnnecessaryFields(){
         $('.form-elements .className-wrap').addClass('hidden');
         $('.form-elements .name-wrap').addClass('hidden');
+        $.each($('input[name="label"]'), function(index, value){
+            var $labelVal = $(value).val();
+            var $removeValues = [
+                'Onay Kutusu Grubu',
+                'Tarih',
+                'Başlık',
+                'Radyo Grup',
+                'Seç',
+                'Metin',
+                'Metin Alanı',
+
+                'Checkbox Group',
+                'Date Field',
+                'Header',
+                'Radio Group',
+                'Select',
+                'Text Field',
+                'Text Area'
+            ];
+            if($removeValues.indexOf($labelVal) !== -1){
+                $(value).val('');
+            }
+        });
+
     }
     //bind to div and on change remove unnecessary fields
     //this lines can be removal, because can trigger an browser crash
