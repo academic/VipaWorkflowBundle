@@ -131,7 +131,10 @@ jQuery(document).ready(function($) {
             'button',
             'autocomplete',
             'hidden',
-            'file'
+            'file',
+            'checkbox',
+            'paragraph',
+            'number'
         ],
         roles: {
             1: 'Author can not see'
