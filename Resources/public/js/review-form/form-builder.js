@@ -180,6 +180,9 @@ jQuery(document).ready(function($) {
                 $(value).val('');
             }
         });
+        $.each($('input[name="placeholder"]'), function(index, value){
+            $(value).parent().addClass('hidden');
+        });
 
     }
     //bind to div and on change remove unnecessary fields
