@@ -19,6 +19,7 @@ class ArticleWfGrantedUsersType extends AbstractType
     {
         $builder
             ->add('grantedUsers', JournalUsersFieldType::class,[
+                'label' => 'article.workflow.granted.users',
                 'attr' => [
                     'style' => 'width: 100%;',
                 ],

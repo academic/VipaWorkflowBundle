@@ -136,6 +136,7 @@ dialog.created.at: 'Oluşturulma zamanı'
 workflow.browse.step.forms: 'Adım Değerlendirme Formları'
 _assign_reviewer.users: 'Hakem kullanıcısı/kullanıcıları'
 _assign_reviewer.create.button: 'Hakem(leri) Ata'
+article.workflow.granted.users: 'Makale Editörlerini Seç'
 
 #action log translations
 article.submitted.by: 'Makale %user% Tarafından Gönderildi'
