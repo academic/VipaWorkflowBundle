@@ -799,7 +799,7 @@ class WorkflowService
             $fetchAll = true;
         }
         if ($fetchAll) {
-            $dialogs = $dialogRepo->findBy(['step' => $step]);
+            $dialogs = $dialogRepo->findBy(['step' => $step], ['openedAt' => 'ASC']);
         } else {
             $dialogs = $dialogRepo
                 ->createQueryBuilder('sd')
@@ -807,6 +807,7 @@ class WorkflowService
                 ->setParameter('user', $user)
                 ->andWhere('sd.step = :step')
                 ->setParameter('step', $step)
+                ->orderBy('openedAt', 'ASC')
                 ->getQuery()
                 ->getResult()
             ;
