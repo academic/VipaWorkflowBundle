@@ -63,9 +63,8 @@
     <script>
         jQuery(document).ready(function($) {
             var template = document.getElementById('journal_review_form_content');
-            var renderWrap = document.querySelector('.render-wrap');
-            $(template).formRender({
-                container: renderWrap
+            $('.render-wrap').formRender({
+                formData: $(template).text()
             });
             var form = document.getElementById("form-render-wrap");
             var elements = form.elements;
