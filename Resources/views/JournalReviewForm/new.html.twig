@@ -22,11 +22,15 @@
     {{ form_start(form) }}
         {{ form_row(form.active) }}
         {{ form_row(form.name) }}
-        <div class="build-wrap well">
-            {{ form_row(form.content) }}
+        {{ form_widget(form.content) }}
+        <hr>
+        <div id="fb-editor" class="well"></div>
+        <div id="fb-rendered-form" class="well">
+            <div id="fb-rendered-form-div"></div>
+            <button class="btn btn-primary pull-right" type="button" id="edit-form">{{ 'resume.to.edit'|trans }}</button>
+            <br>
         </div>
-        <div class="render-wrap well"></div>
-        <button id="edit-form" class="btn btn-primary" type="button">{{ 'resume.to.edit'|trans }}</button>
+        <hr>
     {{ form_end(form) }}
 {% endblock %}
 

@@ -1,23 +1,12 @@
-#journal_review_form_content {
+#fb-rendered-form {
+    clear: both;
     display: none;
 }
 
-.content {
-    margin: auto;
-    width: 100%;
-    max-width: 1280px;
-    padding-top: 5em;
-}
-
-.render-wrap {
+#journal_review_form_content{
     display: none;
 }
 
-#edit-form {
+#frmb-0-view-data{
     display: none;
-    float: right;
-}
-
-.editing-form #edit-form {
-    display: block;
 }

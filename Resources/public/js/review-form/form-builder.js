@@ -113,18 +113,7 @@ jQuery(document).ready(function($) {
             yes: 'Evet'
         }
     };
-    var template = document.getElementById('journal_review_form_content'),
-        $buildWrap = $(document.querySelector('.build-wrap')),
-        renderWrap = document.querySelector('.render-wrap'),
-        editBtn = document.getElementById('edit-form'),
-        editing = true;
 
-    var toggleEdit = function() {
-        document.body.classList.toggle('editing-form', editing);
-        $buildWrap.toggle();
-        $(renderWrap).toggle();
-        editing = !editing;
-    };
     var options = {
         editOnAdd: true,
         disableFields: [
@@ -139,20 +128,26 @@ jQuery(document).ready(function($) {
         roles: {
             1: 'Author can not see'
         },
-        'messages': localeMessages[current_language] || {}
+        'messages': localeMessages[current_language] || {},
+        'formData': $('#journal_review_form_content').text()
     };
-    $(template).formBuilder(options);
+    var $fbEditor = $(document.getElementById('fb-editor')),
+        $formContainer = $(document.getElementById('fb-rendered-form')),
+        formBuilder = $fbEditor.formBuilder(options).data('formBuilder');
 
-    $('.form-builder-save').click(function() {
-        toggleEdit();
-        $(template).formRender({
-            container: renderWrap
+    $('.form-builder-save').click(function(e) {
+        e.preventDefault();
+        $fbEditor.toggle();
+        $formContainer.toggle();
+        $('#fb-rendered-form-div', $formContainer).formRender({
+            formData: formBuilder.formData
         });
     });
 
-    editBtn.onclick = function() {
-        toggleEdit();
-    };
+    $('#edit-form', $formContainer).click(function(e) {
+        $fbEditor.toggle();
+        $formContainer.toggle();
+    });
 
     function removeUnnecessaryFields(){
         $('.form-elements .className-wrap').addClass('hidden');
@@ -187,8 +182,10 @@ jQuery(document).ready(function($) {
     }
     //bind to div and on change remove unnecessary fields
     //this lines can be removal, because can trigger an browser crash
-    $('.build-wrap').bind("DOMSubtreeModified",function(){
+    $('#fb-editor').bind("DOMSubtreeModified",function(){
         removeUnnecessaryFields();
+        console.log(formBuilder.formData);
+        $('#journal_review_form_content').html(formBuilder.formData);
     });
     removeUnnecessaryFields();
 });
