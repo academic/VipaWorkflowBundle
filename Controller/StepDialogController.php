@@ -287,6 +287,95 @@ class StepDialogController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param $workflowId
+     * @param $stepOrder
+     * @return Response
+     */
+    public function createAssignReviewerDialogAction(Request $request, $workflowId, $stepOrder)
+    {
+        //set vars
+        $actionType = StepActionTypes::ASSIGN_REVIEWER;
+        $actionAlias = StepActionTypes::$typeAlias[$actionType];
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $user = $this->getUser();
+
+        $this->throw404IfNotFound($journal);
+        $em = $this->getDoctrine()->getManager();
+        $wfLogger = $this->get('dp.wf_logger_service');
+        $logUsers = [];
+        $dispatcher = $this->get('event_dispatcher');
+        $workflowService = $this->get('dp.workflow_service');
+        $permissionService = $this->get('dp.workflow_permission_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $wfLogger->setArticleWorkflow($workflow);
+        $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => $stepOrder,
+        ]);
+        $this->throw404IfNotFound($step);
+        //#permissioncheck
+        if(!$permissionService->isGrantedForStep($step)){
+            throw new AccessDeniedException;
+        }
+
+        $dialog = new StepDialog();
+        $dialog
+            ->setDialogType($actionType)
+            ->setOpenedAt(new \DateTime())
+            ->setStatus(StepDialogStatus::ACTIVE)
+            ->setStep($step)
+            ->setCreatedDialogBy($user)
+        ;
+
+        $roles = StepActionTypes::$dialogRoles[$actionType];
+        $form = $this->createForm(new DialogType(), $dialog, [
+            'action' => $request->getUri(),
+            'action_alias' => $actionAlias,
+            'journalId' => $journal->getId(),
+            'roles' => $roles,
+        ]);
+        $form = $this->reviseFormForAssignReviewer($form);
+        $form->handleRequest($request);
+
+        if($request->getMethod() == 'POST' && $form->isValid()){
+            //if action type is assin review, then persist seperate dialog for each of them
+            foreach($dialog->getUsers() as $reviewerUser){
+                $logUsers[] = $reviewerUser->getUsername();
+                $workflow->addRelatedUser($reviewerUser);
+
+                $reviewDialog = new StepDialog();
+                $reviewDialog
+                    ->setDialogType(StepActionTypes::ASSIGN_REVIEWER)
+                    ->setOpenedAt(new \DateTime())
+                    ->setStatus(StepDialogStatus::ACTIVE)
+                    ->setStep($step)
+                    ->setTitle($dialog->getTitle())
+                    ->setCreatedDialogBy($user)
+                    ->addUser($reviewerUser)
+                ;
+                $em->persist($reviewDialog);
+            }
+            $em->persist($step);
+            $em->persist($workflow);
+
+            //log action
+            $wfLogger->log($actionAlias.'_log.action', [
+                '%users%' => implode(',', $logUsers),
+                '%by_user%' => $user->getUsername(),
+            ]);
+            $em->flush();
+
+            return $workflowService->getMessageBlock('successful_create'.$actionAlias);
+        }
+
+        return $workflowService->getFormBlock('_assign_reviewer', [
+            'form' => $form->createView(),
+            'actionAlias' => $actionAlias,
+        ]);
+    }
+
+    /**
      * @param $workflowId
      * @param $stepOrder
      * @return JsonResponse
@@ -770,6 +859,25 @@ class StepDialogController extends Controller
                     'style' => 'width: 100%;',
                 ],
                 'label' => '_create_issue.users',
+            ]);
+
+        return $form;
+    }
+
+    /**
+     * @param FormInterface $form
+     * @return FormInterface
+     */
+    private function reviseFormForAssignReviewer(FormInterface $form)
+    {
+        $form
+            ->remove('users')
+            ->add('title')
+            ->add('users', JournalUsersFieldType::class,[
+                'attr' => [
+                    'style' => 'width: 100%;',
+                ],
+                'label' => '_assign_reviewer.users',
             ]);
 
         return $form;

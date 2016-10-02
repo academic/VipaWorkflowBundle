@@ -261,6 +261,38 @@ $(document).ready(function() {
                 });
             });
         },
+
+
+        createAssignReviewerDialog: function($this){
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dp_workflow_create_assign_reviewer_dialog', {
+                    journalId: journalId,
+                    workflowId: workflowId,
+                    stepOrder: stepOrder,
+                    actionType: this.getActionType($this)
+                }),
+                autoSize: false,
+                width: '600px',
+                maxWidth: '600px',
+                height: 'auto'
+            });
+        },
+        postAssignReviewerDialog: function ($this) {
+            var dialogForm = $('form[name="dialog"]');
+            $.post( dialogForm.attr('action'), dialogForm.serialize(), function( data ) {
+                $.fancybox({
+                    content: data,
+                    type: 'inline',
+                    autoSize: false,
+                    width: '600px',
+                    maxWidth: '600px',
+                    height: 'auto'
+                });
+            });
+        },
+
+
         acceptAndGotoArrangement: function($this){
             swal({
                 title: Translator.trans('workflow.are.you.sure.goto.arrangement'),

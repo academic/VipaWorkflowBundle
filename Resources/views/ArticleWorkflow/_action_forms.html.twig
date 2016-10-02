@@ -31,3 +31,30 @@
         $('.select2entity').select2entity();
     </script>
 {% endblock %}
+
+{% block _assign_reviewer %}
+    <h4 class="text-center">{{ (actionAlias~'.form.header')|trans }}</h4>
+    <div class="well">
+        {{ include('::flashbag.html.twig') }}
+        {{ form_start(form) }}
+            {{ form_label(form.title) }} <small>({{ 'optional'|trans }})</small>
+            <div class="input-group">
+                <div class="input-group-addon">{{ '_assign_reviewer.dialog.header'|trans }} - </div>
+                {{ form_widget(form.title) }}
+            </div>
+            <br>
+            {{ form_row(form.users) }}
+        {{ form_end(form) }}
+        <button class="btn btn-success" onclick="OjsWorkflow.postAssignReviewerDialog(this)">
+            {{ (actionAlias~'.create.button')|trans }}
+        </button>
+    </div>
+    <style>
+        .select2-dropdown {
+            z-index: 9001;
+        }
+    </style>
+    <script>
+        $('.select2entity').select2entity();
+    </script>
+{% endblock %}

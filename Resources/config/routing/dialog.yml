@@ -26,6 +26,14 @@ dp_workflow_create_basic_dialog:
   options:
       expose: true
 
+
+dp_workflow_create_assign_reviewer_dialog:
+  path:     /create/assign-reviewer-dialog
+  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:createAssignReviewerDialog" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
 dp_workflow_accept_goto_arrangement:
   path:     /accept/goto-arrangement
   defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:acceptGotoArrangement" }
