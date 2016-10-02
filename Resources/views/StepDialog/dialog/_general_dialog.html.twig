@@ -5,13 +5,19 @@
         {% else %}
             {% set panelClass = 'default' %}
         {% endif %}
-        <div class="panel panel-{{ panelClass }} {% if dialog.status == dialogStatus('CLOSED') %}panel-dialog-opacity{% endif %}">
+        <div class="panel panel-{{ panelClass }}">
             <div class="panel-heading">
                 <span class="glyphicon glyphicon-comment"></span>
                 {% if dialog.dialogType == actionType('CREATE_ISSUE') %}
                     <b>{{ dialog.title }}</b>
                 {% else %}
                     <b>{{ (actionAlias(dialog.dialogType)~'.dialog.header')|trans }}</b>
+                {% endif %}
+                {% if dialog.status == dialogStatus('CLOSED') %}
+                    <span class="label label-success">
+                            <i class="fa fa-check-circle"></i>
+                        {{ 'finished.dialog'|trans }}
+                        </span>
                 {% endif %}
                 <div class="btn-group pull-right">
                     <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -68,7 +74,7 @@
                     ( <abbr title="{{ dialog.openedAt|date('Y-m-d H:i:s') }}" class="ago">{{ dialog.openedAt|date('Y-m-d H:i:s') }}</abbr> )
                 </small>
             </div>
-            <div id="collapse-panel-{{ dialog.id }}" class="collapse {% if dialog.status == dialogStatus('ACTIVE') %}in{% endif %}">
+            <div id="collapse-panel-{{ dialog.id }}" class="collapse in">
                 <div class="panel-body panel-dialog-body">
                     <ul class="dialog-box" id="dialog-posts-{{ dialog.id }}">
                         {{ 'loading.posts'|trans }}...

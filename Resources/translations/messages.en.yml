@@ -112,6 +112,7 @@ workflow.browse.step.forms: 'Browse Step Review Forms'
 _assign_reviewer.users: 'Assign Review User(s)'
 _assign_reviewer.create.button: 'Assign Reviewer(s)'
 article.workflow.granted.users: 'Select Article Editörs'
+finished.dialog: 'Finished Issue'
 
 #action log translations
 article.submitted.by: 'Article Submitted by -> %user%'
