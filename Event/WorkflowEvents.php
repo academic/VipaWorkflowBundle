@@ -116,6 +116,7 @@ final class WorkflowEvents implements MailEventsInterface
             ]),
             new EventDetail(self::REVIEWER_INVITE.'.to.reviewer', 'admin', [
                 'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title', 'accept.link', 'reject.link',
+                'dayLimit', 'article.abstract', 'article.authors',
             ]),
             new EventDetail(self::REVIEWER_REMIND.'.to.editor', 'admin', [
                 'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title',

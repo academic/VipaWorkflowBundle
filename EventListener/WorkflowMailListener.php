@@ -2,6 +2,8 @@
 
 namespace Dergipark\WorkflowBundle\EventListener;
 
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflowSetting;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Dergipark\WorkflowBundle\Event\WorkflowEvent;
 use Dergipark\WorkflowBundle\Event\WorkflowEvents;
@@ -717,6 +719,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         if(!$getMailEvent){
             goto sendmailtoeditors;
         }
+        $settings = $this->getWorkflowSettings($event->workflow);
         $reviewerUser = $event->dialog->users->first();
         $transformParams = [
             'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
@@ -740,6 +743,9 @@ class WorkflowMailListener implements EventSubscriberInterface
                 'stepOrder' => $event->step->getId(),
                 'dialogId' => $event->dialog->getId(),
             ], UrlGeneratorInterface::ABSOLUTE_URL),
+            'dayLimit' => $settings->getReviewerWaitDay(),
+            'article.abstract' => $event->article->getAbstract(),
+            'article.authors' => implode(', ', $event->article->getArticleAuthors()->toArray()),
         ];
         $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
         $this->ojsMailer->sendToUser(
@@ -1022,5 +1028,12 @@ class WorkflowMailListener implements EventSubscriberInterface
         return $this->em->getRepository('OjsUserBundle:User')->findUsersByJournalRole(
             ['ROLE_EDITOR', 'ROLE_CO_EDITOR']
         );
+    }
+
+    private function getWorkflowSettings(ArticleWorkflow $workflow)
+    {
+        return $this->em->getRepository(ArticleWorkflowSetting::class)->findOneBy([
+            'workflow' => $workflow,
+        ]);
     }
 }
