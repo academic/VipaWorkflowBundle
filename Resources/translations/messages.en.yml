@@ -126,6 +126,7 @@ _accept_goto_arrangement.dialog.created.message: '(TODO)__accept_goto_arrangemen
 _assign_layout_editor.dialog.created.message: '(TODO)__assign_layout_editor.dialog.created.message'
 _assign_copy_editor.dialog.created.message: '(TODO)__assign_copy_editor.dialog.created.message'
 _assign_proof_reader.dialog.created.message: '(TODO)__assign_proof_reader.dialog.created.message'
+workflow.send.review.form.response: 'Send Review Form Response'
 
 #action log translations
 article.submitted.by: 'Article Submitted by -> %user%'
