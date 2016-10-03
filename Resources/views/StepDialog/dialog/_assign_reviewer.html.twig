@@ -21,13 +21,13 @@
                     {% endif %}
                 </b>
                 <div class="btn-group pull-right">
-                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                        {{ 'select.action'|trans }}
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        {% if dialog.status == dialogStatus('ACTIVE') %}
-                            {% if dialog.accepted %}
+                    {% if dialog.status == dialogStatus('ACTIVE') %}
+                        {% if dialog.accepted %}
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                {{ 'select.action'|trans }}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
                                 <li>
                                     <a onclick="OjsWorkflow.loadPosts({{ dialog.id }})">
                                         {{ 'refresh.posts'|trans }}
@@ -39,24 +39,20 @@
                                         {{ 'close.dialog.action'|trans }}
                                     </a>
                                 </li>
-                            {% endif %}
-                            {% if permissionCheck().isGrantedForStep(dialog.step) and dialog.accepted == false %}
-                                <li>
-                                    <a onclick="OjsWorkflow.removeDialog({{ dialog.id }})">
-                                        {{ 'remove.dialog'|trans }}
-                                    </a>
-                                </li>
-                            {% endif %}
-                        {% elseif dialog.status == dialogStatus('CLOSED') and dialog.step.status == stepStatus('ACTIVE') %}
-                            {% if permissionCheck().isGrantedForStep(dialog.step) %}
-                                <li>
-                                    <a onclick="OjsWorkflow.reopenDialog({{ dialog.id }})">
-                                        {{ 'reopen.dialog'|trans }}
-                                    </a>
-                                </li>
-                            {% endif %}
+                            </ul>
                         {% endif %}
-                    </ul>
+                        {% if permissionCheck().isGrantedForStep(dialog.step) and dialog.accepted == false %}
+                            <button onclick="OjsWorkflow.removeDialog({{ dialog.id }})" class="btn btn-default btn-xs">
+                                {{ 'remove.dialog'|trans }}
+                            </button>
+                        {% endif %}
+                    {% elseif dialog.status == dialogStatus('CLOSED') and dialog.step.status == stepStatus('ACTIVE') %}
+                        {% if permissionCheck().isGrantedForStep(dialog.step) %}
+                            <button onclick="OjsWorkflow.reopenDialog({{ dialog.id }})" class="btn btn-default btn-xs">
+                                {{ 'reopen.dialog'|trans }}
+                            </button>
+                        {% endif %}
+                    {% endif %}
                     <button class="btn btn-default btn-xs" data-toggle="collapse" href="#collapse-panel-{{ dialog.id }}">
                         <i class="fa fa-expand"></i>
                     </button>
