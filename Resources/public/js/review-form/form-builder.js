@@ -183,9 +183,11 @@ jQuery(document).ready(function($) {
     //bind to div and on change remove unnecessary fields
     //this lines can be removal, because can trigger an browser crash
     $('#fb-editor').bind("DOMSubtreeModified",function(){
-        removeUnnecessaryFields();
-        console.log(formBuilder.formData);
-        $('#journal_review_form_content').html(formBuilder.formData);
+        setTimeout(function(){
+            removeUnnecessaryFields();
+            formBuilder.save;
+            $('#journal_review_form_content').html(formBuilder.formData);
+        }, 500);
     });
     removeUnnecessaryFields();
 });
