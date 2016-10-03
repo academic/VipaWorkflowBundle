@@ -84,35 +84,26 @@
                                         <i class="fa fa-comment"></i>
                                         {{ 'add.comment'|trans }}
                                     </button>
-                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="caret"></span>
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li onclick="OjsWorkflow.browseFiles(this, {{ dialog.id }})">
-                                            <a>
-                                                <i class="fa fa-file-archive-o"></i>
-                                                {{ 'workflow.send.file'|trans }}
-                                            </a>
-                                        </li>
-                                        {% if permissionCheck().isGrantedForStep(dialog.step) %}
-                                            {% if dialog.dialogType == actionType('ASK_AUTHOR_FOR_CORRECTION') %}
-                                                <li onclick="OjsWorkflow.browseReviewFormResponses(this, {{ dialog.id }})">
-                                                    <a>
-                                                        <i class="fa fa-comments-o"></i>
-                                                        {{ 'workflow.send.review.form.response'|trans }}
-                                                    </a>
-                                                </li>
-                                            {% else %}
-                                                <li onclick="OjsWorkflow.browseReviewForms(this, {{ dialog.id }})">
-                                                    <a>
-                                                        <i class="fa fa-comments-o"></i>
-                                                        {{ 'workflow.send.review.form'|trans }}
-                                                    </a>
-                                                </li>
-                                            {% endif %}
+                                    {% if permissionCheck().isGrantedForStep(dialog.step) %}
+                                        {% if dialog.dialogType == actionType('ASK_AUTHOR_FOR_CORRECTION') %}
+                                            <button class="btn btn-success btn-sm"
+                                                    onclick="OjsWorkflow.browseReviewFormResponses(this, {{ dialog.id }})"
+                                                    data-toggle="tooltip" title="{{ 'workflow.send.review.form.response'|trans }}">
+                                                <i class="fa fa-comments-o"></i>
+                                            </button>
+                                        {% else %}
+                                            <button class="btn btn-success btn-sm"
+                                                    onclick="OjsWorkflow.browseReviewForms(this, {{ dialog.id }})"
+                                                    data-toggle="tooltip" title="{{ 'workflow.send.review.form'|trans }}">
+                                                <i class="fa fa-comments-o"></i>
+                                            </button>
                                         {% endif %}
-                                    </ul>
+                                    {% endif %}
+                                    <button class="btn btn-warning btn-sm"
+                                            onclick="OjsWorkflow.browseFiles(this, {{ dialog.id }})"
+                                            data-toggle="tooltip" title="{{ 'workflow.send.file'|trans }}">
+                                        <i class="fa fa-file-text"></i>
+                                    </button>
                                 </span>
                         </div>
                     </div>

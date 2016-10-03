@@ -20,7 +20,7 @@
                         </span>
                     {% endif %}
                 </b>
-                <div class="btn-group pull-right">
+                <span class="btn-group pull-right">
                     {% if dialog.status == dialogStatus('ACTIVE') %}
                         {% if dialog.accepted %}
                             <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -56,7 +56,7 @@
                     <button class="btn btn-default btn-xs" data-toggle="collapse" href="#collapse-panel-{{ dialog.id }}">
                         <i class="fa fa-expand"></i>
                     </button>
-                </div>
+                </span>
                 <br>
                 {{ 'workflow.reviewer'|trans }}:
                 {% for user in dialog.users %}
@@ -93,26 +93,18 @@
                                     <i class="fa fa-comment"></i>
                                     {{ 'add.comment'|trans }}
                                 </button>
-                                <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="caret"></span>
-                                    <span class="sr-only">Toggle Dropdown</span>
+                                {% if permissionCheck().isGrantedForStep(dialog.step) %}
+                                    <button class="btn btn-success btn-sm"
+                                            onclick="OjsWorkflow.browseReviewForms(this, {{ dialog.id }})"
+                                            data-toggle="tooltip" title="{{ 'workflow.send.review.form'|trans }}">
+                                        <i class="fa fa-comments-o"></i>
+                                    </button>
+                                {% endif %}
+                                <button class="btn btn-warning btn-sm"
+                                        onclick="OjsWorkflow.browseFiles(this, {{ dialog.id }})"
+                                        data-toggle="tooltip" title="{{ 'workflow.send.file'|trans }}">
+                                    <i class="fa fa-file-text"></i>
                                 </button>
-                                <ul class="dropdown-menu">
-                                    <li onclick="OjsWorkflow.browseFiles(this, {{ dialog.id }})">
-                                        <a>
-                                            <i class="fa fa-file-archive-o"></i>
-                                            {{ 'workflow.send.file'|trans }}
-                                        </a>
-                                    </li>
-                                    {% if permissionCheck().isGrantedForStep(dialog.step) %}
-                                        <li onclick="OjsWorkflow.browseReviewForms(this, {{ dialog.id }})">
-                                            <a>
-                                                <i class="fa fa-comments-o"></i>
-                                                {{ 'workflow.send.review.form'|trans }}
-                                            </a>
-                                        </li>
-                                    {% endif %}
-                                </ul>
                             </span>
                         </div>
                     </div>
