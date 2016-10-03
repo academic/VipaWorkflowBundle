@@ -807,7 +807,7 @@ class WorkflowService
                 ->setParameter('user', $user)
                 ->andWhere('sd.step = :step')
                 ->setParameter('step', $step)
-                ->orderBy('openedAt', 'ASC')
+                ->orderBy('sd.openedAt', 'ASC')
                 ->getQuery()
                 ->getResult()
             ;
