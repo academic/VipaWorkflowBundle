@@ -99,10 +99,10 @@ jQuery(document).ready(function($) {
             },
             subtype: 'Tip',
             subtypes: {
-                text: ['metin', 'şifre', 'e-posta', 'renk'],
-                button: ['buton', 'gönder'],
+                text: ['text', 'password', 'email', 'color'],
+                button: ['button', 'submit'],
                 header: ['h1', 'h2', 'h3'],
-                paragraph: ['p', 'adres', 'blok alıntı', 'tuval', 'çıktı']
+                paragraph: ['p', 'address', 'blockquote', 'canvas', 'output']
             },
             text: 'Metin',
             textArea: 'Metin Alanı',
