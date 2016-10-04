@@ -139,8 +139,8 @@ _assign_reviewer.create.button: 'Hakem(leri) Ata'
 article.workflow.granted.users: 'Makale Editörlerini Seç'
 finished.dialog: 'Bitmiş İşlem'
 dialog.created.great: 'Tamam!'
-_assign_grammer_editor.dialog.created.message: '(TODO)__assign_grammer_editor.dialog.created.message'
-_assign_spelling_editor.dialog.created.message: '(TODO)__assign_spelling_editor.dialog.created.message'
+_assign_grammer_editor.dialog.created.message: 'Açılan işleme makale dosyasını ekleyip, kontrolü başlatabilirsiniz. Notlarınızı da yorum ekle diyerek paylaşabilirsiniz. Atanan kullanıcıdan gelen cevapları, düzeltilmiş makale dosyasını yine aynı işlem içinde kontrol edebilirsiniz. '
+_assign_spelling_editor.dialog.created.message: 'Açılan işleme makale dosyasını ekleyip, kontrolü başlatabilirsiniz. Notlarınızı da yorum ekle diyerek paylaşabilirsiniz. Atanan kullanıcıdan gelen cevapları, düzeltilmiş makale dosyasını yine aynı işlem içinde kontrol edebilirsiniz.'
 _create_issue.dialog.created.message: '(TODO)__create_issue.dialog.created.message'
 _goto_reviewing.successful: '(TODO)__goto_reviewing.successful'
 _accept_submission.successful: '(TODO)__accept_submission.successful'
@@ -152,6 +152,13 @@ _assign_layout_editor.dialog.created.message: '(TODO)__assign_layout_editor.dial
 _assign_copy_editor.dialog.created.message: '(TODO)__assign_copy_editor.dialog.created.message'
 _assign_proof_reader.dialog.created.message: '(TODO)__assign_proof_reader.dialog.created.message'
 workflow.send.review.form.response: 'Form Yanıtı Gönder'
+workflow.browse.step.form.responses: 'Form Yanıtları'
+response.sended.by: 'Yanıtlayan'
+response.sended.at: 'Yanıtlandı'
+preview.response: 'Ön İzle'
+there.is.any.review.form.response.here: 'Yanıtlanmış değerlendirme formu bulunamadı'
+
+
 
 #action log translations
 article.submitted.by: 'Makale %user% Tarafından Gönderildi'
