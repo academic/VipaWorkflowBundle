@@ -558,7 +558,7 @@ class WorkflowService
             $this->em->persist($step);
         }
         $workflow->setStatus(ArticleWorkflowStatus::HISTORY);
-        $article->setStatus(ArticleStatuses::STATUS_PUBLISHED);
+        $article->setStatus(ArticleStatuses::STATUS_PUBLISH_READY);
         $article->setAcceptanceDate(new \DateTime());
         $this->em->persist($workflow);
         $this->em->persist($article);
@@ -670,7 +670,7 @@ class WorkflowService
         $this->em->persist($workflow);
 
         //publish article
-        $article->setStatus(ArticleStatuses::STATUS_PUBLISHED);
+        $article->setStatus(ArticleStatuses::STATUS_PUBLISH_READY);
         $this->em->persist($article);
 
         if ($flush) {
