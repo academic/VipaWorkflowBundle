@@ -127,6 +127,16 @@ _assign_layout_editor.dialog.created.message: '(TODO)__assign_layout_editor.dial
 _assign_copy_editor.dialog.created.message: '(TODO)__assign_copy_editor.dialog.created.message'
 _assign_proof_reader.dialog.created.message: '(TODO)__assign_proof_reader.dialog.created.message'
 workflow.send.review.form.response: 'Send Review Form Response'
+restart.workflow.process: 'Restart Workflow Process'
+can.not.start.workflow.because.status: 'You can not start workflow because article status is %status%'
+wf.restart.confirm: 'Confirm Restart Workflow'
+workflow.exists.info: 'Article have already a existing workflow. Do you want to see. You can click button for view existing workflow.'
+view.current.process: 'View Current Workflow'
+warning: 'Warning'
+restart.workflow.warning: 'If you want, you can finish current workflow and restart an workflow. For confirm write %confirmText% to input and click button'
+restart.confirm.text: 'I UNDERSTAND'
+wf.restart.sure: 'Restart Workflow'
+fill.confirm.area: 'Fill confirm area'
 
 #action log translations
 article.submitted.by: 'Article Submitted by -> %user%'

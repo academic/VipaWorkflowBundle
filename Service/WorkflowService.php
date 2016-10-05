@@ -169,6 +169,11 @@ class WorkflowService
                 $this->em->persist($articleStepReviewForm);
             }
         }
+
+        //if submitter user not exists set current user as submitter user
+        if($article->getSubmitterUser() == null){
+            $article->setSubmitterUser($user);
+        }
         //add submitter user to workflow related user too
         $articleWorkflow->addRelatedUser($article->getSubmitterUser());
 
@@ -176,6 +181,7 @@ class WorkflowService
 
         //set submission article status as inreview
         $article->setStatus(ArticleStatuses::STATUS_INREVIEW);
+        $this->em->persist($article);
 
         //log workflow events
         $this->wfLogger->setArticleWorkflow($articleWorkflow);

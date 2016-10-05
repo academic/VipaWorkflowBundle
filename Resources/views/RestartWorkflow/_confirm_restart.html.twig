@@ -1,0 +1,52 @@
+{% extends '::ojsbase.html.twig' %}
+{% block title %}{{ 'title.articles'|trans }} {{ parent() }}{% endblock %}
+
+{% block breadcrumb %}
+    {% set list = [
+    {'link': path('ojs_journal_dashboard_index', {journalId: selectedJournal().id}), 'title': 'dashboard'|trans},
+    {'link': path('ojs_journal_article_index', {journalId: selectedJournal().id}), 'title': 'title.articles'|trans},
+    {'title': 'wf.restart.confirm'|trans}
+    ] %}
+    {{ breadcrumb(list) }}
+{% endblock %}
+
+{% block body -%}
+    {% include '::flashbag.html.twig' %}
+
+    <div class="well">
+        <div class="alert alert-info">
+             {{ 'workflow.exists.info'|trans }}
+        </div>
+        <a href="{{ path('dergipark_workflow_article_workflow', {'journalId': selectedJournal().id, 'workflowId' : currentWorkflow.id}) }}"
+           class="btn btn-success pull-right">
+            {{ 'view.current.process'|trans }}
+        </a>
+        <br><br>
+    </div>
+    <div class="well">
+        <div class="alert alert-warning" data-confirm-text="{{ 'restart.confirm.text'|trans }}" id="confirm-warning-box">
+            <strong>{{ 'warning'|trans }}!</strong> {{ 'restart.workflow.warning'|trans({
+                '%confirmText%': '<b>'~'restart.confirm.text'|trans~'</b>'
+            })|raw }}
+        </div>
+        {{ form(form) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(document).ready(function($) {
+            var confirmText = $('#confirm-warning-box').attr('data-confirm-text');
+            $('#form_confirmText').css('width', '200px');
+            $('#form_confirmText').on("change paste keyup", function() {
+                console.log($('#form_confirmText').val());
+                if($('#form_confirmText').val() == confirmText){
+                    $('#form_sure').removeAttr('disabled');
+                }else {
+                    $('#form_sure').attr('disabled', 'disabled');
+                }
+            });
+        });
+    </script>
+{% endblock %}

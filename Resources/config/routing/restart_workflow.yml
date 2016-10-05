@@ -1,0 +1,3 @@
+dergipark_workflow_restart_workflow:
+  path:     /restart/{id}
+  defaults: { _controller: "DergiparkWorkflowBundle:RestartWorkflow:restart" }

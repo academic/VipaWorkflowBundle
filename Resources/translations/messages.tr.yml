@@ -152,13 +152,21 @@ _assign_layout_editor.dialog.created.message: '(TODO)__assign_layout_editor.dial
 _assign_copy_editor.dialog.created.message: '(TODO)__assign_copy_editor.dialog.created.message'
 _assign_proof_reader.dialog.created.message: '(TODO)__assign_proof_reader.dialog.created.message'
 workflow.send.review.form.response: 'Form Yanıtı Gönder'
+restart.workflow.process: 'Yeniden Süreç Başlat'
+can.not.start.workflow.because.status: 'Süreç makale durumundan dolayı başlatılamadı. Makale durumu: %status%'
+wf.restart.confirm: 'Süreç Yeniden Başlatmayı Onayla'
+workflow.exists.info: 'Makale zaten bir sürece sahip. Görmek ister misin?. Süreci görmek için butona tıklayabilirsin.'
+view.current.process: 'Varolan Süreci Gör'
+warning: 'Dikkat'
+restart.workflow.warning: 'Eğer ki isterseniz varolan süreci bitirerek, yeniden bir süreç başlatabilirsiniz. Kabul etmek için aşağıdaki alana %confirmText% yazarak butona tıklayın'
+restart.confirm.text: 'ANLADIM'
+wf.restart.sure: 'Süreci Başlat'
+fill.confirm.area: 'Onaylama alanını doldurun'
 workflow.browse.step.form.responses: 'Form Yanıtları'
 response.sended.by: 'Yanıtlayan'
 response.sended.at: 'Yanıtlandı'
 preview.response: 'Ön İzle'
 there.is.any.review.form.response.here: 'Yanıtlanmış değerlendirme formu bulunamadı'
-
-
 
 #action log translations
 article.submitted.by: 'Makale %user% Tarafından Gönderildi'

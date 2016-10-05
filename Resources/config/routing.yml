@@ -13,3 +13,7 @@ dergipark_workflow_step:
 dergipark_workflow_article_workflow:
     resource: "routing/article_workflow.yml"
     prefix:   /journal/{journalId}/article-workflow/
+
+dergipark_workflow_restart:
+    resource: "routing/restart_workflow.yml"
+    prefix:   /journal/{journalId}/restart-workflow
