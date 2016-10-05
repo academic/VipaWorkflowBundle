@@ -681,6 +681,51 @@ class WorkflowService
     }
 
     /**
+     * @param Article         $article
+     * @param bool            $flush
+     *
+     * @return JsonResponse
+     *
+     * @throws AccessDeniedException
+     */
+    public function closeOldWorklfows(Article $article, $flush = false)
+    {
+        $workflows = $this->em->getRepository(ArticleWorkflow::class)->findBy([
+            'article' => $article,
+            'status' => ArticleWorkflowStatus::ACTIVE,
+        ]);
+
+        if(empty($workflows)){
+            return true;
+        }
+
+        foreach($workflows as $workflow){
+
+            $currentStep = $workflow->getCurrentStep();
+
+            // deactive current step
+            $currentStep->setStatus(StepStatus::CLOSED);
+            //close step dialogs
+            $this->closeStepDialogs($currentStep);
+            $this->em->persist($currentStep);
+
+            //close workflow
+            $workflow->setStatus(ArticleWorkflowStatus::HISTORY);
+            $this->em->persist($workflow);
+
+            //publish article
+            $article->setStatus(ArticleStatuses::STATUS_PUBLISHED);
+            $this->em->persist($article);
+
+            if ($flush) {
+                $this->em->flush();
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @param ArticleWorkflow $workflow
      * @param StepDialog $dialog
      *

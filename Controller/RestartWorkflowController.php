@@ -27,6 +27,7 @@ class RestartWorkflowController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $translator = $this->get('translator');
+        $workflowService = $this->get('dp.workflow_service');
 
         $availableStatus = [
             ArticleStatuses::STATUS_INREVIEW,
@@ -62,8 +63,11 @@ class RestartWorkflowController extends Controller
             ->getForm();
         $form->handleRequest($request);
 
-        if (!$currentFlow || $form->isValid()) {
-            $workflow = $this->get('dp.workflow_service')->prepareArticleWorkflow($article);
+        if ($form->isValid()) {
+            if($currentFlow instanceof ArticleWorkflow){
+                $workflowService->closeOldWorklfows($article, true);
+            }
+            $workflow = $workflowService->prepareArticleWorkflow($article);
 
             return $this->redirectToRoute(
                 'dergipark_workflow_article_workflow',
