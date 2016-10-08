@@ -134,6 +134,34 @@ class WorkflowPermissionService
      * @param ArticleWorkflow $workflow
      * @return bool
      */
+    public function isGrantedForEditArticleMetadata(ArticleWorkflow $workflow)
+    {
+        $user = $this->getUser();
+        $journal = $workflow->getArticle()->getJournal();
+        $article = $workflow->getArticle();
+
+        if($user->isAdmin()
+            || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))){
+            return true;
+        }
+        if($workflow->getGrantedUsers()->contains($user)){
+            return true;
+        }
+        if($workflow->getCurrentStep()->grantedUsers->contains($user)){
+            return true;
+        }
+        if($workflow->getCurrentStep()->getOrder() == '1'
+            && $article->getSubmitterUser()->getUsername() == $user->getUsername()){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param ArticleWorkflow $workflow
+     * @return bool
+     */
     public function isReviewerOnWorkflow(ArticleWorkflow $workflow)
     {
         $dialogRepo = $this->em->getRepository(StepDialog::class);

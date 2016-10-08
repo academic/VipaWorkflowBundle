@@ -68,10 +68,12 @@
                 {% endfor %}
             </div>
         {% endif %}
-        <button  class="btn btn-success" onclick="OjsWorkflow.editArticleMetadata(this)"
-            href="{{ path('dergipark_workflow_edit_article_metadata', {journalId: selectedJournal().id, workflowId: workflow.id}) }}">
-            {{ 'title.article_edit_metadata'|trans }}
-        </button>
+        {% if permissionCheck().isGrantedForEditArticleMetadata(workflow) %}
+            <button  class="btn btn-success" onclick="OjsWorkflow.editArticleMetadata(this)"
+                href="{{ path('dergipark_workflow_edit_article_metadata', {journalId: selectedJournal().id, workflowId: workflow.id}) }}">
+                {{ 'title.article_edit_metadata'|trans }}
+            </button>
+        {% endif %}
         {% if permissionCheck().isHaveEditorRole() %}
             <a target="_blank" href="{{ path('ojs_journal_article_show', {journalId: selectedJournal().id, id: article.id}) }}" class="btn btn-primary">
                 {{ 'title.article_show_and_edit'|trans }}
