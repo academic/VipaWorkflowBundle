@@ -231,4 +231,9 @@ class ArticleWorkflow
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return 'article.workflow';
+    }
 }
