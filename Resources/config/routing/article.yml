@@ -1,0 +1,3 @@
+dergipark_workflow_edit_article_metadata:
+  path:     /edit-article-metadata/{workflowId}
+  defaults: { _controller: "DergiparkWorkflowBundle:Article:editMetadata" }

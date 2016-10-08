@@ -188,6 +188,62 @@ $(document).ready(function() {
         refreshTooltip: function () {
             $("[data-toggle=tooltip]").tooltip();
         },
+        refreshRichTextEditorPlugin: function () {
+            $('.wysihtml5').each(function () {
+                var wysihtml5 = $(this);
+                wysihtml5.summernote({
+                    height: 100,                 // set editor height
+
+                    minHeight: null,             // set minimum height of editor
+                    maxHeight: null,             // set maximum height of editor
+
+                    focus: false,                 // set focus to editable area after initializing summernote
+                    toolbar: [
+                        ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+                        ['fontsize', ['fontsize']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'hr']],
+                        ['view', ['codeview']]
+                    ]
+                });
+
+                $('form').on('submit', function () {
+                    if (wysihtml5.summernote('isEmpty')) {
+                        wysihtml5.val('');
+                    } else if (wysihtml5.val() == '<p><br></p>') {
+                        wysihtml5.val('');
+                    }
+                });
+
+            });
+        },
+        refreshTagsInputPlugin: function () {
+            var tagAutocompleteInput = $('select[data-role=tagsinputautocomplete]');
+            tagAutocompleteInput.select2({
+                ajax: {
+                    data: function (params) {
+                        return {
+                            q: params.term
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                },
+                templateResult: function (user) {
+                    return user.text;
+                },
+                templateSelection: function (user) {
+                    return user.text;
+                }
+            });
+            $('.select2-container').css('width', '100%');
+        },
         createSpecificDialog: function ($this) {
             $.fancybox({
                 type: 'ajax',
@@ -684,6 +740,23 @@ $(document).ready(function() {
                     window.location = data.redirectUrl;
                     swal(Translator.trans('success'), Translator.trans('you.rejected'), "warning");
                 }
+            });
+        },
+        editArticleMetadata: function($this) {
+            $this = $($this);
+            $.fancybox({
+                type: 'ajax',
+                autoSize: false,
+                width: '600px',
+                maxWidth: '600px',
+                height: 'auto',
+                href: $this.attr('href')
+            });
+        },
+        updateArticleMetadata: function () {
+            var articleMetadataForm = $('form[name="article_metadata_edit"]');
+            $.post( articleMetadataForm.attr('action'), articleMetadataForm.serialize(), function( data ) {
+                $.fancybox(data);
             });
         }
     };

@@ -1,0 +1,18 @@
+<style>
+    .select2-dropdown {
+        z-index: 9001;
+    }
+</style>
+
+<div class="well">
+    {{ include('::flashbag.html.twig') }}
+    {{ form(form) }}
+    <button class="btn btn-success" onclick="OjsWorkflow.updateArticleMetadata(this)">{{ 'update'|trans }}</button>
+</div>
+
+<script>
+    $(document).ready(function () {
+        OjsWorkflow.refreshRichTextEditorPlugin();
+        OjsWorkflow.refreshTagsInputPlugin();
+    });
+</script>
