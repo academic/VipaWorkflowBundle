@@ -167,6 +167,7 @@ response.sended.by: 'Yanıtlayan'
 response.sended.at: 'Yanıtlandı'
 preview.response: 'Ön İzle'
 there.is.any.review.form.response.here: 'Yanıtlanmış değerlendirme formu bulunamadı'
+print.or.save: 'Yazdır veya Kaydet'
 
 #action log translations
 article.submitted.by: 'Makale %user% Tarafından Gönderildi'

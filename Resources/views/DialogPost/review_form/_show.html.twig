@@ -14,23 +14,38 @@
         .build-wrap{
             display: none;
         }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #download-content, #download-content * {
+                visibility: visible;
+            }
+        }
     </style>
 {% endblock %}
 
 {% block body %}
-    <h1 class="text-center">{{ reviewForm.name }}</h1>
     {% include '::flashbag.html.twig' %}
+    <div id="download-content">
+        <h1 class="text-center">{{ reviewForm.name }}</h1>
 
+        <div class="row">
+            <div class="col-lg-8 col-md-push-2">
+                <div class="build-wrap well col-lg-8 push-left-2">
+                    <textarea id="journal_review_form_content">
+                        {{ reviewForm.content }}
+                    </textarea>
+                </div>
+                <form id="form-render-wrap">
+                    <div class="render-wrap well"></div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-8 col-md-push-2">
-            <div class="build-wrap well col-lg-8 push-left-2">
-                <textarea id="journal_review_form_content">
-                    {{ reviewForm.content }}
-                </textarea>
-            </div>
-            <form id="form-render-wrap">
-                <div class="render-wrap well"></div>
-            </form>
+            <button class="btn btn-success pull-right" id="download-pdf">{{ 'print.or.save'|trans }}</button>
         </div>
     </div>
 {% endblock %}
@@ -49,6 +64,10 @@
                 elements[i].readOnly = true;
                 elements[i].disabled = true;
             }
+
+            $('#download-pdf').on('click', function(){
+                window.print();
+            });
         });
     </script>
 {% endblock %}

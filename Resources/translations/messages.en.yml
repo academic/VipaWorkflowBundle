@@ -137,6 +137,7 @@ restart.workflow.warning: 'If you want, you can finish current workflow and rest
 restart.confirm.text: 'I UNDERSTAND'
 wf.restart.sure: 'Restart Workflow'
 fill.confirm.area: 'Fill confirm area'
+print.or.save: 'Print or Save'
 
 #action log translations
 article.submitted.by: 'Article Submitted by -> %user%'
