@@ -23,23 +23,12 @@
                 <span class="btn-group pull-right">
                     {% if dialog.status == dialogStatus('ACTIVE') %}
                         {% if dialog.accepted %}
-                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                {{ 'select.action'|trans }}
-                                <span class="caret"></span>
+                            <button onclick="OjsWorkflow.finishDialogAction({{ dialog.id }})" class="btn btn-default btn-xs">
+                                {{ 'close.dialog.action'|trans }}
                             </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a onclick="OjsWorkflow.loadPosts({{ dialog.id }})">
-                                        {{ 'refresh.posts'|trans }}
-                                    </a>
-                                </li>
-                                <li role="separator" class="divider"></li>
-                                <li>
-                                    <a onclick="OjsWorkflow.finishDialogAction({{ dialog.id }})">
-                                        {{ 'close.dialog.action'|trans }}
-                                    </a>
-                                </li>
-                            </ul>
+                            <button onclick="OjsWorkflow.loadPosts({{ dialog.id }})" class="btn btn-default btn-xs">
+                                <i class="fa fa-refresh"></i>
+                            </button>
                         {% endif %}
                         {% if permissionCheck().isGrantedForStep(dialog.step) and dialog.accepted == false %}
                             <button onclick="OjsWorkflow.removeDialog({{ dialog.id }})" class="btn btn-default btn-xs">

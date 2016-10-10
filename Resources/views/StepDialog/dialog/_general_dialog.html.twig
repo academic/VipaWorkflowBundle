@@ -20,33 +20,20 @@
                         </span>
                 {% endif %}
                 <div class="btn-group pull-right">
-                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                        {{ 'select.action'|trans }}
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        {% if dialog.status == dialogStatus('ACTIVE') %}
-                            <li>
-                                <a onclick="OjsWorkflow.loadPosts({{ dialog.id }})">
-                                    {{ 'refresh.posts'|trans }}
-                                </a>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li>
-                                <a onclick="OjsWorkflow.finishDialogAction({{ dialog.id }})">
-                                    {{ 'close.dialog.action'|trans }}
-                                </a>
-                            </li>
-                        {% elseif dialog.status == dialogStatus('CLOSED') and dialog.step.status == stepStatus('ACTIVE') %}
-                            {% if permissionCheck().isGrantedForStep(dialog.step) %}
-                                <li>
-                                    <a onclick="OjsWorkflow.reopenDialog({{ dialog.id }})">
-                                        {{ 'reopen.dialog'|trans }}
-                                    </a>
-                                </li>
-                            {% endif %}
+                    {% if dialog.status == dialogStatus('ACTIVE') %}
+                        <button class="btn btn-default btn-xs" onclick="OjsWorkflow.finishDialogAction({{ dialog.id }})">
+                            {{ 'close.dialog.action'|trans }}
+                        </button>
+                        <button class="btn btn-default btn-xs" onclick="OjsWorkflow.loadPosts({{ dialog.id }})">
+                            <i class="fa fa-refresh"></i>
+                        </button>
+                    {% elseif dialog.status == dialogStatus('CLOSED') and dialog.step.status == stepStatus('ACTIVE') %}
+                        {% if permissionCheck().isGrantedForStep(dialog.step) %}
+                            <button class="btn btn-default btn-xs" onclick="OjsWorkflow.reopenDialog({{ dialog.id }})">
+                                {{ 'reopen.dialog'|trans }}
+                            </button>
                         {% endif %}
-                    </ul>
+                    {% endif %}
                     <button class="btn btn-default btn-xs" data-toggle="collapse" href="#collapse-panel-{{ dialog.id }}">
                         <i class="fa fa-expand"></i>
                     </button>
