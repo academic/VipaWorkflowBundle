@@ -317,8 +317,6 @@ $(document).ready(function() {
                 });
             });
         },
-
-
         createAssignReviewerDialog: function($this){
             $.fancybox({
                 type: 'ajax',
@@ -632,6 +630,27 @@ $(document).ready(function() {
                     swal(Translator.trans('excellent'), Translator.trans('your.review.form.responses.sended'), "success");
                 }
             });
+        },
+        browseReviewerUsers: function ($this, $dialogId) {
+            var browseUrl = Routing.generate('dergipark_workflow_reviewers_browse', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder
+            });
+            browseWindow = window.open(browseUrl);
+            browseWindow.focus();
+        },
+        addUserToUsersDialog: function ($id, $text) {
+            $(".select2entity")
+                .append('<option value="'+$id+'" selected="selected">'+$text+'</option>')
+                .trigger('change')
+                .select2entity()
+            ;
+        },
+        addUserToUsersDialogViaButton: function (button, $id, $text) {
+            $button = $(button);
+            $button.html(Translator.trans('added.successfully')).attr('disabled', 'disabled');
+            OjsWorkflow.addUserToUsersDialog($id, $text);
         },
         /**
          * @link https://gist.github.com/behram/e38ffbe820b4419a270249d7893ec3e7

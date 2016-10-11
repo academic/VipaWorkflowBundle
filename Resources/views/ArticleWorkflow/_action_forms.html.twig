@@ -43,6 +43,9 @@
                 {{ form_widget(form.title) }}
             </div>
             <br>
+            <button class="btn btn-primary btn-xs pull-right" onclick="OjsWorkflow.browseReviewerUsers();" type="button">
+                {{ 'browse.review.users'|trans }}
+            </button>
             {{ form_row(form.users) }}
         {{ form_end(form) }}
         <button class="btn btn-success" onclick="OjsWorkflow.postAssignReviewerDialog(this)">

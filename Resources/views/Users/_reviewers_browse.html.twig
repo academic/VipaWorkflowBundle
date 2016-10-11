@@ -1,0 +1,52 @@
+{% set hideleft = true %}
+{% extends '::ojsbase.html.twig' %}
+{% block header %}{% endblock %}
+{% block title %}{{ '_assign_reviewer.users'|trans }}{% endblock %}
+{% block breadcrumb %}{% endblock %}
+
+{% block body %}
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <td colspan="8" class="text-center">
+                <h3>
+                    {{ '_assign_reviewer.users'|trans }}
+                </h3>
+            </td>
+        </tr>
+        <tr>
+            <td>{{ 'user.id'|trans }}</td>
+            <td>{{ 'user.title'|trans }}</td>
+            <td>{{ 'user.username'|trans }}</td>
+            <td>{{ 'advanced.user.firstName'|trans }}</td>
+            <td>{{ 'lastname'|trans }}</td>
+            <td>{{ 'user.lastlogin'|trans }}</td>
+            <td>{{ 'actions'|trans }}</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for reviewer in reviewerUsers %}
+            <tr>
+                <td class="text-center">{{ reviewer.id }}</td>
+                <td>{{ reviewer.title }}</td>
+                <td>{{ profileLink(reviewer) }}</td>
+                <td>{{ reviewer.firstName }}</td>
+                <td>{{ reviewer.lastName }}</td>
+                <td>{{ reviewer.lastLogin|date('d/m/Y') }}</td>
+                <td>
+                    <button class="btn btn-sm btn-success"
+                            onclick="window.opener.OjsWorkflow.addUserToUsersDialogViaButton(this, '{{ reviewer.id }}', '{{ reviewer }}')">
+                        {{ 'add'|trans }}
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block footer %}{% endblock %}
