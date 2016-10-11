@@ -4,6 +4,8 @@ namespace Dergipark\WorkflowBundle\EventListener;
 
 use APY\DataGridBundle\Grid\Action\RowAction;
 use APY\DataGridBundle\Grid\Column\ActionsColumn;
+use APY\DataGridBundle\Grid\Row;
+use Ojs\CoreBundle\Params\ArticleStatuses;
 use Ojs\JournalBundle\Event\ListEvent;
 use Ojs\JournalBundle\Event\Article\ArticleEvents;
 use Ojs\JournalBundle\Service\JournalService;
@@ -71,20 +73,34 @@ class ArticleListEventListener implements EventSubscriberInterface
     {
         $journal = $this->journalService->getSelectedJournal();
         $grid = $event->getGrid();
+        $availableStatus = [
+            ArticleStatuses::STATUS_INREVIEW,
+            ArticleStatuses::STATUS_REJECTED,
+            ArticleStatuses::STATUS_WITHDRAWN,
+        ];
 
         /** @var ActionsColumn $actionColumn */
         $actionColumn = $grid->getColumn("actions");
         $rowActions = $actionColumn->getRowActions();
 
         $rowAction = new RowAction('<i class="fa fa-random"></i>', 'dergipark_workflow_restart_workflow');
-        $rowAction->setAttributes(
-            [
-                'class' => 'btn btn-primary btn-xs',
-                'data-toggle' => 'tooltip',
-                'title' => $this->translator->trans('restart.workflow.process'),
-            ]
-        );
         $rowAction->setRouteParameters(['id', 'journalId' => $journal->getId()]);
+
+        $rowAction->manipulateRender(
+            function (RowAction $rowAction, Row $row) use ($journal, $availableStatus) {
+                if (in_array($row->getField('status'), $availableStatus)) {
+                    $rowAction->setAttributes(
+                        [
+                            'class' => 'btn btn-primary btn-xs',
+                            'data-toggle' => 'tooltip',
+                            'title' => $this->translator->trans('restart.workflow.process'),
+                        ]
+                    );
+                    return $rowAction;
+                }
+                return null;
+            }
+        );
 
         $rowActions[] = $rowAction;
         $actionColumn->setRowActions($rowActions);
