@@ -1,0 +1,5 @@
+dergipark_workflow_reviewers_browse:
+  path:     /browse-reviewers
+  defaults: { _controller: "DergiparkWorkflowBundle:Users:browseReviewers" }
+  options:
+      expose: true

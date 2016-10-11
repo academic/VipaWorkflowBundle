@@ -21,3 +21,7 @@ dergipark_workflow_restart:
 dergipark_workflow_article:
     resource: "routing/article.yml"
     prefix:   /journal/{journalId}/article
+
+dergipark_workflow_users:
+    resource: "routing/users.yml"
+    prefix:   /journal/{journalId}/workflow/{workflowId}/users
