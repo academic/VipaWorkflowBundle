@@ -2,13 +2,34 @@
 {% extends '::ojsbase.html.twig' %}
 {% block title %}{{ 'title.review_form_show'|trans }} {{ parent() }}{% endblock %}
 
-{% block body %}
-    <h1 class="text-center">{{ post.reviewForm.name }}</h1>
-    {% include '::flashbag.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #download-content, #download-content * {
+                visibility: visible;
+            }
+        }
+    </style>
+{% endblock %}
 
+{% block body %}
+    <div id="download-content">
+        <h1 class="text-center">{{ post.reviewForm.name }}</h1>
+        {% include '::flashbag.html.twig' %}
+
+        <div class="row">
+            <div class="col-lg-8 col-md-push-2 well">
+                {{ post.reviewFormResponseContent|raw }}
+            </div>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-lg-8 col-md-push-2 well">
-            {{ post.reviewFormResponseContent|raw }}
+        <div class="col-lg-8 col-md-push-2">
+            <button class="btn btn-success pull-right" id="download-pdf">{{ 'print.or.save'|trans }}</button>
         </div>
     </div>
 {% endblock %}
@@ -23,6 +44,10 @@
                 elements[i].readOnly = true;
                 elements[i].disabled = true;
             }
+
+            $('#download-pdf').on('click', function(){
+                window.print();
+            });
         });
     </script>
 {% endblock %}
