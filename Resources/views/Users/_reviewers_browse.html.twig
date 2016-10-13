@@ -8,7 +8,7 @@
     <table class="table table-striped table-bordered">
         <thead>
         <tr>
-            <td colspan="8" class="text-center">
+            <td colspan="11" class="text-center">
                 <h3>
                     {{ '_assign_reviewer.users'|trans }}
                 </h3>
@@ -16,30 +16,40 @@
         </tr>
         <tr>
             <td>{{ 'user.id'|trans }}</td>
-            <td>{{ 'user.title'|trans }}</td>
             <td>{{ 'user.username'|trans }}</td>
-            <td>{{ 'advanced.user.firstName'|trans }}</td>
-            <td>{{ 'lastname'|trans }}</td>
             <td>{{ 'user.lastlogin'|trans }}</td>
+            <td>{{ 'user.subjects'|trans }}</td>
+            <td>{{ 'finished.review.dialog.count'|trans }}</td>
+            <td>{{ 'finished.last.issue.time'|trans }}</td>
+            <td>{{ 'open.review.dialog.count'|trans }}</td>
+            <td>{{ 'review.accept.count'|trans }}</td>
+            <td>{{ 'review.decline.count'|trans }}</td>
+            <td>{{ 'review.remind.count'|trans }}</td>
             <td>{{ 'actions'|trans }}</td>
         </tr>
         </thead>
         <tbody>
         {% for reviewer in reviewerUsers %}
-            <tr>
-                <td class="text-center">{{ reviewer.id }}</td>
-                <td>{{ reviewer.title }}</td>
-                <td>{{ profileLink(reviewer) }}</td>
-                <td>{{ reviewer.firstName }}</td>
-                <td>{{ reviewer.lastName }}</td>
-                <td>{{ reviewer.lastLogin|date('d/m/Y') }}</td>
-                <td>
-                    <button class="btn btn-sm btn-success"
-                            onclick="window.opener.OjsWorkflow.addUserToUsersDialogViaButton(this, '{{ reviewer.id }}', '{{ reviewer }}')">
-                        {{ 'add'|trans }}
-                    </button>
-                </td>
-            </tr>
+            {% if reviewerStats[reviewer.id] is defined %}
+                <tr>
+                    <td class="text-center">{{ reviewer.id }}</td>
+                    <td>{{ profileLink(reviewer) }}</td>
+                    <td>{{ reviewer.lastLogin|date('d/m/Y') }}</td>
+                    <td>{{ reviewer.subjects|join('<br>')|raw }}</td>
+                    <td>{{ reviewerStats[reviewer.id].closed_issues_count }}</td>
+                    <td>{{ reviewerStats[reviewer.id].newest_closed_dialog }}</td>
+                    <td>{{ reviewerStats[reviewer.id].open_issues_count }}</td>
+                    <td>{{ reviewerStats[reviewer.id].review_accept_count }}</td>
+                    <td>{{ reviewerStats[reviewer.id].review_decline_count }}</td>
+                    <td>{{ reviewerStats[reviewer.id].review_remind_count }}</td>
+                    <td>
+                        <button class="btn btn-xs btn-success"
+                                onclick="window.opener.OjsWorkflow.addUserToUsersDialogViaButton(this, '{{ reviewer.id }}', '{{ reviewer }}')">
+                            {{ 'add'|trans }}
+                        </button>
+                    </td>
+                </tr>
+            {% endif %}
         {% endfor %}
         </tbody>
     </table>
