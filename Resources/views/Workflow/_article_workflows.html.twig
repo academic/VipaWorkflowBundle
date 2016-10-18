@@ -52,6 +52,18 @@
                     </td>
                     <td class="stepTitle">
                         {{ ('wf.step.'~journalStepAlias(dataContainer.workflow.currentStep.order))|trans }}
+                        {% if dataContainer.reviewer_stats is defined %}
+                            <table class="table table-bordered">
+                            {% for stat_text,stat in dataContainer.reviewer_stats %}
+                                {% if stat != 0 %}
+                                    <tr>
+                                        <th>{{ stat_text|trans }}</th>
+                                        <th><span class="badge badge-default">{{ stat }}</span></th>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </table>
+                        {% endif %}
                     </td>
                     <td class="author text-center">
                         {% if dataContainer.author is defined %}

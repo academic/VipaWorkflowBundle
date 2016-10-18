@@ -237,6 +237,11 @@ class WorkflowService
             }
             $wfContainer['active_dialog'] = $this->getUserBasedDialogCount($workflow, StepDialogStatus::ACTIVE);
             $wfContainer['closed_dialog'] = $this->getUserBasedDialogCount($workflow, StepDialogStatus::CLOSED);
+            if($workflow->getCurrentStep()->getOrder() == JournalWorkflowSteps::REVIEW_ORDER
+                && $status == ArticleWorkflowStatus::ACTIVE
+                && $this->wfPermissionCheck->isGrantedForStep($workflow->getCurrentStep())){
+                $wfContainer['reviewer_stats'] = $this->getArticleWorkflowReviewerStats($workflow);
+            }
             $wfContainers[] = $wfContainer;
         }
 
@@ -276,6 +281,54 @@ class WorkflowService
         $dialogs = $dialogQuery->getQuery()->getResult();
 
         return count($dialogs);
+    }
+
+    /**
+     * @param ArticleWorkflow $workflow
+     *
+     * @return array
+     */
+    private function getArticleWorkflowReviewerStats(ArticleWorkflow $workflow)
+    {
+        $stats = [];
+        $dialogRepo = $this->em->getRepository(StepDialog::class);
+        $dialogQuery = $dialogRepo
+            ->createQueryBuilder('stepDialog')
+            ->andWhere('stepDialog.step = :dialogStep')
+            ->setParameter('dialogStep', $workflow->getCurrentStep())
+            ->andWhere('stepDialog.dialogType = :dialogType')
+            ->setParameter('dialogType', StepActionTypes::ASSIGN_REVIEWER)
+        ;
+        $dialogs = $dialogQuery->getQuery()->getResult();
+
+        $stats['rejected.review.dialog.count'] = 0;
+        $stats['accepted.review.dialog.count'] = 0;
+        $stats['active.review.dialog.count'] = 0;
+        $stats['closed.review.dialog.count'] = 0;
+        $stats['active.waiting.reviewer.count'] = 0;
+
+        /** @var StepDialog $dialog */
+        foreach($dialogs as $dialog){
+
+            if($dialog->isRejected()){
+                $stats['rejected.review.dialog.count']++;
+            }
+            if($dialog->isAccepted()){
+                $stats['accepted.review.dialog.count']++;
+            }
+            if($dialog->getStatus() == StepDialogStatus::ACTIVE){
+                $stats['active.review.dialog.count']++;
+            }
+            if($dialog->getStatus() == StepDialogStatus::CLOSED){
+                $stats['closed.review.dialog.count']++;
+            }
+            if(($dialog->getInviteTime() !== null || $dialog->getRemindingTime() !== null)
+                && ($dialog->isRejected() == false && $dialog->isAccepted() == false)){
+                $stats['active.waiting.reviewer.count']++;
+            }
+        }
+
+        return $stats;
     }
 
     private function hasReviewerRoleOnWorkflow(ArticleWorkflow $workflow)
