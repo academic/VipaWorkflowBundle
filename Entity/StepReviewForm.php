@@ -24,6 +24,11 @@ class StepReviewForm
     private $content;
 
     /**
+     * @var \DateTime
+     */
+    private $updatedAt;
+
+    /**
      * @var ArticleWorkflowStep
      */
     private $step;
@@ -101,6 +106,26 @@ class StepReviewForm
     public function setStep($step)
     {
         $this->step = $step;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     *
+     * @return $this
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

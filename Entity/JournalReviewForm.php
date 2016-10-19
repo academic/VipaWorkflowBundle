@@ -39,6 +39,11 @@ class JournalReviewForm
     private $step;
 
     /**
+     * @var \DateTime
+     */
+    private $updatedAt;
+
+    /**
      * DialogPost constructor.
      */
     public function __construct()
@@ -131,6 +136,26 @@ class JournalReviewForm
     public function setStep($step)
     {
         $this->step = $step;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     *
+     * @return $this
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

@@ -1,13 +1,14 @@
 <table class="table table-hover" id="browse-review-forms-table">
     <thead>
         <tr>
-            <th colspan="3">
+            <th colspan="4">
                 <h4 class="text-center">{{ 'workflow.browse.step.forms'|trans }}</h4>
             </th>
         </tr>
         <tr>
             <th>{{ 'select'|trans }}</th>
             <th>{{ 'form.name'|trans }}</th>
+            <th>{{ 'updated'|trans }}</th>
             <th>{{ 'look.form'|trans }}</th>
         </tr>
     </thead>
@@ -18,6 +19,13 @@
                     <input type="checkbox" value="{{ form.id }}"/>
                 </th>
                 <th>{{ form.name  }}</th>
+                <th>
+                    {% if form.updatedAt is not null %}
+                        <abbr title="{{ form.updatedAt|date('Y-m-d H:i:s') }}" class="ago">
+                            {{ form.updatedAt|date('Y-m-d H:i:s') }}
+                        </abbr>
+                    {% endif %}
+                </th>
                 <th>
                     <a href="{{ path('dp_workflow_dialog_posts_show_review_form', {
                         journalId: form.step.articleWorkflow.journal.id,
@@ -44,3 +52,7 @@
         {{ 'send.selected.forms'|trans }}
     </button>
 {% endif %}
+
+<script>
+    OjsWorkflow.refreshAgoPlugin();
+</script>

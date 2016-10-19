@@ -20,6 +20,9 @@ Dergipark\WorkflowBundle\Entity\JournalReviewForm:
         default: true
     content:
       type: text
+    updatedAt:
+      type: datetime
+      nullable: true
   manyToOne:
     step:
       targetEntity: Dergipark\WorkflowBundle\Entity\JournalWorkflowStep

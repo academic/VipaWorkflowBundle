@@ -15,6 +15,9 @@ Dergipark\WorkflowBundle\Entity\StepReviewForm:
       length: 255
     content:
       type: text
+    updatedAt:
+      type: datetime
+      nullable: true
   manyToOne:
     step:
       targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep
