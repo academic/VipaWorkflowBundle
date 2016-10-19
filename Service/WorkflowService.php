@@ -2,36 +2,36 @@
 
 namespace Dergipark\WorkflowBundle\Service;
 
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflowSetting;
-use Dergipark\WorkflowBundle\Entity\JournalReviewForm;
-use Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting;
-use Dergipark\WorkflowBundle\Entity\StepReviewForm;
-use Dergipark\WorkflowBundle\Event\WorkflowEvent;
-use Dergipark\WorkflowBundle\Event\WorkflowEvents;
-use Ojs\JournalBundle\Entity\ArticleSubmissionFile;
-use Ojs\UserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
+use Ojs\UserBundle\Entity\User;
 use Ojs\JournalBundle\Entity\Article;
 use Ojs\JournalBundle\Entity\Journal;
 use Ojs\JournalBundle\Entity\ArticleFile;
 use Ojs\CoreBundle\Params\ArticleStatuses;
 use Ojs\JournalBundle\Service\JournalService;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Dergipark\WorkflowBundle\Entity\DialogPost;
 use Dergipark\WorkflowBundle\Params\StepStatus;
+use Dergipark\WorkflowBundle\Entity\StepDialog;
+use Dergipark\WorkflowBundle\Event\WorkflowEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Dergipark\WorkflowBundle\Event\WorkflowEvents;
+use Dergipark\WorkflowBundle\Entity\StepReviewForm;
+use Ojs\JournalBundle\Entity\ArticleSubmissionFile;
 use Dergipark\WorkflowBundle\Params\StepActionTypes;
 use Dergipark\WorkflowBundle\Params\DialogPostTypes;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
 use Dergipark\WorkflowBundle\Params\StepDialogStatus;
 use Symfony\Component\Translation\TranslatorInterface;
+use Dergipark\WorkflowBundle\Entity\JournalReviewForm;
 use Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
 use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
 use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
 use Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflowSetting;
+use Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -378,7 +378,6 @@ class WorkflowService
 
         if ($fetchAll) {
             $userRelatedWorkflows = $this->em->getRepository(ArticleWorkflow::class)->findBy([
-                'status' => ArticleWorkflowStatus::ACTIVE,
                 'journal' => $journal,
                 'status' => $status
             ], ['id' => 'DESC']);
