@@ -652,6 +652,18 @@ $(document).ready(function() {
             $button.html(Translator.trans('added.successfully')).attr('disabled', 'disabled');
             OjsWorkflow.addUserToUsersDialog($id, $text);
         },
+        syncStepReviewForms: function ($this, $dialogId) {
+            $.get(Routing.generate('dp_workflow_sync_step_review_forms', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder
+            }), function( data ) {
+                if(data.success == true){
+                    swal(Translator.trans('excellent'), Translator.trans('review.forms.sync.successful'), "success");
+                    OjsWorkflow.browseReviewForms($this, $dialogId);
+                }
+            });
+        },
         /**
          * @link https://gist.github.com/behram/e38ffbe820b4419a270249d7893ec3e7
          */

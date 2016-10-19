@@ -2,6 +2,10 @@
     <thead>
         <tr>
             <th colspan="4">
+                <button class="btn btn-xs btn-success pull-left" onclick="OjsWorkflow.syncStepReviewForms(this, {{ dialogId }})">
+                    <i class="fa fa-refresh"></i>
+                    {{ 'sync.forms'|trans }}
+                </button>
                 <h4 class="text-center">{{ 'workflow.browse.step.forms'|trans }}</h4>
             </th>
         </tr>
@@ -18,7 +22,7 @@
                 <th>
                     <input type="checkbox" value="{{ form.id }}"/>
                 </th>
-                <th>{{ form.name  }}</th>
+                <th>{{ form.name }}</th>
                 <th>
                     {% if form.updatedAt is not null %}
                         <abbr title="{{ form.updatedAt|date('Y-m-d H:i:s') }}" class="ago">

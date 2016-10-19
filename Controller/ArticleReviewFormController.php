@@ -2,12 +2,14 @@
 
 namespace Dergipark\WorkflowBundle\Controller;
 
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
 use Dergipark\WorkflowBundle\Entity\DialogPost;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Dergipark\WorkflowBundle\Entity\StepReviewForm;
 use Dergipark\WorkflowBundle\Event\WorkflowEvent;
 use Dergipark\WorkflowBundle\Event\WorkflowEvents;
 use Dergipark\WorkflowBundle\Params\DialogPostTypes;
+use Dergipark\WorkflowBundle\Params\StepStatus;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Pagerfanta\Exception\LogicException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -33,6 +35,30 @@ class ArticleReviewFormController extends Controller
         return $this->render('DergiparkWorkflowBundle:DialogPost/review_form:_browse_review_forms.html.twig', [
             'forms' => $forms,
             'dialogId' => $dialogId,
+        ]);
+    }
+
+    /**
+     * @param $workflowId
+     * @param $stepOrder
+     *
+     * @return Response
+     */
+    public function syncReviewFormsAction($workflowId, $stepOrder)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
+            'articleWorkflow' => $workflow,
+            'order' => $stepOrder,
+            'status' => StepStatus::ACTIVE,
+        ]);
+        $this->throw404IfNotFound($step);
+        $workflowService->syncStepReviewForms($step);
+
+        return new JsonResponse([
+            'success' => true,
         ]);
     }
 

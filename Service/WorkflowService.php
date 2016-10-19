@@ -165,6 +165,7 @@ class WorkflowService
                     ->setContent($journalReviewForm->getContent())
                     ->setName($journalReviewForm->getName())
                     ->setStep($articleWorkflowStep)
+                    ->setUpdatedAt(new \DateTime())
                 ;
                 $this->em->persist($articleStepReviewForm);
             }
@@ -949,6 +950,45 @@ class WorkflowService
         ]);
 
         return new Response($template);
+    }
+
+    /**
+     * @param ArticleWorkflowStep $step
+     * @param bool $flush
+     */
+    public function syncStepReviewForms(ArticleWorkflowStep $step, $flush = true)
+    {
+        $journalStep = $this->em->getRepository(JournalWorkflowStep::class)->findOneBy([
+            'order' => $step->getOrder(),
+        ]);
+        $journalStepReviewForms = $this->em->getRepository(JournalReviewForm::class)->findBy([
+            'step' => $journalStep,
+        ]);
+        $articleReviewForms = $this->em->getRepository(StepReviewForm::class)->findBy([
+            'step' => $step,
+        ]);
+        foreach($journalStepReviewForms as $journalReviewForm){
+            $formMatch = false;
+            foreach($articleReviewForms as $articleReviewForm){
+                if($journalReviewForm->getContent() == $articleReviewForm->getContent()){
+                    $formMatch = true;
+                }
+            }
+            if(!$formMatch){
+                $newArticleReviewForm = new StepReviewForm();
+                $newArticleReviewForm
+                    ->setContent($journalReviewForm->getContent())
+                    ->setName($journalReviewForm->getName())
+                    ->setUpdatedAt(new \DateTime())
+                    ->setStep($step)
+                ;
+                $this->em->persist($newArticleReviewForm);
+            }
+        }
+
+        if($flush){
+            $this->em->flush();
+        }
     }
 
     /**
