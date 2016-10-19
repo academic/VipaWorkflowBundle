@@ -46,7 +46,7 @@
                 </ul>
             </div>
         {% endif %}
-        {% if permissionCheck().isReviewerOnWorkflow(workflow) == false or workflowSettings.blindReview == false %}
+        {% if permissionCheck().isReviewerOnWorkflow(workflow) == false or workflowSettings.doubleBlind == false %}
             <div class="well">
                 <h5>{{ 'author.details'|trans }}</h5>
                 <pre>
