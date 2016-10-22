@@ -4,7 +4,7 @@
 {% block breadcrumb %}
     {% set list = [
         {'link': path('ojs_journal_dashboard_index', {journalId: selectedJournal().id}), 'title': 'dashboard'|trans},
-        {'title': 'title.article_files'|trans}
+        {'title': 'title.review_forms'|trans}
     ] %}
     {{ breadcrumb(list) }}
 {% endblock %}
@@ -12,7 +12,7 @@
 {% block body -%}
     {% include '::flashbag.html.twig' %}
 
-    <h2>{{ 'title.review_forms'|trans }}</h2>
+    <h2>{{ ('show.review.forms.'~journalStepAlias(step.order))|trans }}</h2>
     <a href="{{ url('dp_workflow_review_form_new', {'stepId': step.id, 'journalId': selectedJournal().id}) }}" class="btn btn-success">
         {{ "c"|trans }}
     </a>

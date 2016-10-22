@@ -44,7 +44,7 @@
                             <i class="fa fa-info-circle" data-toggle="tooltip"  data-title="{{ 'show.step.detail'|trans }}"></i>
                         </button>
                         <a class="btn btn-primary btn-sm" href="{{ path('dp_workflow_review_form', {journalId: selectedJournal().id, stepId: step.id}) }}">
-                            <i class="fa fa-comments-o" data-toggle="tooltip"  data-title="{{ 'show.review.forms'|trans }}"></i>
+                            <i class="fa fa-comments-o" data-toggle="tooltip"  data-title="{{ ('show.review.forms.'~journalStepAlias(step.order))|trans }}"></i>
                         </a>
                     </th>
                 </tr>
