@@ -159,19 +159,23 @@ class StepDialogController extends Controller
      */
     public function createDialogWithAuthorAction(Request $request, $workflowId, $stepOrder)
     {
+
+
         //set vars
-        $actionType = $request->get('actionType');
+        $actionType = StepActionTypes::ASK_AUTHOR_FOR_CORRECTION;
         $actionAlias = StepActionTypes::$typeAlias[$actionType];
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
         $user = $this->getUser();
 
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
+        $wfLogger = $this->get('dp.wf_logger_service');
+        $logUsers = [];
         $dispatcher = $this->get('event_dispatcher');
         $workflowService = $this->get('dp.workflow_service');
         $permissionService = $this->get('dp.workflow_permission_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
-        $wfLogger = $this->get('dp.wf_logger_service')->setArticleWorkflow($workflow);
+        $wfLogger->setArticleWorkflow($workflow);
         $step = $em->getRepository(ArticleWorkflowStep::class)->findOneBy([
             'articleWorkflow' => $workflow,
             'order' => $stepOrder,
@@ -181,7 +185,6 @@ class StepDialogController extends Controller
         if(!$permissionService->isGrantedForStep($step)){
             throw new AccessDeniedException;
         }
-        $articleSubmitter = $workflow->getArticle()->getSubmitterUser();
 
         $dialog = new StepDialog();
         $dialog
@@ -190,23 +193,42 @@ class StepDialogController extends Controller
             ->setStatus(StepDialogStatus::ACTIVE)
             ->setStep($step)
             ->setCreatedDialogBy($user)
-            ->addUser($articleSubmitter)
+            ->addUser($workflow->getArticle()->getSubmitterUser())
         ;
-        $em->persist($dialog);
 
-        //log action
-        $wfLogger->log('assign.issue.to.author_log', [
-            '%author%' => $articleSubmitter->getUsername(),
-            '%by_user%' => $user->getUsername(),
+        $form = $this->createForm(new DialogType(), $dialog, [
+            'action' => $request->getUri(),
+            'action_alias' => $actionAlias,
+            'journalId' => $journal->getId(),
         ]);
-        $em->flush();
+        $form = $this->reviseFormForAssignAuthor($form);
+        $form->handleRequest($request);
 
-        //dispatch event
-        $workflowEvent = new WorkflowEvent();
-        $workflowEvent->setDialog($dialog);
-        $dispatcher->dispatch(WorkflowEvents::CREATE_DIALOG_WITH_AUTHOR, $workflowEvent);
+        if($request->getMethod() == 'POST' && $form->isValid()){
+            //if action type is assign review, then persist seperate dialog for each of them
+            $em->persist($dialog);
+            $em->persist($step);
+            $em->persist($workflow);
 
-        return $workflowService->getMessageBlock('successful_create'.$actionAlias);
+            //log action
+            $wfLogger->log($actionAlias.'assign.issue.to.author_log', [
+                '%author%' => $workflow->getArticle()->getSubmitterUser()->getUsername(),
+                '%by_user%' => $user->getUsername(),
+            ]);
+            $em->flush();
+
+            //dispatch event
+            $workflowEvent = new WorkflowEvent();
+            $workflowEvent->setDialog($dialog);
+            $dispatcher->dispatch(WorkflowEvents::CREATE_DIALOG_WITH_AUTHOR, $workflowEvent);
+
+            return $workflowService->getMessageBlock('successful_create'.$actionAlias);
+        }
+
+        return $workflowService->getFormBlock('_ask_author_for_correction', [
+            'form' => $form->createView(),
+            'actionAlias' => $actionAlias,
+        ]);
     }
 
     /**
@@ -879,6 +901,20 @@ class StepDialogController extends Controller
                 ],
                 'label' => '_assign_reviewer.users',
             ]);
+
+        return $form;
+    }
+
+    /**
+     * @param FormInterface $form
+     * @return FormInterface
+     */
+    private function reviseFormForAssignAuthor(FormInterface $form)
+    {
+        $form
+            ->remove('users')
+            ->add('title')
+        ;
 
         return $form;
     }

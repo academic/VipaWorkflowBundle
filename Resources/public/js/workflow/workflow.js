@@ -346,6 +346,35 @@ $(document).ready(function() {
             });
         },
 
+        createAssignAuthorDialog: function($this){
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dp_workflow_create_dialog_with_author', {
+                    journalId: journalId,
+                    workflowId: workflowId,
+                    stepOrder: stepOrder,
+                    actionType: this.getActionType($this)
+                }),
+                autoSize: false,
+                width: '600px',
+                maxWidth: '600px',
+                height: 'auto'
+            });
+        },
+        postAssignAuthorDialog: function ($this) {
+            var dialogForm = $('form[name="dialog"]');
+            $.post( dialogForm.attr('action'), dialogForm.serialize(), function( data ) {
+                $.fancybox({
+                    content: data,
+                    type: 'inline',
+                    autoSize: false,
+                    width: '600px',
+                    maxWidth: '600px',
+                    height: 'auto'
+                });
+            });
+        },
+
 
         acceptAndGotoArrangement: function($this){
             swal({

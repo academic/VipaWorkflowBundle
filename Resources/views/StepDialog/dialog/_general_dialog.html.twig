@@ -13,6 +13,11 @@
                 {% else %}
                     <b>{{ (actionAlias(dialog.dialogType)~'.dialog.header')|trans }}</b>
                 {% endif %}
+
+                {% if dialog.dialogType == actionType('ASK_AUTHOR_FOR_CORRECTION') and dialog.title is not empty %}
+                    - {{ dialog.title }}
+                {% endif %}
+
                 {% if dialog.status == dialogStatus('CLOSED') %}
                     <span class="label label-success">
                             <i class="fa fa-check-circle"></i>
