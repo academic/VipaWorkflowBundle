@@ -272,6 +272,8 @@ $(document).ready(function() {
                 });
             });
         },
+        //we not using this function for now but i will remove this function
+        // two week later
         createDialogWithAuthor: function($this){
             $.get( Routing.generate('dp_workflow_create_dialog_with_author', {
                 journalId: journalId,
@@ -345,7 +347,6 @@ $(document).ready(function() {
                 });
             });
         },
-
         createAssignAuthorDialog: function($this){
             $.fancybox({
                 type: 'ajax',
@@ -374,8 +375,6 @@ $(document).ready(function() {
                 });
             });
         },
-
-
         acceptAndGotoArrangement: function($this){
             swal({
                 title: Translator.trans('workflow.are.you.sure.goto.arrangement'),
