@@ -304,8 +304,6 @@ class WorkflowService
 
         $stats['rejected.review.dialog.count'] = 0;
         $stats['accepted.review.dialog.count'] = 0;
-        $stats['active.review.dialog.count'] = 0;
-        $stats['closed.review.dialog.count'] = 0;
         $stats['active.waiting.reviewer.count'] = 0;
 
         /** @var StepDialog $dialog */
@@ -316,12 +314,6 @@ class WorkflowService
             }
             if($dialog->isAccepted()){
                 $stats['accepted.review.dialog.count']++;
-            }
-            if($dialog->getStatus() == StepDialogStatus::ACTIVE){
-                $stats['active.review.dialog.count']++;
-            }
-            if($dialog->getStatus() == StepDialogStatus::CLOSED){
-                $stats['closed.review.dialog.count']++;
             }
             if(($dialog->getInviteTime() !== null || $dialog->getRemindingTime() !== null)
                 && ($dialog->isRejected() == false && $dialog->isAccepted() == false)){
