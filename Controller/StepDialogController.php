@@ -144,8 +144,12 @@ class StepDialogController extends Controller
 
             return $workflowService->getMessageBlock('successful_create'.$actionAlias);
         }
+        $formBlock = '_specific_form';
+        if($actionType == StepActionTypes::ASSIGN_SECTION_EDITOR){
+            $formBlock = '_assign_section_editor_form';
+        }
 
-        return $workflowService->getFormBlock('_specific_form', [
+        return $workflowService->getFormBlock($formBlock, [
             'form' => $form->createView(),
             'actionAlias' => $actionAlias,
         ]);

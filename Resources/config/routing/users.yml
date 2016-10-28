@@ -4,6 +4,12 @@ dergipark_workflow_reviewers_browse:
   options:
       expose: true
 
+dergipark_workflow_section_editors_browse:
+  path:     /browse-section-editors
+  defaults: { _controller: "DergiparkWorkflowBundle:Users:browseSectionEditors" }
+  options:
+      expose: true
+
 dergipark_workflow_create_reviewer_user:
   path:     /create-reviewer-user
   defaults: { _controller: "DergiparkWorkflowBundle:Users:createReviewerUser" }

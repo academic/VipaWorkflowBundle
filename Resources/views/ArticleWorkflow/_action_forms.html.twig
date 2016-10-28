@@ -15,6 +15,34 @@
     </script>
 {% endblock %}
 
+{% block _assign_section_editor_form %}
+    <h4 class="text-center">
+        {{ (actionAlias~'.form.header')|trans }}
+    </h4>
+    <div class="well">
+        {{ include('::flashbag.html.twig') }}
+        {{ form_start(form) }}
+        <div class="btn-group pull-right" role="group">
+            <button class="btn btn-primary btn-xs browse-users-button" onclick="OjsWorkflow.browseSectionEditorUsers();" type="button">
+                {{ 'browse.review.users'|trans }}
+            </button>
+        </div>
+        {{ form_row(form.users) }}
+        {{ form_end(form) }}
+        <button class="btn btn-success" onclick="OjsWorkflow.postSpecificDialog(this)">
+            {{ (actionAlias~'.create.button')|trans }}
+        </button>
+    </div>
+    <style>
+        .select2-dropdown {
+            z-index: 9001;
+        }
+    </style>
+    <script>
+        $('.select2entity').select2entity();
+    </script>
+{% endblock %}
+
 {% block _basic_form %}
     <h4 class="text-center">{{ (actionAlias~'.form.header')|trans }}</h4>
     <div class="well">

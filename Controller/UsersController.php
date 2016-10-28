@@ -137,6 +137,31 @@ GROUP BY users.id;";
      * @param $workflowId
      * @return Response
      */
+    public function browseSectionEditorsAction(Request $request, $workflowId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $this->throw404IfNotFound($workflow);
+        if($journal->getId() !== $workflow->getJournal()->getId()){
+            throw new AccessDeniedException;
+        }
+
+        $sectionEditorUsers = $em->getRepository('OjsUserBundle:User')->findUsersByJournalRole(
+            ['ROLE_SECTION_EDITOR']
+        );
+
+        return $this->render('DergiparkWorkflowBundle:Users:_section_editors_browse.html.twig', [
+            'sectionEditorUsers' => $sectionEditorUsers,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $workflowId
+     * @return Response
+     */
     public function createReviewerUserAction(Request $request, $workflowId)
     {
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
