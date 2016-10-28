@@ -2,7 +2,12 @@
 
 namespace Dergipark\WorkflowBundle\Controller;
 
+use Dergipark\WorkflowBundle\Form\Type\ReviewerUserType;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
+use Ojs\JournalBundle\Entity\JournalUser;
+use Ojs\UserBundle\Entity\Role;
+use Ojs\UserBundle\Entity\User;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -124,5 +129,66 @@ GROUP BY users.id;";
         }
 
         return $resultMap;
+    }
+
+    /**
+     * @param Request $request
+     * @param $workflowId
+     * @return Response
+     */
+    public function createReviewerUserAction(Request $request, $workflowId)
+    {
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $this->throw404IfNotFound($journal);
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $em = $this->getDoctrine()->getManager();
+
+        $reviewerRole = $em->getRepository(Role::class)->findOneBy([
+            'role' => 'ROLE_REVIEWER',
+        ]);
+
+        $reviewerUser = new User();
+        $reviewerUser->setPassword($this->generateRandomString(10));
+        $reviewerUser->setEnabled(true);
+
+        $form = $this->createForm(new ReviewerUserType(), $reviewerUser, [
+            'action' => $this->generateUrl('dergipark_workflow_create_reviewer_user', [
+                'journalId' => $journal->getId(),
+                'workflowId' => $workflow->getId(),
+            ])
+        ]);
+        $form->handleRequest($request);
+
+        if($request->getMethod() == 'POST' && $form->isValid()){
+            $em->persist($reviewerUser);
+
+            $journalReviewerUser = new JournalUser();
+            $journalReviewerUser
+                ->setJournal($journal)
+                ->setUser($reviewerUser)
+                ->addRole($reviewerRole)
+            ;
+            $em->persist($journalReviewerUser);
+
+            $em->flush();
+
+            return $workflowService->getMessageBlock('successful_create_reviewer_user');
+        }
+
+        return $this->render('DergiparkWorkflowBundle:Users:_create_reviewer.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    private function generateRandomString($length = 10)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 }

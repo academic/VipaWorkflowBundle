@@ -93,3 +93,11 @@
         OjsWorkflow.loadDialogs();
     </script>
 {% endblock %}
+
+
+{% block successful_create_reviewer_user %}
+    <script>
+        $.fancybox.close();
+        swal(Translator.trans('great'), Translator.trans('_reviewer_user.created.message'), "success");
+    </script>
+{% endblock %}

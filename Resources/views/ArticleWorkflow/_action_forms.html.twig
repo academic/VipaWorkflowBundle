@@ -43,9 +43,15 @@
                 {{ form_widget(form.title) }}
             </div>
             <br>
-            <button class="btn btn-primary btn-xs pull-right browse-users-button" onclick="OjsWorkflow.browseReviewerUsers();" type="button">
-                {{ 'browse.review.users'|trans }}
-            </button>
+            <div class="btn-group pull-right" role="group">
+                <button class="btn btn-primary btn-xs browse-users-button" onclick="OjsWorkflow.browseReviewerUsers();" type="button">
+                    {{ 'browse.review.users'|trans }}
+                </button>
+                <button class="btn btn-default btn-xs" type="button" onclick="OjsWorkflow.createReviewerUser();">
+                    <i class="fa fa-plus"></i>
+                    {{ 'create.reviewer.user'|trans }}
+                </button>
+            </div>
             {{ form_row(form.users) }}
         {{ form_end(form) }}
         <button class="btn btn-success" onclick="OjsWorkflow.postAssignReviewerDialog(this)">

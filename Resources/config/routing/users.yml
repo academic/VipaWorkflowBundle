@@ -3,3 +3,9 @@ dergipark_workflow_reviewers_browse:
   defaults: { _controller: "DergiparkWorkflowBundle:Users:browseReviewers" }
   options:
       expose: true
+
+dergipark_workflow_create_reviewer_user:
+  path:     /create-reviewer-user
+  defaults: { _controller: "DergiparkWorkflowBundle:Users:createReviewerUser" }
+  options:
+      expose: true

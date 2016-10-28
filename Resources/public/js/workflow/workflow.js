@@ -680,6 +680,42 @@ $(document).ready(function() {
             $button.html(Translator.trans('added.successfully')).attr('disabled', 'disabled');
             OjsWorkflow.addUserToUsersDialog($id, $text);
         },
+
+
+
+
+
+        createReviewerUser: function(){
+            $.fancybox({
+                type: 'ajax',
+                href: Routing.generate('dergipark_workflow_create_reviewer_user', {
+                    journalId: journalId,
+                    workflowId: workflowId,
+                    stepOrder: stepOrder
+                }),
+                autoSize: false,
+                width: '600px',
+                maxWidth: '600px',
+                height: 'auto'
+            });
+        },
+        postReviewerUser: function ($this) {
+            var dialogForm = $('form[name="reviewer_user"]');
+            $.post( dialogForm.attr('action'), dialogForm.serialize(), function( data ) {
+                $.fancybox({
+                    content: data,
+                    type: 'inline',
+                    autoSize: false,
+                    width: '600px',
+                    maxWidth: '600px',
+                    height: 'auto'
+                });
+            });
+        },
+
+
+
+
         syncStepReviewForms: function ($this, $dialogId) {
             $.get(Routing.generate('dp_workflow_sync_step_review_forms', {
                 journalId: journalId,
