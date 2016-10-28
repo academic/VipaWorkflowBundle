@@ -95,6 +95,7 @@ class WorkflowMailListener implements EventSubscriberInterface
             WorkflowEvents::REVIEWER_REMIND                 => 'onReviewerRemind',
             WorkflowEvents::ACCEPT_REVIEW                   => 'onAcceptReview',
             WorkflowEvents::REJECT_REVIEW                   => 'onRejectReview',
+            WorkflowEvents::REVIEWER_USER_CREATED           => 'onReviewerCreated',
         );
     }
 
@@ -978,6 +979,31 @@ class WorkflowMailListener implements EventSubscriberInterface
                 $template
             );
         }
+    }
+
+    /**
+     * @param WorkflowEvent $event
+     */
+    public function onReviewerCreated(WorkflowEvent $event)
+    {
+        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_USER_CREATED);
+        if(!$getMailEvent){
+            return;
+        }
+        $passwordResetLink = $this->router->generate('fos_user_resetting_request', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $transformParams = [
+            'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
+            'password.reset.link'   => $passwordResetLink,
+            'journal'           => $event->journal->getTitle(),
+            'receiver.username' => $event->user->getUsername(),
+            'receiver.fullName' => $event->user->getFullName(),
+        ];
+        $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
+        $this->ojsMailer->sendToUser(
+            $event->user,
+            $getMailEvent->getSubject(),
+            $template
+        );
     }
 
     /**

@@ -2,12 +2,13 @@
 
 namespace Dergipark\WorkflowBundle\Controller;
 
+use Dergipark\WorkflowBundle\Event\WorkflowEvent;
+use Dergipark\WorkflowBundle\Event\WorkflowEvents;
 use Dergipark\WorkflowBundle\Form\Type\ReviewerUserType;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\JournalBundle\Entity\JournalUser;
 use Ojs\UserBundle\Entity\Role;
 use Ojs\UserBundle\Entity\User;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -142,6 +143,7 @@ GROUP BY users.id;";
         $this->throw404IfNotFound($journal);
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $dispatcher = $this->get('event_dispatcher');
         $em = $this->getDoctrine()->getManager();
 
         $reviewerRole = $em->getRepository(Role::class)->findOneBy([
@@ -172,6 +174,11 @@ GROUP BY users.id;";
             $em->persist($journalReviewerUser);
 
             $em->flush();
+
+            //dispatch event
+            $event = new WorkflowEvent($reviewerUser);
+            $event->setWorkflow($workflow);
+            $dispatcher->dispatch(WorkflowEvents::REVIEWER_USER_CREATED, $event);
 
             return $workflowService->getMessageBlock('successful_create_reviewer_user');
         }

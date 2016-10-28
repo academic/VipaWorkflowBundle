@@ -51,6 +51,8 @@ final class WorkflowEvents implements MailEventsInterface
 
     const REJECT_REVIEW = 'dp.workflow.reject.review';
 
+    const REVIEWER_USER_CREATED = 'dp.workflow.create.reviewer.user';
+
     public function getMailEventsOptions()
     {
         return [
@@ -135,6 +137,9 @@ final class WorkflowEvents implements MailEventsInterface
             ]),
             new EventDetail(self::REJECT_REVIEW.'.to.reviewer', 'admin', [
                 'done.by', 'related.link', 'journal', 'receiver.username', 'receiver.fullName', 'article.title',
+            ]),
+            new EventDetail(self::REVIEWER_USER_CREATED, 'admin', [
+                'done.by', 'password.reset.link', 'journal', 'receiver.username', 'receiver.fullName',
             ]),
         ];
     }
