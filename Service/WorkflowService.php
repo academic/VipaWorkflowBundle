@@ -882,12 +882,10 @@ class WorkflowService
     public function getUserRelatedStepDialogs(ArticleWorkflow $workflow, ArticleWorkflowStep $step)
     {
         $user = $this->getUser();
-        $journal = $workflow->getArticle()->getJournal();
         $dialogRepo = $this->em->getRepository(StepDialog::class);
         $fetchAll = false;
         //if user have admin role or related roles
-        if ($user->isAdmin()
-            || $this->haveLeastRole(['ROLE_EDITOR', 'ROLE_CO_EDITOR'], $user->getJournalRolesBag($journal))) {
+        if ($this->wfPermissionCheck->isGrantedForStep($step)) {
             $fetchAll = true;
         }
         //if user in step granted users
