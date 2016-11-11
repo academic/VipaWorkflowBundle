@@ -12,6 +12,7 @@ use Dergipark\WorkflowBundle\Params\StepActionTypes;
 use Dergipark\WorkflowBundle\Params\StepDialogStatus;
 use Dergipark\WorkflowBundle\Params\StepStatus;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
+use Ojs\JournalBundle\Entity\Journal;
 use Ojs\JournalBundle\Form\Type\JournalUsersFieldType;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormInterface;
@@ -354,14 +355,10 @@ class StepDialogController extends Controller
             ->setCreatedDialogBy($user)
         ;
 
-        $roles = StepActionTypes::$dialogRoles[$actionType];
         $form = $this->createForm(new DialogType(), $dialog, [
             'action' => $request->getUri(),
-            'action_alias' => $actionAlias,
-            'journalId' => $journal->getId(),
-            'roles' => $roles,
         ]);
-        $form = $this->reviseFormForAssignReviewer($form);
+        $form = $this->reviseFormForAssignReviewer($form, $journal);
         $form->handleRequest($request);
 
         if($request->getMethod() == 'POST' && $form->isValid()){
@@ -892,10 +889,12 @@ class StepDialogController extends Controller
 
     /**
      * @param FormInterface $form
+     * @param Journal $journal
      * @return FormInterface
      */
-    private function reviseFormForAssignReviewer(FormInterface $form)
+    private function reviseFormForAssignReviewer(FormInterface $form, Journal $journal)
     {
+        $roles = StepActionTypes::$dialogRoles[StepActionTypes::ASSIGN_REVIEWER];
         $form
             ->remove('users')
             ->add('title')
@@ -903,7 +902,11 @@ class StepDialogController extends Controller
                 'attr' => [
                     'style' => 'width: 100%;',
                 ],
-                'label' => '_assign_reviewer.users',
+                'label' =>'_assign_reviewer.users',
+                'remote_params' => [
+                    'journalId' => $journal->getId(),
+                    'roles' => implode(',', $roles),
+                ]
             ]);
 
         return $form;
