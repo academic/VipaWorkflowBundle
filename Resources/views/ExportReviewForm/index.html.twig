@@ -1,0 +1,17 @@
+{% extends '::ojsbase.html.twig' %}
+{% block title %}{{ 'title.export.review.forms'|trans }} {{ parent() }}{% endblock %}
+
+{% block breadcrumb %}
+    {% set list = [
+    {'link': path('ojs_journal_dashboard_index', {journalId: selectedJournal().id}), 'title': 'dashboard'|trans},
+    {'title': 'title.export.review.forms'|trans}
+    ] %}
+    {{ breadcrumb(list) }}
+{% endblock %}
+
+{% block body -%}
+    <h2>{{ 'title.export.review.forms'|trans }}</h2>
+    {% include '::flashbag.html.twig' %}
+    <hr>
+    {{ grid(grid) }}
+{% endblock %}
