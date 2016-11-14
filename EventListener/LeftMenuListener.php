@@ -60,16 +60,16 @@ class LeftMenuListener implements EventSubscriberInterface
      */
     public function onLeftMenuInitialized(MenuEvent $menuEvent)
     {
-        if(!$this->wfPermissionService->isHaveEditorRole()){
-            return;
-        }
         $journal = $this->journalService->getSelectedJournal();
         $journalId = $journal->getId();
 
         $menuItem = $menuEvent->getMenuItem();
         $items = [
-            ['workflow.setting', 'dergipark_workflow_step_index', 'random'],
+            ['title.export.review.forms', 'dp_workflow_export_review_form', 'download'],
         ];
+        if($this->wfPermissionService->isHaveEditorRole()){
+            $items[] = ['workflow.setting', 'dergipark_workflow_step_index', 'random'];
+        }
         foreach ($items as $item) {
             $label = $item[0];
             $path = $item[1];
