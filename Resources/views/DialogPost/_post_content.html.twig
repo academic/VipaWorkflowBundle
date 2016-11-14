@@ -3,7 +3,7 @@
         {{ post.fileOriginalName }}
     </a>
 {% elseif post.type == postType('TYPE_TEXT') %}
-    {{ post.text }}
+    {{ post.text|nl2br }}
 {% elseif post.type == postType('TYPE_FORM_REQUEST') %}
     {{ 'user.requested.a.form.review'|trans({'%user%': post.sendedBy.username }) }}<br>
     {{ 'form.name'|trans }}: {{ post.reviewForm.name }}<br>

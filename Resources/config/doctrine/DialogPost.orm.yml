@@ -20,7 +20,7 @@ Dergipark\WorkflowBundle\Entity\DialogPost:
       options:
         default: 1
     text:
-      type: string
+      type: text
       nullable: true
     fileOriginalName:
       type: string

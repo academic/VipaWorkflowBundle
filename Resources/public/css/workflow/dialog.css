@@ -56,3 +56,7 @@
 .dialog-box-body p{
     font-size: 14px;
 }
+
+.dialog-comment-input{
+    resize: vertical;
+}
