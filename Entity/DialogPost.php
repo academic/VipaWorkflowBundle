@@ -4,10 +4,12 @@ namespace Dergipark\WorkflowBundle\Entity;
 
 use Dergipark\WorkflowBundle\Params\DialogPostTypes;
 use Ojs\UserBundle\Entity\User;
+use APY\DataGridBundle\Grid\Mapping as GRID;
 
 /**
  * Class DialogPost
  * @package Dergipark\WorkflowBundle\Entity
+ * @GRID\Source(columns="id, sendedAt, sendedBy.username, reviewForm.name")
  */
 class DialogPost
 {
@@ -53,11 +55,13 @@ class DialogPost
 
     /**
      * @var StepReviewForm
+     * @GRID\Column(title="form.name", field="reviewForm.name")
      */
     private $reviewForm;
 
     /**
      * @var User
+     * @GRID\Column(title="sended.by", field="sendedBy.username")
      */
     private $sendedBy;
 

@@ -72,3 +72,7 @@ services:
     arguments: ["@ojs.journal_service", "@doctrine.orm.entity_manager", "@router", "@translator"]
     tags:
       - { name: kernel.event_subscriber }
+
+  dp.workflow_export_grid_action:
+    class: Dergipark\WorkflowBundle\Service\ExportGridAction
+    arguments: ["@translator"]

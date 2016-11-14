@@ -1,0 +1,63 @@
+{% set hideleft = true %}
+{% extends '::ojsbase.html.twig' %}
+{% block title %}{{ 'title.review_form_show'|trans }} {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #download-content, #download-content * {
+                visibility: visible;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-8 col-md-push-2">
+            <a class="btn btn-primary pull-left" href="{{ path('dp_workflow_export_review_form', {journalId: journal.id}) }}">
+                {{ 'back'|trans }}
+            </a>
+        </div>
+    </div>
+    <div id="download-content">
+        {% include '::flashbag.html.twig' %}
+        {% for formResponse in formResponses %}
+            <div class="form-response-content">
+                <h1 class="text-center">{{ formResponse.reviewForm.name }}</h1>
+                <div class="row">
+                    <div class="col-lg-8 col-md-push-2 well">
+                        {{ formResponse.reviewFormResponseContent|raw }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-md-push-2">
+            <button class="btn btn-success pull-right" id="download-pdf">{{ 'print.or.save'|trans }}</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(document).ready(function($) {
+            var elements = document.getElementById('download-content').getElementsByTagName("*");
+            for (var i = 0, len = elements.length; i < len; ++i) {
+                elements[i].readOnly = true;
+                elements[i].disabled = true;
+            }
+
+            $('#download-pdf').on('click', function(){
+                window.print();
+            });
+            setTimeout(function(){ window.print(); }, 1000);
+        });
+    </script>
+{% endblock %}

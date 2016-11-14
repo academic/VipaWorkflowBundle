@@ -6,6 +6,10 @@ dergipark_workflow_review_form:
     resource: "routing/journal_review_form.yml"
     prefix:   /journal/{journalId}/workflow/{stepId}/review-form
 
+dergipark_workflow_export_review_form:
+    resource: "routing/export_review_form.yml"
+    prefix:   /journal/{journalId}/export/review-form
+
 dergipark_workflow_step:
     resource: "routing/wf_setting.yml"
     prefix:   /journal/{journalId}/workflow-setting/
