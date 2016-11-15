@@ -17,8 +17,12 @@ class JournalWfSettingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('doubleBlind')
-            ->add('reviewerWaitDay')
+            ->add('doubleBlind', null, [
+                'label' => 'double.blind',
+            ])
+            ->add('reviewerWaitDay', null, [
+                'label' => 'reviewer.wait.day'
+            ])
             ;
     }
 
