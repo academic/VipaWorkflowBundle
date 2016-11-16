@@ -9,6 +9,7 @@ use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
 use Dergipark\WorkflowBundle\Params\StepActionTypes;
 use Dergipark\WorkflowBundle\Service\WorkflowPermissionService;
 use Doctrine\ORM\EntityManager;
+use Ojs\JournalBundle\Entity\Author;
 use Ojs\JournalBundle\Service\JournalService;
 use Ojs\UserBundle\Entity\User;
 use Symfony\Component\Routing\RouterInterface;
@@ -120,6 +121,7 @@ class DPWorkflowTwigExtension extends \Twig_Extension
             new \Twig_SimpleFunction('stepStatus', array($this, 'getStepStatus')),
             new \Twig_SimpleFunction('postType', array($this, 'getPostType')),
             new \Twig_SimpleFunction('profileLink', array($this, 'getProfileLink'), ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('authorSearchLink', array($this, 'getAuthorSearchLink'), ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('passedInviteDate', array($this, 'passedInviteDate')),
             new \Twig_SimpleFunction('passedRemindDate', array($this, 'passedRemindDate')),
             new \Twig_SimpleFunction('articleEditors', array($this, 'getArticleEditors')),
@@ -183,6 +185,18 @@ class DPWorkflowTwigExtension extends \Twig_Extension
         $link = $this->router->generate('ojs_user_profile', ['slug' => $user->getUsername()]);
         $tooltip = (string)$user;
         $template = '<a target="_blank" data-toggle="tooltip" title="'.$tooltip.'" href="'.$link.'">@'.$username.'</a>';
+
+        return $template;
+    }
+
+    public function getAuthorSearchLink(Author $author)
+    {
+        $link = $this->router->generate('ojs_search_index', [
+            'q' => (string)$author,
+            'section' => 'author',
+        ]);
+        $tooltip = (string)$author;
+        $template = '<a target="_blank" data-toggle="tooltip" title="'.$tooltip.'" href="'.$link.'">'.(string)$author.'</a>';
 
         return $template;
     }

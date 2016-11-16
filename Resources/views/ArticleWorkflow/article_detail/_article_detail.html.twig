@@ -49,12 +49,15 @@
         {% if permissionCheck().isReviewerOnWorkflow(workflow) == false or workflowSettings.doubleBlind == false %}
             <div class="well">
                 <h5>{{ 'author.details'|trans }}</h5>
-                <pre>
-{{ 'fullname'|trans }}: {{ article.submitterUser.fullName }}
+                <h6>{{ 'submitter.author'|trans }}</h6>
+                <pre>{{ 'fullname'|trans }}: {{ article.submitterUser.fullName }}
 {{ 'username'|trans }}: {{ article.submitterUser.userName }}
-{{ 'profile'|trans }}: <a href="{{ path('ojs_user_profile', {slug: article.submitterUser.userName}) }}" target="_blank">{{ article.submitterUser.userName }}</a>
-{{ 'notes_to_editor'|trans }}: {{ article.note }}
-                </pre>
+{{ 'profile'|trans }}: {{ profileLink(article.submitterUser) }}
+{{ 'notes_to_editor'|trans }}: {{ article.note }}</pre>
+                <h6>{{ 'article.authors'|trans }}</h6>
+                {% for articleAuthor in article.articleAuthors %}
+                    <pre>{{ authorSearchLink(articleAuthor.author) }}({{ articleAuthor.author.email }})</pre>
+                {% endfor %}
             </div>
         {% endif %}
         {% set articleEditors = articleEditors(workflow) %}
@@ -83,3 +86,7 @@
     <div class="clearfix">
     </div>
 </div>
+
+<script>
+    OjsWorkflow.refreshTooltip();
+</script>
