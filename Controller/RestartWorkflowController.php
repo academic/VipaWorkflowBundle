@@ -48,6 +48,17 @@ class RestartWorkflowController extends Controller
                 'status' => ArticleWorkflowStatus::ACTIVE,
             )
         );
+        if(!$currentFlow){
+            $workflow = $workflowService->prepareArticleWorkflow($article);
+
+            return $this->redirectToRoute(
+                'dergipark_workflow_article_workflow',
+                [
+                    'journalId' => $journal->getId(),
+                    'workflowId' => $workflow->getId(),
+                ]
+            );
+        }
 
         $form = $this->createFormBuilder()
             ->add('confirmText', TextType::class, [
