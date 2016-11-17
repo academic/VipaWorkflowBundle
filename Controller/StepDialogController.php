@@ -863,7 +863,7 @@ class StepDialogController extends Controller
             ]);
         }else{
             return $this->redirectToRoute('dergipark_workflow_flow_active', [
-                'journalId' => $workflow->getJournal()->getId(),
+                'journalId' => $journal->getId(),
             ]);
         }
     }
