@@ -19,7 +19,7 @@ class JournalWorkflowSetting
     /**
      * @var bool
      */
-    private $doubleBlind = false;
+    private $doubleBlind = true;
 
     /**
      * @var int
