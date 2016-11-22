@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 class ArticleController extends Controller
 {
     /**
+     * Edit article metadata action
+     * works on timeline template
+     *
      * @param Request $request
      * @param $workflowId
      *

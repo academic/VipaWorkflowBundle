@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\Response;
 class ArticleReviewFormController extends Controller
 {
     /**
+     * Browse article workflow step review forms
+     *
      * @param $dialogId
      * @return Response
      */
@@ -39,6 +41,8 @@ class ArticleReviewFormController extends Controller
     }
 
     /**
+     * Sync article workflow review form with journal review forms
+     *
      * @param $workflowId
      * @param $stepOrder
      *
@@ -55,6 +59,7 @@ class ArticleReviewFormController extends Controller
             'status' => StepStatus::ACTIVE,
         ]);
         $this->throw404IfNotFound($step);
+        // sync via workflow service
         $workflowService->syncStepReviewForms($step);
 
         return new JsonResponse([
@@ -63,6 +68,8 @@ class ArticleReviewFormController extends Controller
     }
 
     /**
+     * Show article workflow review form
+     *
      * @param StepReviewForm $reviewForm
      * @return Response
      */
@@ -74,6 +81,8 @@ class ArticleReviewFormController extends Controller
     }
 
     /**
+     * Preview action for article workflow review form response
+     *
      * @param $postId
      * @return Response
      */
@@ -87,6 +96,9 @@ class ArticleReviewFormController extends Controller
     }
 
     /**
+     * Reviewer or another article workflow related person
+     * review form request response form and send action
+     *
      * @param Request $request
      * @param StepReviewForm $reviewForm
      * @param $dialogId
@@ -104,6 +116,8 @@ class ArticleReviewFormController extends Controller
     }
 
     /**
+     * Persist submitted form to dialog and dispatch event
+     *
      * @param Request $request
      * @param StepReviewForm $reviewForm
      * @param $dialogId
@@ -138,6 +152,9 @@ class ArticleReviewFormController extends Controller
     }
 
     /**
+     * Send selected article workflow forms to dialog related persons
+     * and dispatch related event
+     *
      * @param Request $request
      * @param $dialogId
      * @return LogicException|JsonResponse
@@ -190,6 +207,8 @@ class ArticleReviewFormController extends Controller
     #########################################################################
 
     /**
+     * Browse article workflow review form responses
+     *
      * @param $dialogId
      * @return Response
      */
@@ -208,6 +227,8 @@ class ArticleReviewFormController extends Controller
     }
 
     /**
+     * send article workflow review form response preview to another user dialog
+     *
      * @param Request $request
      * @param $dialogId
      * @return LogicException|JsonResponse

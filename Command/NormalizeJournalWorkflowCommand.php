@@ -93,9 +93,11 @@ class NormalizeJournalWorkflowCommand extends ContainerAwareCommand
         $findWorkflowSetting = $this->em->getRepository(JournalWorkflowSetting::class)->findOneBy([
             'journal' => $journal,
         ]);
+        // if journal workflow settings exists return null
         if($findWorkflowSetting){
            return;
         }
+        //if not exists persist new one
         $journalWorkflowSetting = new JournalWorkflowSetting();
         $journalWorkflowSetting
             ->setJournal($journal)
@@ -108,19 +110,24 @@ class NormalizeJournalWorkflowCommand extends ContainerAwareCommand
      */
     private function normalizeWorkflowSteps(Journal $journal)
     {
+        // for each step
         foreach(range(1,3) as $stepOrder){
+            // find journal workflow step
             $step = $this->em->getRepository(JournalWorkflowStep::class)->findBy([
                 'journal' => $journal,
                 'order' => $stepOrder
             ]);
+            //if step is already exists continue to
             if($step){
                 continue;
             }
+            // if journal step is not exists setup new one
             $journalStep = new JournalWorkflowStep();
             $journalStep
                 ->setJournal($journal)
                 ->setOrder($stepOrder)
             ;
+            // add all journal granted users to step granted users
             foreach($this->getJournalRelatedUsers($journal) as $user){
                 $journalStep->addGrantedUser($user);
             }
@@ -134,6 +141,7 @@ class NormalizeJournalWorkflowCommand extends ContainerAwareCommand
      */
     public function getJournalRelatedUsers(Journal $journal)
     {
+        // collect editors and co-editors as journal granted users
         return $this->em->getRepository('OjsUserBundle:User')->findUsersByJournalRole(
             ['ROLE_EDITOR', 'ROLE_CO_EDITOR'],
             $journal
