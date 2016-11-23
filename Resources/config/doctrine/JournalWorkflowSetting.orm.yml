@@ -21,7 +21,7 @@ Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting:
       type: boolean
       column: double_blind
       options:
-          default: false
+          default: true
       nullable: true
     reviewerWaitDay:
       type: integer
