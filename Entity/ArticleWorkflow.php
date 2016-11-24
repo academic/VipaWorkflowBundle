@@ -43,6 +43,11 @@ class ArticleWorkflow
     public $grantedUsers;
 
     /**
+     * @var ArrayCollection|ArticleWorkflowStep[]
+     */
+    public $steps;
+
+    /**
      * @var int
      */
     protected $status = ArticleWorkflowStatus::ACTIVE;
@@ -55,6 +60,7 @@ class ArticleWorkflow
     {
         $this->relatedUsers = new ArrayCollection();
         $this->grantedUsers = new ArrayCollection();
+        $this->steps = new ArrayCollection();
     }
 
     /**
@@ -230,6 +236,21 @@ class ArticleWorkflow
         $this->currentStep = $currentStep;
 
         return $this;
+    }
+
+    /**
+     * @param $stepOrder
+     * @return bool|ArticleWorkflowStep|mixed
+     */
+    public function getStepByOrder($stepOrder)
+    {
+        foreach ($this->steps as $step){
+            if($step->getOrder() == $stepOrder){
+                return $step;
+            }
+        }
+
+        return false;
     }
 
     public function __toString()
