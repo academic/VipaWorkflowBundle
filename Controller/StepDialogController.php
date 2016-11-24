@@ -846,6 +846,7 @@ class StepDialogController extends Controller
         $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
         $journal = $dialog->getStep()->getArticleWorkflow()->getJournal();
         $dialog->setRejected(true);
+        $dialog->setStatus(StepDialogStatus::CLOSED);
         $em->persist($dialog);
         $em->flush();
 
