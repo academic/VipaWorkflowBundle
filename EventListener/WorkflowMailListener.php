@@ -4,9 +4,11 @@ namespace Dergipark\WorkflowBundle\EventListener;
 
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
 use Dergipark\WorkflowBundle\Entity\ArticleWorkflowSetting;
+use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
 use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Dergipark\WorkflowBundle\Event\WorkflowEvent;
 use Dergipark\WorkflowBundle\Event\WorkflowEvents;
+use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
 use Dergipark\WorkflowBundle\Params\StepActionTypes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
@@ -473,8 +475,9 @@ class WorkflowMailListener implements EventSubscriberInterface
             return;
         }
         $mailUsers = $this->mergeUserBags(
-            $event->workflow->relatedUsers,
-            $this->getJournalEditors()
+            $this->getJournalEditors(),
+            [$event->article->getSubmitterUser()],
+            ($event->workflow->getStepByOrder(JournalWorkflowSteps::ARRANGEMENT_ORDER))->getGrantedUsers()
         );
         foreach ($mailUsers as $user) {
             $transformParams = [
@@ -507,8 +510,9 @@ class WorkflowMailListener implements EventSubscriberInterface
             return;
         }
         $mailUsers = $this->mergeUserBags(
-            $event->workflow->relatedUsers,
-            $this->getJournalEditors()
+            $this->getJournalEditors(),
+            [$event->article->getSubmitterUser()],
+            ($event->workflow->getStepByOrder(JournalWorkflowSteps::REVIEW_ORDER))->getGrantedUsers()
         );
         foreach ($mailUsers as $user) {
             $transformParams = [
@@ -575,8 +579,8 @@ class WorkflowMailListener implements EventSubscriberInterface
             return;
         }
         $mailUsers = $this->mergeUserBags(
-            $event->workflow->relatedUsers,
-            $this->getJournalEditors()
+            $this->getJournalEditors(),
+            [$event->article->getSubmitterUser()]
         );
         foreach ($mailUsers as $user) {
             $transformParams = [
@@ -609,7 +613,8 @@ class WorkflowMailListener implements EventSubscriberInterface
             return;
         }
         $mailUsers = $this->mergeUserBags(
-            $event->workflow->relatedUsers
+            $this->getJournalEditors(),
+            [$event->article->getSubmitterUser()]
         );
         foreach ($mailUsers as $user) {
             $transformParams = [
@@ -644,8 +649,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         $mailUsers = $this->mergeUserBags(
             $event->workflow->grantedUsers,
             $event->step->grantedUsers,
-            $event->dialog->users,
-            [$event->dialog->createdDialogBy]
+            $event->dialog->users
         );
         foreach ($mailUsers as $user) {
             $transformParams = [
@@ -681,8 +685,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         $mailUsers = $this->mergeUserBags(
             $event->workflow->grantedUsers,
             $event->step->grantedUsers,
-            $event->dialog->users,
-            [$event->dialog->createdDialogBy]
+            $event->dialog->users
         );
         foreach ($mailUsers as $user) {
             $transformParams = [
@@ -757,7 +760,6 @@ class WorkflowMailListener implements EventSubscriberInterface
             return;
         }
         $mailUsers = $this->mergeUserBags(
-            $event->step->grantedUsers,
             [$event->dialog->createdDialogBy]
         );
         foreach ($mailUsers as $user) {
@@ -828,7 +830,6 @@ class WorkflowMailListener implements EventSubscriberInterface
             return;
         }
         $mailUsers = $this->mergeUserBags(
-            $event->step->grantedUsers,
             [$event->dialog->createdDialogBy]
         );
         foreach ($mailUsers as $user) {
@@ -888,7 +889,6 @@ class WorkflowMailListener implements EventSubscriberInterface
             return;
         }
         $mailUsers = $this->mergeUserBags(
-            $event->step->grantedUsers,
             [$event->dialog->createdDialogBy]
         );
         foreach ($mailUsers as $user) {
@@ -950,7 +950,6 @@ class WorkflowMailListener implements EventSubscriberInterface
             return;
         }
         $mailUsers = $this->mergeUserBags(
-            $event->step->grantedUsers,
             [$event->dialog->createdDialogBy]
         );
         foreach ($mailUsers as $user) {
