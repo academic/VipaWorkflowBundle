@@ -273,6 +273,10 @@ class WorkflowService
             ->andWhere('dialogStep.articleWorkflow = :workflow')
             ->setParameter('workflow', $workflow)
         ;
+        if($status == StepDialogStatus::ACTIVE){
+            $dialogQuery
+                ->andWhere('stepDialog.rejected != true');
+        }
         if (!$fetchAll) {
             $dialogQuery
                 ->andWhere(':user MEMBER OF stepDialog.users OR stepDialog.createdDialogBy = :user')
