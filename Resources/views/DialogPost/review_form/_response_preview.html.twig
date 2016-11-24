@@ -22,7 +22,7 @@
         {% include '::flashbag.html.twig' %}
 
         <div class="row">
-            <div class="col-lg-8 col-md-push-2 well">
+            <div class="col-lg-8 col-md-push-2 well" >
                 {{ post.reviewFormResponseContent|raw }}
             </div>
         </div>
@@ -44,6 +44,12 @@
                 elements[i].readOnly = true;
                 elements[i].disabled = true;
             }
+
+            {% if isArticleAuthor %}
+                $.each($('*[role=1]'), function (index, value) {
+                    $(value).closest('.form-group').remove();
+                });
+            {% endif %}
 
             $('#download-pdf').on('click', function(){
                 window.print();

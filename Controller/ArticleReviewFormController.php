@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class ArticleReviewFormController extends Controller
 {
@@ -88,10 +89,19 @@ class ArticleReviewFormController extends Controller
      */
     public function previewReviewFormResponseAction($postId)
     {
+        $isArticleAuthor = false;
+        $accessor = PropertyAccess::createPropertyAccessor();
         $em = $this->getDoctrine()->getManager();
+        /** @var DialogPost $responsePost */
         $responsePost = $em->getRepository(DialogPost::class)->find($postId);
+        $submitterUsername = $accessor->getValue($responsePost, 'dialog.step.articleWorkflow.article.submitterUser.username');
+        dump($submitterUsername);
+        if($submitterUsername === $this->getUser()->getUsername()){
+            $isArticleAuthor = true;
+        }
         return $this->render('DergiparkWorkflowBundle:DialogPost/review_form:_response_preview.html.twig', [
             'post' => $responsePost,
+            'isArticleAuthor' => $isArticleAuthor,
         ]);
     }
 
