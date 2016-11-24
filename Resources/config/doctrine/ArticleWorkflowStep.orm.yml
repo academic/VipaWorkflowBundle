@@ -20,6 +20,7 @@ Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep:
   manyToOne:
     articleWorkflow:
       targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflow
+      mappedBy: steps
       joinColumn:
         name: article_workflow_id
         referencedColumnName: id

@@ -45,7 +45,7 @@ class ArticleWorkflow
     /**
      * @var ArrayCollection|ArticleWorkflowStep[]
      */
-    public $steps;
+    public $steps = [];
 
     /**
      * @var int
@@ -234,6 +234,25 @@ class ArticleWorkflow
     public function setCurrentStep($currentStep)
     {
         $this->currentStep = $currentStep;
+
+        return $this;
+    }
+
+    /**
+     * @return ArticleWorkflowStep[]|ArrayCollection
+     */
+    public function getSteps()
+    {
+        return $this->steps;
+    }
+
+    /**
+     * @param $steps
+     * @return $this
+     */
+    public function setSteps($steps)
+    {
+        $this->steps = $steps;
 
         return $this;
     }
