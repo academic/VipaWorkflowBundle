@@ -95,7 +95,7 @@ class ArticleReviewFormController extends Controller
         /** @var DialogPost $responsePost */
         $responsePost = $em->getRepository(DialogPost::class)->find($postId);
         $submitterUsername = $accessor->getValue($responsePost, 'dialog.step.articleWorkflow.article.submitterUser.username');
-        dump($submitterUsername);
+
         if($submitterUsername === $this->getUser()->getUsername()){
             $isArticleAuthor = true;
         }
