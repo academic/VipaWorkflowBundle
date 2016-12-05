@@ -12,7 +12,7 @@ use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
 use Dergipark\WorkflowBundle\Params\StepActionTypes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
-use Ojs\CoreBundle\Service\OjsMailer;
+use Ojs\CoreBundle\Service\Mailer;
 use Ojs\UserBundle\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -34,7 +34,7 @@ class WorkflowMailListener implements EventSubscriberInterface
     private $em;
 
     /**
-     * @var OjsMailer
+     * @var Mailer
      */
     private $ojsMailer;
 
@@ -50,16 +50,16 @@ class WorkflowMailListener implements EventSubscriberInterface
 
     /**
      * WorkflowMailListener constructor.
-     *
+
      * @param RouterInterface       $router
      * @param EntityManager         $em
-     * @param OjsMailer             $ojsMailer
+     * @param Mailer             $ojsMailer
      * @param TranslatorInterface   $translator
      */
     public function __construct(
         RouterInterface $router,
         EntityManager $em,
-        OjsMailer $ojsMailer,
+        Mailer $ojsMailer,
         TranslatorInterface $translator
     ) {
         $this->router       = $router;
