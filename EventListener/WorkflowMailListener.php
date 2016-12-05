@@ -124,7 +124,7 @@ class WorkflowMailListener implements EventSubscriberInterface
     public function onWorkflowStarted(WorkflowEvent $event)
     {
         $accessor = $this->accessor;
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::WORKFLOW_STARTED);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::WORKFLOW_STARTED);
         if(!$getMailEvent){
             return;
         }
@@ -155,7 +155,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReviewFormResponse(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEW_FORM_RESPONSE);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::REVIEW_FORM_RESPONSE);
         if(!$getMailEvent){
             return;
         }
@@ -188,7 +188,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReviewFormResponsePreview(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEW_FORM_RESPONSE_PREVIEW);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::REVIEW_FORM_RESPONSE_PREVIEW);
         if(!$getMailEvent){
             return;
         }
@@ -221,7 +221,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReviewFormRequest(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEW_FORM_REQUEST);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::REVIEW_FORM_REQUEST);
         if(!$getMailEvent){
             return;
         }
@@ -254,7 +254,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onWorkflowGrantUser(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::WORKFLOW_GRANT_USER);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::WORKFLOW_GRANT_USER);
         if(!$getMailEvent){
             return;
         }
@@ -282,7 +282,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onDialogPostComment(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::DIALOG_POST_COMMENT);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::DIALOG_POST_COMMENT);
         if(!$getMailEvent){
             return;
         }
@@ -319,7 +319,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onDialogPostFile(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::DIALOG_POST_FILE);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::DIALOG_POST_FILE);
         if(!$getMailEvent){
             return;
         }
@@ -363,7 +363,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         if($event->dialog->getDialogType() == StepActionTypes::ASSIGN_SECTION_EDITOR){
             $eventName = WorkflowEvents::CREATE_SPESIFIC_DIALOG.'.assign.section.editor';
         }
-        $getMailEvent = $this->ojsMailer->getEventByName($eventName);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent($eventName);
         if(!$getMailEvent){
             return;
         }
@@ -399,7 +399,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onCreateDialogWithAuthor(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::CREATE_DIALOG_WITH_AUTHOR);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::CREATE_DIALOG_WITH_AUTHOR);
         if(!$getMailEvent){
             return;
         }
@@ -434,7 +434,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onCreateBasicDialog(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::CREATE_BASIC_DIALOG);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::CREATE_BASIC_DIALOG);
         if(!$getMailEvent){
             return;
         }
@@ -470,7 +470,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onStepGotoArrangement(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::STEP_GOTO_ARRANGEMET);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::STEP_GOTO_ARRANGEMET);
         if(!$getMailEvent){
             return;
         }
@@ -505,7 +505,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onStepGotoReviewing(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::STEP_GOTO_REVIEWING);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::STEP_GOTO_REVIEWING);
         if(!$getMailEvent){
             return;
         }
@@ -540,7 +540,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onAcceptSubmissionDirectly(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::ACCEPT_SUBMISSION_DIRECTLY);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::ACCEPT_SUBMISSION_DIRECTLY);
         if(!$getMailEvent){
             return;
         }
@@ -574,7 +574,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onWorkflowFinishAction(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::WORKFLOW_FINISH_ACTION);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::WORKFLOW_FINISH_ACTION);
         if(!$getMailEvent){
             return;
         }
@@ -608,7 +608,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onDeclineSubmission(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::DECLINE_SUBMISSION);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::DECLINE_SUBMISSION);
         if(!$getMailEvent){
             return;
         }
@@ -642,7 +642,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onCloseDialog(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::CLOSE_DIALOG);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::CLOSE_DIALOG);
         if(!$getMailEvent){
             return;
         }
@@ -678,7 +678,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReopenDialog(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REOPEN_DIALOG);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::REOPEN_DIALOG);
         if(!$getMailEvent){
             return;
         }
@@ -714,7 +714,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReviewerInvite(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_INVITE.'.to.reviewer');
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::REVIEWER_INVITE.'.to.reviewer');
         if(!$getMailEvent){
             goto sendmailtoeditors;
         }
@@ -755,7 +755,7 @@ class WorkflowMailListener implements EventSubscriberInterface
 
         sendmailtoeditors:
 
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_INVITE.'.to.editor');
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::REVIEWER_INVITE.'.to.editor');
         if(!$getMailEvent){
             return;
         }
@@ -788,7 +788,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReviewerRemind(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_REMIND.'.to.reviewer');
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::REVIEWER_REMIND.'.to.reviewer');
         if(!$getMailEvent){
             goto sendmailtoeditors;
         }
@@ -825,7 +825,7 @@ class WorkflowMailListener implements EventSubscriberInterface
 
         sendmailtoeditors:
 
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_REMIND.'.to.editor');
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::REVIEWER_REMIND.'.to.editor');
         if(!$getMailEvent){
             return;
         }
@@ -858,7 +858,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onAcceptReview(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::ACCEPT_REVIEW.'.to.reviewer');
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::ACCEPT_REVIEW.'.to.reviewer');
         /** @var User $reviewerUser */
         $reviewerUser = $event->dialog->users->first();
         if(!$getMailEvent){
@@ -884,7 +884,7 @@ class WorkflowMailListener implements EventSubscriberInterface
 
         sendmailtoeditors:
 
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::ACCEPT_REVIEW.'.to.editor');
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::ACCEPT_REVIEW.'.to.editor');
         if(!$getMailEvent){
             return;
         }
@@ -919,7 +919,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onRejectReview(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REJECT_REVIEW.'.to.reviewer');
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::REJECT_REVIEW.'.to.reviewer');
         /** @var User $reviewerUser */
         $reviewerUser = $event->dialog->users->first();
         if(!$getMailEvent){
@@ -945,7 +945,7 @@ class WorkflowMailListener implements EventSubscriberInterface
 
         sendmailtoeditors:
 
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REJECT_REVIEW.'.to.editor');
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::REJECT_REVIEW.'.to.editor');
         if(!$getMailEvent){
             return;
         }
@@ -980,7 +980,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReviewerCreated(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_USER_CREATED);
+        $getMailEvent = $this->ojsMailer->getTemplateByEvent(WorkflowEvents::REVIEWER_USER_CREATED);
         if(!$getMailEvent){
             return;
         }
