@@ -7,7 +7,7 @@
             <div class="well">
                 {% if translation.title is not null %}
                     <strong>{{ 'article.title'|trans }} ({{ translation.locale }}): {{ translation.title }}</strong>
-                    {% include 'DergiparkWorkflowBundle:ArticleWorkflow:article_detail/searchon.html.twig' %}
+                    {% include 'OjsWorkflowBundle:ArticleWorkflow:article_detail/searchon.html.twig' %}
                     <br>
                 {% endif %}
                 {% if translation.abstract is null %}
@@ -73,7 +73,7 @@
         {% endif %}
         {% if permissionCheck().isGrantedForEditArticleMetadata(workflow) %}
             <button  class="btn btn-success" onclick="OjsWorkflow.editArticleMetadata(this)"
-                href="{{ path('dergipark_workflow_edit_article_metadata', {journalId: selectedJournal().id, workflowId: workflow.id}) }}">
+                href="{{ path('ojs_workflow_edit_article_metadata', {journalId: selectedJournal().id, workflowId: workflow.id}) }}">
                 {{ 'title.article_edit_metadata'|trans }}
             </button>
         {% endif %}

@@ -1,16 +1,16 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\Controller;
+namespace Ojs\WorkflowBundle\Controller;
 
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
-use Dergipark\WorkflowBundle\Entity\DialogPost;
-use Dergipark\WorkflowBundle\Entity\StepDialog;
-use Dergipark\WorkflowBundle\Event\WorkflowEvent;
-use Dergipark\WorkflowBundle\Event\WorkflowEvents;
-use Dergipark\WorkflowBundle\Form\Type\DialogType;
-use Dergipark\WorkflowBundle\Params\StepActionTypes;
-use Dergipark\WorkflowBundle\Params\StepDialogStatus;
-use Dergipark\WorkflowBundle\Params\StepStatus;
+use Ojs\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Ojs\WorkflowBundle\Entity\DialogPost;
+use Ojs\WorkflowBundle\Entity\StepDialog;
+use Ojs\WorkflowBundle\Event\WorkflowEvent;
+use Ojs\WorkflowBundle\Event\WorkflowEvents;
+use Ojs\WorkflowBundle\Form\Type\DialogType;
+use Ojs\WorkflowBundle\Params\StepActionTypes;
+use Ojs\WorkflowBundle\Params\StepDialogStatus;
+use Ojs\WorkflowBundle\Params\StepStatus;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\JournalBundle\Entity\Journal;
 use Ojs\JournalBundle\Form\Type\JournalUsersFieldType;
@@ -42,7 +42,7 @@ class StepDialogController extends Controller
         ]);
         $dialogs = $workflowService->getUserRelatedStepDialogs($workflow, $step);
 
-        return $this->render('DergiparkWorkflowBundle:StepDialog:_step_dialogs.html.twig', [
+        return $this->render('OjsWorkflowBundle:StepDialog:_step_dialogs.html.twig', [
             'dialogs' => $dialogs,
             'step' => $step,
         ]);
@@ -824,7 +824,7 @@ class StepDialogController extends Controller
                 'success' => true,
             ]);
         }else{
-            return $this->redirectToRoute('dergipark_workflow_article_workflow', [
+            return $this->redirectToRoute('ojs_workflow_article_workflow', [
                 'workflowId' => $workflow->getId(),
                 'journalId' => $workflow->getJournal()->getId(),
             ]);
@@ -858,12 +858,12 @@ class StepDialogController extends Controller
         if($request->isXmlHttpRequest()){
             return new JsonResponse([
                 'success' => true,
-                'redirectUrl' => $this->generateUrl('dergipark_workflow_flow_active', [
+                'redirectUrl' => $this->generateUrl('ojs_workflow_flow_active', [
                     'journalId' => $journal->getId(),
                 ])
             ]);
         }else{
-            return $this->redirectToRoute('dergipark_workflow_flow_active', [
+            return $this->redirectToRoute('ojs_workflow_flow_active', [
                 'journalId' => $journal->getId(),
             ]);
         }

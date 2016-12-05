@@ -1,7 +1,7 @@
-Dergipark\WorkflowBundle\Entity\StepReviewForm:
+Ojs\WorkflowBundle\Entity\StepReviewForm:
   type: entity
   table: bc_article_step_review_form
-  repositoryClass: Dergipark\WorkflowBundle\Entity\StepReviewFormRepository
+  repositoryClass: Ojs\WorkflowBundle\Entity\StepReviewFormRepository
   type: entity
   id:
     id:
@@ -20,7 +20,7 @@ Dergipark\WorkflowBundle\Entity\StepReviewForm:
       nullable: true
   manyToOne:
     step:
-      targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep
+      targetEntity: Ojs\WorkflowBundle\Entity\ArticleWorkflowStep
       joinColumn:
         name: article_workflow_step_id
         referencedColumnName: id

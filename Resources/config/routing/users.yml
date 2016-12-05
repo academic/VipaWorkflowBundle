@@ -1,17 +1,17 @@
-dergipark_workflow_reviewers_browse:
+ojs_workflow_reviewers_browse:
   path:     /browse-reviewers
-  defaults: { _controller: "DergiparkWorkflowBundle:Users:browseReviewers" }
+  defaults: { _controller: "OjsWorkflowBundle:Users:browseReviewers" }
   options:
       expose: true
 
-dergipark_workflow_section_editors_browse:
+ojs_workflow_section_editors_browse:
   path:     /browse-section-editors
-  defaults: { _controller: "DergiparkWorkflowBundle:Users:browseSectionEditors" }
+  defaults: { _controller: "OjsWorkflowBundle:Users:browseSectionEditors" }
   options:
       expose: true
 
-dergipark_workflow_create_reviewer_user:
+ojs_workflow_create_reviewer_user:
   path:     /create-reviewer-user
-  defaults: { _controller: "DergiparkWorkflowBundle:Users:createReviewerUser" }
+  defaults: { _controller: "OjsWorkflowBundle:Users:createReviewerUser" }
   options:
       expose: true

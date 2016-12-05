@@ -1,8 +1,8 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\Form\Type;
+namespace Ojs\WorkflowBundle\Form\Type;
 
-use Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting;
+use Ojs\WorkflowBundle\Entity\JournalWorkflowSetting;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

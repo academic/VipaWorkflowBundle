@@ -1,8 +1,8 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\Form\Type;
+namespace Ojs\WorkflowBundle\Form\Type;
 
-use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
+use Ojs\WorkflowBundle\Entity\JournalWorkflowStep;
 use Ojs\JournalBundle\Form\Type\JournalUsersFieldType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

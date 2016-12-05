@@ -1,9 +1,9 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\Controller;
+namespace Ojs\WorkflowBundle\Controller;
 
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
-use Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus;
+use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
+use Ojs\WorkflowBundle\Params\ArticleWorkflowStatus;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\CoreBundle\Params\ArticleStatuses;
 use Ojs\JournalBundle\Entity\Article;
@@ -52,7 +52,7 @@ class RestartWorkflowController extends Controller
             $workflow = $workflowService->prepareArticleWorkflow($article);
 
             return $this->redirectToRoute(
-                'dergipark_workflow_article_workflow',
+                'ojs_workflow_article_workflow',
                 [
                     'journalId' => $journal->getId(),
                     'workflowId' => $workflow->getId(),
@@ -81,7 +81,7 @@ class RestartWorkflowController extends Controller
             $workflow = $workflowService->prepareArticleWorkflow($article);
 
             return $this->redirectToRoute(
-                'dergipark_workflow_article_workflow',
+                'ojs_workflow_article_workflow',
                 [
                     'journalId' => $journal->getId(),
                     'workflowId' => $workflow->getId(),
@@ -90,7 +90,7 @@ class RestartWorkflowController extends Controller
         }
 
         return $this->render(
-            'DergiparkWorkflowBundle:RestartWorkflow:_confirm_restart.html.twig',
+            'OjsWorkflowBundle:RestartWorkflow:_confirm_restart.html.twig',
             [
                 'article' => $article,
                 'currentWorkflow' => $currentFlow,

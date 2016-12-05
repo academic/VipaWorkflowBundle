@@ -1,7 +1,7 @@
-Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting:
+Ojs\WorkflowBundle\Entity\JournalWorkflowSetting:
   type: entity
   table: bc_wf_journal_wf_setting
-  repositoryClass: Dergipark\WorkflowBundle\Entity\JournalWorkflowSettingRepository
+  repositoryClass: Ojs\WorkflowBundle\Entity\JournalWorkflowSettingRepository
   cache:
     usage: NONSTRICT_READ_WRITE
   id:

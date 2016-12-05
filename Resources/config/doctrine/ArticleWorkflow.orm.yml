@@ -1,7 +1,7 @@
-Dergipark\WorkflowBundle\Entity\ArticleWorkflow:
+Ojs\WorkflowBundle\Entity\ArticleWorkflow:
   type: entity
   table: bc_wf_article_workflow
-  repositoryClass: Dergipark\WorkflowBundle\Entity\ArticleWorkflowRepository
+  repositoryClass: Ojs\WorkflowBundle\Entity\ArticleWorkflowRepository
   type: entity
   id:
     id:
@@ -31,13 +31,13 @@ Dergipark\WorkflowBundle\Entity\ArticleWorkflow:
         name: article_id
         referencedColumnName: id
     currentStep:
-      targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep
+      targetEntity: Ojs\WorkflowBundle\Entity\ArticleWorkflowStep
       joinColumn:
         name: current_step_id
         referencedColumnName: id
   oneToMany:
     steps:
-      targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep
+      targetEntity: Ojs\WorkflowBundle\Entity\ArticleWorkflowStep
       mappedBy: articleWorkflow
   manyToMany:
     grantedUsers:

@@ -1,9 +1,9 @@
-dergipark_workflow_flow_active:
+ojs_workflow_flow_active:
   path:     /active
-  defaults: { _controller: "DergiparkWorkflowBundle:Workflow:actives" }
+  defaults: { _controller: "OjsWorkflowBundle:Workflow:actives" }
   options:
     expose: true
 
-dergipark_workflow_flow_history:
+ojs_workflow_flow_history:
   path:     /history
-  defaults: { _controller: "DergiparkWorkflowBundle:Workflow:history" }
+  defaults: { _controller: "OjsWorkflowBundle:Workflow:history" }

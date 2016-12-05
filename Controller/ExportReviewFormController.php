@@ -1,19 +1,19 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\Controller;
+namespace Ojs\WorkflowBundle\Controller;
 
 use APY\DataGridBundle\Grid\Action\MassAction;
 use APY\DataGridBundle\Grid\Column\ActionsColumn;
 use APY\DataGridBundle\Grid\Source\Entity;
-use Dergipark\WorkflowBundle\Entity\DialogPost;
-use Dergipark\WorkflowBundle\Params\DialogPostTypes;
+use Ojs\WorkflowBundle\Entity\DialogPost;
+use Ojs\WorkflowBundle\Params\DialogPostTypes;
 use Doctrine\ORM\QueryBuilder;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ExportReviewFormController
- * @package Dergipark\WorkflowBundle\Controller
+ * @package Ojs\WorkflowBundle\Controller
  */
 class ExportReviewFormController extends Controller
 {
@@ -63,7 +63,7 @@ class ExportReviewFormController extends Controller
         $actionColumn->setRowActions($rowAction);
         $grid->addColumn($actionColumn);
 
-        return $grid->getGridResponse('DergiparkWorkflowBundle:ExportReviewForm:index.html.twig', [
+        return $grid->getGridResponse('OjsWorkflowBundle:ExportReviewForm:index.html.twig', [
             'grid'      => $grid,
             'journal'   => $journal,
         ]);
@@ -87,7 +87,7 @@ class ExportReviewFormController extends Controller
         $dialogPostRepo = $em->getRepository(DialogPost::class);
         $formResponses = $dialogPostRepo->findById($primaryKeys);
 
-        return $this->render('DergiparkWorkflowBundle:ExportReviewForm:print_or_save.html.twig', [
+        return $this->render('OjsWorkflowBundle:ExportReviewForm:print_or_save.html.twig', [
             'formResponses' => $formResponses,
             'journal' => $journal,
         ]);
@@ -102,7 +102,7 @@ class ExportReviewFormController extends Controller
         $journalService = $this->get('ojs.journal_service');
         $journal = $journalService->getSelectedJournal();
 
-        return $this->render('DergiparkWorkflowBundle:ExportReviewForm:print_or_save.html.twig', [
+        return $this->render('OjsWorkflowBundle:ExportReviewForm:print_or_save.html.twig', [
             'formResponses' => [$dialogPost],
             'journal' => $journal,
         ]);

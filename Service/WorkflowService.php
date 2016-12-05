@@ -1,6 +1,6 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\Service;
+namespace Ojs\WorkflowBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Ojs\UserBundle\Entity\User;
@@ -10,27 +10,27 @@ use Ojs\JournalBundle\Entity\ArticleFile;
 use Ojs\CoreBundle\Params\ArticleStatuses;
 use Ojs\JournalBundle\Service\JournalService;
 use Symfony\Component\HttpFoundation\Response;
-use Dergipark\WorkflowBundle\Entity\DialogPost;
-use Dergipark\WorkflowBundle\Params\StepStatus;
-use Dergipark\WorkflowBundle\Entity\StepDialog;
-use Dergipark\WorkflowBundle\Event\WorkflowEvent;
+use Ojs\WorkflowBundle\Entity\DialogPost;
+use Ojs\WorkflowBundle\Params\StepStatus;
+use Ojs\WorkflowBundle\Entity\StepDialog;
+use Ojs\WorkflowBundle\Event\WorkflowEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Dergipark\WorkflowBundle\Event\WorkflowEvents;
-use Dergipark\WorkflowBundle\Entity\StepReviewForm;
+use Ojs\WorkflowBundle\Event\WorkflowEvents;
+use Ojs\WorkflowBundle\Entity\StepReviewForm;
 use Ojs\JournalBundle\Entity\ArticleSubmissionFile;
-use Dergipark\WorkflowBundle\Params\StepActionTypes;
-use Dergipark\WorkflowBundle\Params\DialogPostTypes;
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
-use Dergipark\WorkflowBundle\Params\StepDialogStatus;
+use Ojs\WorkflowBundle\Params\StepActionTypes;
+use Ojs\WorkflowBundle\Params\DialogPostTypes;
+use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
+use Ojs\WorkflowBundle\Params\StepDialogStatus;
 use Symfony\Component\Translation\TranslatorInterface;
-use Dergipark\WorkflowBundle\Entity\JournalReviewForm;
-use Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog;
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
-use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
-use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
-use Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus;
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflowSetting;
-use Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting;
+use Ojs\WorkflowBundle\Entity\JournalReviewForm;
+use Ojs\WorkflowBundle\Entity\WorkflowHistoryLog;
+use Ojs\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Ojs\WorkflowBundle\Entity\JournalWorkflowStep;
+use Ojs\WorkflowBundle\Params\JournalWorkflowSteps;
+use Ojs\WorkflowBundle\Params\ArticleWorkflowStatus;
+use Ojs\WorkflowBundle\Entity\ArticleWorkflowSetting;
+use Ojs\WorkflowBundle\Entity\JournalWorkflowSetting;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -536,7 +536,7 @@ class WorkflowService
      */
     public function getMessageBlock($block, $params = [])
     {
-        $template = $this->twig->loadTemplate('DergiparkWorkflowBundle:ArticleWorkflow:_message_blocks.html.twig');
+        $template = $this->twig->loadTemplate('OjsWorkflowBundle:ArticleWorkflow:_message_blocks.html.twig');
 
         return new Response($template->renderBlock($block, $params));
     }
@@ -549,7 +549,7 @@ class WorkflowService
      */
     public function getFormBlock($block, $params = [])
     {
-        $template = $this->twig->loadTemplate('DergiparkWorkflowBundle:ArticleWorkflow:_action_forms.html.twig');
+        $template = $this->twig->loadTemplate('OjsWorkflowBundle:ArticleWorkflow:_action_forms.html.twig');
 
         return new Response($template->renderBlock($block, $params));
     }
@@ -937,7 +937,7 @@ class WorkflowService
     public function getArticleDetail(ArticleWorkflow $workflow)
     {
         $article = $workflow->getArticle();
-        $template = $this->twig->render('DergiparkWorkflowBundle:ArticleWorkflow/article_detail:_article_detail.html.twig', [
+        $template = $this->twig->render('OjsWorkflowBundle:ArticleWorkflow/article_detail:_article_detail.html.twig', [
             'article' => $article,
             'workflow' => $workflow,
             'workflowSettings' => $this->workflowSettings($workflow),

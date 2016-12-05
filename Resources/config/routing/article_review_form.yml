@@ -1,32 +1,32 @@
 dp_workflow_dialog_posts_browse_review_forms:
   path:     /
-  defaults: { _controller: "DergiparkWorkflowBundle:ArticleReviewForm:reviewForms" }
+  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:reviewForms" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_dialog_posts_show_review_form:
   path:     /show/{id}
-  defaults: { _controller: "DergiparkWorkflowBundle:ArticleReviewForm:showForm" }
+  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:showForm" }
   options:
       expose: true
 
 dp_workflow_dialog_posts_submit_review_form:
   path:     /submit-form/{id}
   methods: [POST, GET]
-  defaults: { _controller: "DergiparkWorkflowBundle:ArticleReviewForm:submitForm" }
+  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:submitForm" }
   options:
       expose: true
 
 dp_workflow_dialog_posts_review_form_response_preview:
   path:     /form-response-preview/{postId}
-  defaults: { _controller: "DergiparkWorkflowBundle:ArticleReviewForm:previewReviewFormResponse" }
+  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:previewReviewFormResponse" }
   options:
       expose: true
 
 dp_workflow_dialog_posts_new_review_form:
   path:     /new-review-form
-  defaults: { _controller: "DergiparkWorkflowBundle:ArticleReviewForm:postReviewForm" }
+  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:postReviewForm" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
@@ -34,14 +34,14 @@ dp_workflow_dialog_posts_new_review_form:
 #review form response send logic routes
 dp_workflow_dialog_posts_browse_review_form_responses:
   path:     /browse/responses
-  defaults: { _controller: "DergiparkWorkflowBundle:ArticleReviewForm:reviewFormResponses" }
+  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:reviewFormResponses" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_dialog_posts_new_review_form_response_preview:
   path:     /new-review-form-response-preview
-  defaults: { _controller: "DergiparkWorkflowBundle:ArticleReviewForm:postReviewFormResponsePreview" }
+  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:postReviewFormResponsePreview" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true

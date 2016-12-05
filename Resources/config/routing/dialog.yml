@@ -1,27 +1,27 @@
 dp_workflow_step_dialogs:
   path:     /get/dialogs
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:getDialogs" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:getDialogs" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_create_specific_dialog:
   path:     /create/spesific-dialog
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:createSpecificDialog" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:createSpecificDialog" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_create_dialog_with_author:
   path:     /create/author-dialog
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:createDialogWithAuthor" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:createDialogWithAuthor" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_create_basic_dialog:
   path:     /create/basic-dialog
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:createBasicDialog" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:createBasicDialog" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
@@ -29,89 +29,89 @@ dp_workflow_create_basic_dialog:
 
 dp_workflow_create_assign_reviewer_dialog:
   path:     /create/assign-reviewer-dialog
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:createAssignReviewerDialog" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:createAssignReviewerDialog" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_accept_goto_arrangement:
   path:     /accept/goto-arrangement
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:acceptGotoArrangement" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:acceptGotoArrangement" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_goto_reviewing:
   path:     /goto-reviewing
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:gotoReviewing" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:gotoReviewing" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_accept_submission:
   path:     /accept-submission
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:acceptSubmission" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:acceptSubmission" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_decline_submission:
   path:     /decline-submission
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:declineSubmission" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:declineSubmission" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_finish_workflow:
   path:     /finish-workflow
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:finishWorkflow" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:finishWorkflow" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_dialog_finish:
   path:     /finish-dialog/{dialogId}
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:finishDialog" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:finishDialog" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_dialog_reopen:
   path:     /reopen-dialog/{dialogId}
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:reopenDialog" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:reopenDialog" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_dialog_remove:
   path:     /remove-dialog/{dialogId}
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:removeDialog" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:removeDialog" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_dialog_invite_reviewer:
   path:     /invite-reviewer/{dialogId}
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:inviteReviewer" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:inviteReviewer" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_dialog_remind_reviewer:
   path:     /remind-reviewer/{dialogId}
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:remindReviewer" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:remindReviewer" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_dialog_accept_review:
   path:     /accept-review/{dialogId}
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:acceptReview" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:acceptReview" }
   options:
       expose: true
 
 dp_workflow_dialog_reject_review:
   path:     /reject-review/{dialogId}
-  defaults: { _controller: "DergiparkWorkflowBundle:StepDialog:rejectReview" }
+  defaults: { _controller: "OjsWorkflowBundle:StepDialog:rejectReview" }
   options:
       expose: true

@@ -1,15 +1,15 @@
-dergipark_workflow_step_index:
+ojs_workflow_step_index:
   path:     /
-  defaults: { _controller: "DergiparkWorkflowBundle:WorkflowSetting:index" }
+  defaults: { _controller: "OjsWorkflowBundle:WorkflowSetting:index" }
 
-dergipark_workflow_basic_settings:
+ojs_workflow_basic_settings:
   path:     /basic-setting
-  defaults: { _controller: "DergiparkWorkflowBundle:WorkflowSetting:basicSetting" }
+  defaults: { _controller: "OjsWorkflowBundle:WorkflowSetting:basicSetting" }
   condition: "request.isXmlHttpRequest()"
 
-dergipark_workflow_step_users_setup:
+ojs_workflow_step_users_setup:
   path:     /step-users-setup/{stepOrder}
-  defaults: { _controller: "DergiparkWorkflowBundle:WorkflowSetting:stepUsersSetup" }
+  defaults: { _controller: "OjsWorkflowBundle:WorkflowSetting:stepUsersSetup" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true

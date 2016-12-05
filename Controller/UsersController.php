@@ -1,10 +1,10 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\Controller;
+namespace Ojs\WorkflowBundle\Controller;
 
-use Dergipark\WorkflowBundle\Event\WorkflowEvent;
-use Dergipark\WorkflowBundle\Event\WorkflowEvents;
-use Dergipark\WorkflowBundle\Form\Type\ReviewerUserType;
+use Ojs\WorkflowBundle\Event\WorkflowEvent;
+use Ojs\WorkflowBundle\Event\WorkflowEvents;
+use Ojs\WorkflowBundle\Form\Type\ReviewerUserType;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\JournalBundle\Entity\JournalUser;
 use Ojs\UserBundle\Entity\Role;
@@ -35,7 +35,7 @@ class UsersController extends Controller
             ['ROLE_REVIEWER']
         );
 
-        return $this->render('DergiparkWorkflowBundle:Users:_reviewers_browse.html.twig', [
+        return $this->render('OjsWorkflowBundle:Users:_reviewers_browse.html.twig', [
             'reviewerUsers' => $reviewerUsers,
             'reviewerStats' => $this->collectReviewerStats(),
         ]);
@@ -152,7 +152,7 @@ GROUP BY users.id;";
             ['ROLE_SECTION_EDITOR']
         );
 
-        return $this->render('DergiparkWorkflowBundle:Users:_section_editors_browse.html.twig', [
+        return $this->render('OjsWorkflowBundle:Users:_section_editors_browse.html.twig', [
             'sectionEditorUsers' => $sectionEditorUsers,
         ]);
     }
@@ -180,7 +180,7 @@ GROUP BY users.id;";
         $reviewerUser->setEnabled(true);
 
         $form = $this->createForm(new ReviewerUserType(), $reviewerUser, [
-            'action' => $this->generateUrl('dergipark_workflow_create_reviewer_user', [
+            'action' => $this->generateUrl('ojs_workflow_create_reviewer_user', [
                 'journalId' => $journal->getId(),
                 'workflowId' => $workflow->getId(),
             ])
@@ -208,7 +208,7 @@ GROUP BY users.id;";
             return $workflowService->getMessageBlock('successful_create_reviewer_user');
         }
 
-        return $this->render('DergiparkWorkflowBundle:Users:_create_reviewer.html.twig', [
+        return $this->render('OjsWorkflowBundle:Users:_create_reviewer.html.twig', [
             'form' => $form->createView(),
         ]);
     }

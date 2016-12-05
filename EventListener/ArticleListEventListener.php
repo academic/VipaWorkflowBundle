@@ -1,6 +1,6 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\EventListener;
+namespace Ojs\WorkflowBundle\EventListener;
 
 use APY\DataGridBundle\Grid\Action\RowAction;
 use APY\DataGridBundle\Grid\Column\ActionsColumn;
@@ -83,7 +83,7 @@ class ArticleListEventListener implements EventSubscriberInterface
         $actionColumn = $grid->getColumn("actions");
         $rowActions = $actionColumn->getRowActions();
 
-        $rowAction = new RowAction('<i class="fa fa-random"></i>', 'dergipark_workflow_restart_workflow');
+        $rowAction = new RowAction('<i class="fa fa-random"></i>', 'ojs_workflow_restart_workflow');
         $rowAction->setRouteParameters(['id', 'journalId' => $journal->getId()]);
 
         $rowAction->manipulateRender(
