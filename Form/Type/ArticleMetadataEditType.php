@@ -1,8 +1,8 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Form\Type;
+namespace Dergipark\WorkflowBundle\Form\Type;
 
-use Ojs\WorkflowBundle\Entity\JournalWorkflowSetting;
+use Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting;
 use Ojs\CoreBundle\Form\Type\JournalBasedTranslationsType;
 use Ojs\JournalBundle\Entity\Article;
 use Symfony\Component\Form\AbstractType;

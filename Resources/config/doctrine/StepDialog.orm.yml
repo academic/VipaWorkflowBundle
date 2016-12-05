@@ -1,7 +1,7 @@
-Ojs\WorkflowBundle\Entity\StepDialog:
+Dergipark\WorkflowBundle\Entity\StepDialog:
   type: entity
   table: bc_wf_step_dialog
-  repositoryClass: Ojs\WorkflowBundle\Entity\StepDialogRepository
+  repositoryClass: Dergipark\WorkflowBundle\Entity\StepDialogRepository
   type: entity
   id:
     id:
@@ -46,7 +46,7 @@ Ojs\WorkflowBundle\Entity\StepDialog:
         default: false
   manyToOne:
     step:
-      targetEntity: Ojs\WorkflowBundle\Entity\ArticleWorkflowStep
+      targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep
       joinColumn:
         name: workflow_step_id
         referencedColumnName: id

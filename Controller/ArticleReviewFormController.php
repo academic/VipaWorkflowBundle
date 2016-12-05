@@ -1,15 +1,15 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Controller;
+namespace Dergipark\WorkflowBundle\Controller;
 
-use Ojs\WorkflowBundle\Entity\ArticleWorkflowStep;
-use Ojs\WorkflowBundle\Entity\DialogPost;
-use Ojs\WorkflowBundle\Entity\StepDialog;
-use Ojs\WorkflowBundle\Entity\StepReviewForm;
-use Ojs\WorkflowBundle\Event\WorkflowEvent;
-use Ojs\WorkflowBundle\Event\WorkflowEvents;
-use Ojs\WorkflowBundle\Params\DialogPostTypes;
-use Ojs\WorkflowBundle\Params\StepStatus;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Dergipark\WorkflowBundle\Entity\DialogPost;
+use Dergipark\WorkflowBundle\Entity\StepDialog;
+use Dergipark\WorkflowBundle\Entity\StepReviewForm;
+use Dergipark\WorkflowBundle\Event\WorkflowEvent;
+use Dergipark\WorkflowBundle\Event\WorkflowEvents;
+use Dergipark\WorkflowBundle\Params\DialogPostTypes;
+use Dergipark\WorkflowBundle\Params\StepStatus;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Pagerfanta\Exception\LogicException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -35,7 +35,7 @@ class ArticleReviewFormController extends Controller
             'step' => $step,
         ]);
 
-        return $this->render('OjsWorkflowBundle:DialogPost/review_form:_browse_review_forms.html.twig', [
+        return $this->render('DergiparkWorkflowBundle:DialogPost/review_form:_browse_review_forms.html.twig', [
             'forms' => $forms,
             'dialogId' => $dialogId,
         ]);
@@ -76,7 +76,7 @@ class ArticleReviewFormController extends Controller
      */
     public function showFormAction(StepReviewForm $reviewForm)
     {
-        return $this->render('OjsWorkflowBundle:DialogPost/review_form:_show.html.twig', [
+        return $this->render('DergiparkWorkflowBundle:DialogPost/review_form:_show.html.twig', [
             'reviewForm' => $reviewForm,
         ]);
     }
@@ -99,7 +99,7 @@ class ArticleReviewFormController extends Controller
         if($submitterUsername === $this->getUser()->getUsername()){
             $isArticleAuthor = true;
         }
-        return $this->render('OjsWorkflowBundle:DialogPost/review_form:_response_preview.html.twig', [
+        return $this->render('DergiparkWorkflowBundle:DialogPost/review_form:_response_preview.html.twig', [
             'post' => $responsePost,
             'isArticleAuthor' => $isArticleAuthor,
         ]);
@@ -119,7 +119,7 @@ class ArticleReviewFormController extends Controller
         if($request->getMethod() == 'POST'){
             return $this->persistSubmittedForm($request, $reviewForm, $dialogId);
         }
-        return $this->render('OjsWorkflowBundle:DialogPost/review_form:_submit_form.html.twig', [
+        return $this->render('DergiparkWorkflowBundle:DialogPost/review_form:_submit_form.html.twig', [
             'reviewForm' => $reviewForm,
             'dialogId' => $dialogId,
         ]);
@@ -230,7 +230,7 @@ class ArticleReviewFormController extends Controller
         $this->throw404IfNotFound($dialog);
         $step  = $dialog->getStep();
 
-        return $this->render('OjsWorkflowBundle:DialogPost/review_form:_browse_review_form_responses.html.twig', [
+        return $this->render('DergiparkWorkflowBundle:DialogPost/review_form:_browse_review_form_responses.html.twig', [
             'formResponses' => $workflowService->getStepFormResponses($step),
             'dialogId' => $dialogId,
         ]);

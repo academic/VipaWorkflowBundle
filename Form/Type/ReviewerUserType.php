@@ -1,6 +1,6 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Form\Type;
+namespace Dergipark\WorkflowBundle\Form\Type;
 
 use Ojs\UserBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;

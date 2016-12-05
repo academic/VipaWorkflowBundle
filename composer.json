@@ -1,6 +1,6 @@
 {
-  "name": "ojs/workflow-bundle",
-  "description": "Workflow bundle for OJS",
+  "name": "dergipark/workflow-bundle",
+  "description": "Dergipark Workflow bundle for OJS",
   "type": "ojs-bundle",
   "authors": [
     {
@@ -9,7 +9,7 @@
     }
   ],
   "keywords": [
-    "ojs workflow bundle"
+    "dergipark workflow bundle"
   ],
   "license": [
     "MIT"
@@ -21,7 +21,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Ojs\\WorkflowBundle\\": ""
+      "Dergipark\\WorkflowBundle\\": ""
     }
   },
   "extra": {

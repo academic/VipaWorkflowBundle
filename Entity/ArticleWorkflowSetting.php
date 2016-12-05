@@ -1,10 +1,10 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Dergipark\WorkflowBundle\Entity;
 
 /**
  * Class ArticleWorkflowSetting
- * @package Ojs\WorkflowBundle\Entity
+ * @package Dergipark\WorkflowBundle\Entity
  */
 class ArticleWorkflowSetting
 {

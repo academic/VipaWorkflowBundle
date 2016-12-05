@@ -17,7 +17,7 @@
         <div class="alert alert-info">
              {{ 'workflow.exists.info'|trans }}
         </div>
-        <a href="{{ path('ojs_workflow_article_workflow', {'journalId': selectedJournal().id, 'workflowId' : currentWorkflow.id}) }}"
+        <a href="{{ path('dergipark_workflow_article_workflow', {'journalId': selectedJournal().id, 'workflowId' : currentWorkflow.id}) }}"
            class="btn btn-success pull-right">
             {{ 'view.current.process'|trans }}
         </a>

@@ -1,4 +1,4 @@
-Ojs\WorkflowBundle\Entity\JournalWorkflowSetting:
+Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting:
     properties:
         reviewerWaitDay:
             - Range:

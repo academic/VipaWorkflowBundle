@@ -1,6 +1,6 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Params;
+namespace Dergipark\WorkflowBundle\Params;
 
 class StepActionTypes
 {

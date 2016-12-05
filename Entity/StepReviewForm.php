@@ -1,10 +1,10 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Dergipark\WorkflowBundle\Entity;
 
 /**
  * Class JournalReviewForm
- * @package Ojs\WorkflowBundle\Entity
+ * @package Dergipark\WorkflowBundle\Entity
  */
 class StepReviewForm
 {

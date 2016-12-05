@@ -1,7 +1,7 @@
 <div class="row col-lg-12 text-center">
     <div class="col-lg-10">
         <div class="btn-group btn-breadcrumb">
-            <a href="{{ path('ojs_workflow_flow_active', {
+            <a href="{{ path('dergipark_workflow_flow_active', {
                 'journalId': timeline.journal.id
             }) }}" class="btn btn-default" data-toggle="tooltip" title="{{ 'workflow.actives'|trans }}"><i class="glyphicon glyphicon-flag"></i></a>
             {% for step in timeline.steps %}

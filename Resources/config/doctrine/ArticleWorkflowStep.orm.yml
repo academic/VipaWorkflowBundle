@@ -1,7 +1,7 @@
-Ojs\WorkflowBundle\Entity\ArticleWorkflowStep:
+Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep:
   type: entity
   table: bc_article_wf_step
-  repositoryClass: Ojs\WorkflowBundle\Entity\ArticleWorkflowStepRepository
+  repositoryClass: Dergipark\WorkflowBundle\Entity\ArticleWorkflowStepRepository
   type: entity
   id:
     id:
@@ -19,7 +19,7 @@ Ojs\WorkflowBundle\Entity\ArticleWorkflowStep:
       nullable: true
   manyToOne:
     articleWorkflow:
-      targetEntity: Ojs\WorkflowBundle\Entity\ArticleWorkflow
+      targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflow
       mappedBy: steps
       joinColumn:
         name: article_workflow_id

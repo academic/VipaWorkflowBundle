@@ -1,6 +1,6 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Event;
+namespace Dergipark\WorkflowBundle\Event;
 
 use Ojs\CoreBundle\Events\EventDetail;
 use Ojs\CoreBundle\Events\MailEventsInterface;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Form\Type;
+namespace Dergipark\WorkflowBundle\Form\Type;
 
-use Ojs\WorkflowBundle\Entity\JournalReviewForm;
+use Dergipark\WorkflowBundle\Entity\JournalReviewForm;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class JournalReviewFormType
- * @package Ojs\WorkflowBundle\Form\Type
+ * @package Dergipark\WorkflowBundle\Form\Type
  */
 class JournalReviewFormType extends AbstractType
 {

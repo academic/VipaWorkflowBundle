@@ -1,7 +1,7 @@
-Ojs\WorkflowBundle\Entity\JournalWorkflowStep:
+Dergipark\WorkflowBundle\Entity\JournalWorkflowStep:
   type: entity
   table: bc_journal_wf_step
-  repositoryClass: Ojs\WorkflowBundle\Entity\JournalWorkflowStepRepository
+  repositoryClass: Dergipark\WorkflowBundle\Entity\JournalWorkflowStepRepository
   type: entity
   id:
     id:

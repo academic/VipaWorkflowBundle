@@ -1,8 +1,8 @@
 <?php
 
-namespace Ojs\WorkflowBundle\EventListener;
+namespace Dergipark\WorkflowBundle\EventListener;
 
-use Ojs\WorkflowBundle\Service\WorkflowService;
+use Dergipark\WorkflowBundle\Service\WorkflowService;
 use Ojs\JournalBundle\Entity\Article;
 use Ojs\JournalBundle\Event\Article\ArticleEvents;
 use Ojs\JournalBundle\Event\JournalItemEvent;

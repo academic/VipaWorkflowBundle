@@ -1,13 +1,13 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Controller;
+namespace Dergipark\WorkflowBundle\Controller;
 
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\WorkflowBundle\Entity\ArticleWorkflowStep;
-use Ojs\WorkflowBundle\Event\WorkflowEvent;
-use Ojs\WorkflowBundle\Event\WorkflowEvents;
-use Ojs\WorkflowBundle\Form\Type\ArticleWfGrantedUsersType;
-use Ojs\WorkflowBundle\Params\StepStatus;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Dergipark\WorkflowBundle\Event\WorkflowEvent;
+use Dergipark\WorkflowBundle\Event\WorkflowEvents;
+use Dergipark\WorkflowBundle\Form\Type\ArticleWfGrantedUsersType;
+use Dergipark\WorkflowBundle\Params\StepStatus;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\JournalBundle\Entity\Journal;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +29,7 @@ class ArticleWorkflowController extends Controller
         if(!$this->get('dp.workflow_permission_service')->isInWorkflowRelatedUsers($workflow)){
             throw new AccessDeniedException;
         }
-        return $this->render('OjsWorkflowBundle:ArticleWorkflow:_timeline.html.twig', [
+        return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:_timeline.html.twig', [
             'timeline' => $workflowService->getWorkflowTimeline($workflow),
         ]);
     }
@@ -53,10 +53,10 @@ class ArticleWorkflowController extends Controller
             throw new AccessDeniedException;
         }
         if($step->getStatus() == StepStatus::NOT_OPENED){
-            return $this->render('OjsWorkflowBundle:ArticleWorkflow/steps:_not_opened.html.twig');
+            return $this->render('DergiparkWorkflowBundle:ArticleWorkflow/steps:_not_opened.html.twig');
         }
 
-        return $this->render('OjsWorkflowBundle:ArticleWorkflow:steps/_step_'.$stepOrder.'.html.twig', [
+        return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:steps/_step_'.$stepOrder.'.html.twig', [
             'step' => $step,
         ]);
     }
@@ -74,7 +74,7 @@ class ArticleWorkflowController extends Controller
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
 
-        return $this->render('OjsWorkflowBundle:ArticleWorkflow:_history_log.html.twig', [
+        return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:_history_log.html.twig', [
             'logs' => $workflowService->getWorkflowLogs($workflow),
         ]);
     }
@@ -92,7 +92,7 @@ class ArticleWorkflowController extends Controller
         if(!$this->get('dp.workflow_permission_service')->isInWorkflowRelatedUsers($workflow)){
             throw new AccessDeniedException;
         }
-        return $this->render('OjsWorkflowBundle:ArticleWorkflow:_permission_table.html.twig', [
+        return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:_permission_table.html.twig', [
             'permissions' => $workflowService->getPermissionsContainer($workflow),
             'workflow' => $workflow,
         ]);
@@ -138,7 +138,7 @@ class ArticleWorkflowController extends Controller
         }
 
         $form = $this->createForm(new ArticleWfGrantedUsersType(), $workflow, [
-            'action' => $this->generateUrl('ojs_article_workflow_granted_users_setup', [
+            'action' => $this->generateUrl('dergipark_article_workflow_granted_users_setup', [
                 'journalId' => $journal->getId(),
                 'workflowId' => $workflowId,
             ]),
@@ -171,7 +171,7 @@ class ArticleWorkflowController extends Controller
             }
         }
 
-        return $this->render('OjsWorkflowBundle:ArticleWorkflow:_article_workflow_granted_users_setup.html.twig', [
+        return $this->render('DergiparkWorkflowBundle:ArticleWorkflow:_article_workflow_granted_users_setup.html.twig', [
             'form' => $form->createView(),
         ]);
     }

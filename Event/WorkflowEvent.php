@@ -1,11 +1,11 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Event;
+namespace Dergipark\WorkflowBundle\Event;
 
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\WorkflowBundle\Entity\ArticleWorkflowStep;
-use Ojs\WorkflowBundle\Entity\DialogPost;
-use Ojs\WorkflowBundle\Entity\StepDialog;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Dergipark\WorkflowBundle\Entity\DialogPost;
+use Dergipark\WorkflowBundle\Entity\StepDialog;
 use Ojs\JournalBundle\Entity\Article;
 use Ojs\JournalBundle\Entity\Journal;
 use Ojs\UserBundle\Entity\User;

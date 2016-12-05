@@ -1,14 +1,14 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Dergipark\WorkflowBundle\Entity;
 
-use Ojs\WorkflowBundle\Params\DialogPostTypes;
+use Dergipark\WorkflowBundle\Params\DialogPostTypes;
 use Ojs\UserBundle\Entity\User;
 use APY\DataGridBundle\Grid\Mapping as GRID;
 
 /**
  * Class DialogPost
- * @package Ojs\WorkflowBundle\Entity
+ * @package Dergipark\WorkflowBundle\Entity
  * @GRID\Source(columns="id, sendedAt, sendedBy.username, reviewForm.name")
  */
 class DialogPost

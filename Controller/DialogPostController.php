@@ -1,12 +1,12 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Controller;
+namespace Dergipark\WorkflowBundle\Controller;
 
-use Ojs\WorkflowBundle\Entity\DialogPost;
-use Ojs\WorkflowBundle\Entity\StepDialog;
-use Ojs\WorkflowBundle\Event\WorkflowEvent;
-use Ojs\WorkflowBundle\Event\WorkflowEvents;
-use Ojs\WorkflowBundle\Params\DialogPostTypes;
+use Dergipark\WorkflowBundle\Entity\DialogPost;
+use Dergipark\WorkflowBundle\Entity\StepDialog;
+use Dergipark\WorkflowBundle\Event\WorkflowEvent;
+use Dergipark\WorkflowBundle\Event\WorkflowEvents;
+use Dergipark\WorkflowBundle\Params\DialogPostTypes;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Pagerfanta\Exception\LogicException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -35,7 +35,7 @@ class DialogPostController extends Controller
             'id' => 'ASC',
         ]);
 
-        return $this->render('OjsWorkflowBundle:DialogPost:_dialog_posts.html.twig', [
+        return $this->render('DergiparkWorkflowBundle:DialogPost:_dialog_posts.html.twig', [
             'posts' => $posts,
         ]);
     }
@@ -98,7 +98,7 @@ class DialogPostController extends Controller
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
 
-        return $this->render('OjsWorkflowBundle:DialogPost:_browse_files.html.twig', [
+        return $this->render('DergiparkWorkflowBundle:DialogPost:_browse_files.html.twig', [
             'files' => $workflowService->getUserRelatedFiles($workflow, $dialog),
             'dialogId' => $dialogId,
         ]);

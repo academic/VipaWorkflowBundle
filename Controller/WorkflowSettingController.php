@@ -1,11 +1,11 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Controller;
+namespace Dergipark\WorkflowBundle\Controller;
 
-use Ojs\WorkflowBundle\Entity\JournalWorkflowSetting;
-use Ojs\WorkflowBundle\Entity\JournalWorkflowStep;
-use Ojs\WorkflowBundle\Form\Type\JournalWfSettingType;
-use Ojs\WorkflowBundle\Form\Type\JournalWfStepType;
+use Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting;
+use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
+use Dergipark\WorkflowBundle\Form\Type\JournalWfSettingType;
+use Dergipark\WorkflowBundle\Form\Type\JournalWfStepType;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +29,7 @@ class WorkflowSettingController extends Controller
             'journal' => $journal,
         ], ['order' => 'ASC']);
         $journal = $this->get('ojs.journal_service')->getSelectedJournal();
-        return $this->render('OjsWorkflowBundle:WorkflowSetting:_workflow_setting.html.twig',[
+        return $this->render('DergiparkWorkflowBundle:WorkflowSetting:_workflow_setting.html.twig',[
             'journal' => $journal,
             'steps' => $journalSteps,
         ]);
@@ -58,7 +58,7 @@ class WorkflowSettingController extends Controller
         }
         $journalWorkflowSetting->setJournal($journal);
         $form = $this->createForm(new JournalWfSettingType(), $journalWorkflowSetting, [
-            'action' => $this->generateUrl('ojs_workflow_basic_settings', [
+            'action' => $this->generateUrl('dergipark_workflow_basic_settings', [
                 'journalId' => $journal->getId(),
             ])
         ]);
@@ -70,7 +70,7 @@ class WorkflowSettingController extends Controller
             $this->successFlashBag('successful.update');
         }
 
-        return $this->render('OjsWorkflowBundle:WorkflowSetting:_basic_journal_wf_setting.html.twig', [
+        return $this->render('DergiparkWorkflowBundle:WorkflowSetting:_basic_journal_wf_setting.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -101,7 +101,7 @@ class WorkflowSettingController extends Controller
         $journalWorkflowStep->setOrder($stepOrder);
 
         $form = $this->createForm(new JournalWfStepType(), $journalWorkflowStep, [
-            'action' => $this->generateUrl('ojs_workflow_step_users_setup', [
+            'action' => $this->generateUrl('dergipark_workflow_step_users_setup', [
                 'journalId' => $journal->getId(),
                 'stepOrder' => $stepOrder,
             ])
@@ -114,7 +114,7 @@ class WorkflowSettingController extends Controller
             $this->successFlashBag('successful.update');
         }
 
-        return $this->render('OjsWorkflowBundle:WorkflowSetting:_workflow_step_setting.html.twig', [
+        return $this->render('DergiparkWorkflowBundle:WorkflowSetting:_workflow_step_setting.html.twig', [
             'form' => $form->createView(),
         ]);
     }

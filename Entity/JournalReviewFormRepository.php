@@ -1,13 +1,13 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Dergipark\WorkflowBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 
 /**
  * Class JournalReviewFormRepository
- * @package Ojs\WorkflowBundle\Entity
+ * @package Dergipark\WorkflowBundle\Entity
  */
 class JournalReviewFormRepository extends EntityRepository
 {

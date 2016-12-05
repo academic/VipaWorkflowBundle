@@ -1,55 +1,55 @@
-ojs_workflow_article_workflow:
+dergipark_workflow_article_workflow:
   path:     /{workflowId}
-  defaults: { _controller: "OjsWorkflowBundle:ArticleWorkflow:timeline" }
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:timeline" }
 
-ojs_workflow_timeline_step:
+dergipark_workflow_timeline_step:
   path:     /{workflowId}/step/{stepOrder}
-  defaults: { _controller: "OjsWorkflowBundle:ArticleWorkflow:step" }
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:step" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
-ojs_workflow_history_log:
+dergipark_workflow_history_log:
   path:     /{workflowId}/history/log
-  defaults: { _controller: "OjsWorkflowBundle:ArticleWorkflow:historyLog" }
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:historyLog" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
-ojs_workflow_permission_table:
+dergipark_workflow_permission_table:
   path:     /{workflowId}/permission/table
-  defaults: { _controller: "OjsWorkflowBundle:ArticleWorkflow:permissionTable" }
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:permissionTable" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
-ojs_article_workflow_granted_users_setup:
+dergipark_article_workflow_granted_users_setup:
   path:     /{workflowId}/granted/users/setup
-  defaults: { _controller: "OjsWorkflowBundle:ArticleWorkflow:grantedUsersSetup" }
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:grantedUsersSetup" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
-ojs_workflow_article_detail:
+dergipark_workflow_article_detail:
   path:     /{workflowId}/article/detail
-  defaults: { _controller: "OjsWorkflowBundle:ArticleWorkflow:articleDetail" }
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleWorkflow:articleDetail" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 # step dialog related routing
-ojs_workflow_dialog:
+dergipark_workflow_dialog:
     resource: "dialog.yml"
     prefix:   /{workflowId}/step/{stepOrder}
 
 # dialog post related routing
-ojs_workflow_dialog_post:
+dergipark_workflow_dialog_post:
     resource: "post.yml"
     prefix:   /{workflowId}/step/{stepOrder}/dialog/{dialogId}
 
 dp_workflow_sync_step_review_forms:
   path:     /{workflowId}/step/{stepOrder}/sync/review-forms
-  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:syncReviewForms" }
+  defaults: { _controller: "DergiparkWorkflowBundle:ArticleReviewForm:syncReviewForms" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true

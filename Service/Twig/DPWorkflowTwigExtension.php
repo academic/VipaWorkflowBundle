@@ -1,13 +1,13 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Service\Twig;
+namespace Dergipark\WorkflowBundle\Service\Twig;
 
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\WorkflowBundle\Entity\ArticleWorkflowSetting;
-use Ojs\WorkflowBundle\Entity\StepDialog;
-use Ojs\WorkflowBundle\Params\JournalWorkflowSteps;
-use Ojs\WorkflowBundle\Params\StepActionTypes;
-use Ojs\WorkflowBundle\Service\WorkflowPermissionService;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflowSetting;
+use Dergipark\WorkflowBundle\Entity\StepDialog;
+use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
+use Dergipark\WorkflowBundle\Params\StepActionTypes;
+use Dergipark\WorkflowBundle\Service\WorkflowPermissionService;
 use Doctrine\ORM\EntityManager;
 use Ojs\JournalBundle\Entity\Author;
 use Ojs\JournalBundle\Service\JournalService;
@@ -131,27 +131,27 @@ class DPWorkflowTwigExtension extends \Twig_Extension
 
     public function getActionType($const)
     {
-        return constant('Ojs\WorkflowBundle\Params\StepActionTypes::'.$const);
+        return constant('Dergipark\WorkflowBundle\Params\StepActionTypes::'.$const);
     }
 
     public function getDialogStatus($const)
     {
-        return constant('Ojs\WorkflowBundle\Params\StepDialogStatus::'.$const);
+        return constant('Dergipark\WorkflowBundle\Params\StepDialogStatus::'.$const);
     }
 
     public function getWorkflowStatus($const)
     {
-        return constant('Ojs\WorkflowBundle\Params\ArticleWorkflowStatus::'.$const);
+        return constant('Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus::'.$const);
     }
 
     public function getStepStatus($const)
     {
-        return constant('Ojs\WorkflowBundle\Params\StepStatus::'.$const);
+        return constant('Dergipark\WorkflowBundle\Params\StepStatus::'.$const);
     }
 
     public function getPostType($const)
     {
-        return constant('Ojs\WorkflowBundle\Params\DialogPostTypes::'.$const);
+        return constant('Dergipark\WorkflowBundle\Params\DialogPostTypes::'.$const);
     }
 
     public function getJournalStepAlias($stepOrder)
@@ -166,7 +166,7 @@ class DPWorkflowTwigExtension extends \Twig_Extension
 
     public function getName()
     {
-        return 'ojs_workflow_extension';
+        return 'dergipark_workflow_extension';
     }
 
     public function getPermissionCheck()
@@ -319,7 +319,7 @@ class DPWorkflowTwigExtension extends \Twig_Extension
      */
     private function renderReviewMessage($block, $params = [])
     {
-        $template = $this->twig->loadTemplate('OjsWorkflowBundle:StepDialog/dialog/messages:_reviewer_message_box.html.twig');
+        $template = $this->twig->loadTemplate('DergiparkWorkflowBundle:StepDialog/dialog/messages:_reviewer_message_box.html.twig');
 
         return $template->renderBlock($block, $params);
     }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Service;
+namespace Dergipark\WorkflowBundle\Service;
 
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\WorkflowBundle\Entity\WorkflowHistoryLog;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
+use Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog;
 use Doctrine\ORM\EntityManager;
 use JMS\Serializer\Exception\LogicException;
 use Ojs\JournalBundle\Service\JournalService;

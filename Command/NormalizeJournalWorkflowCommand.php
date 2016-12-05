@@ -1,9 +1,9 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Command;
+namespace Dergipark\WorkflowBundle\Command;
 
-use Ojs\WorkflowBundle\Entity\JournalWorkflowSetting;
-use Ojs\WorkflowBundle\Entity\JournalWorkflowStep;
+use Dergipark\WorkflowBundle\Entity\JournalWorkflowSetting;
+use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Ojs\JournalBundle\Entity\Journal;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class NormalizeJournalWorkflowCommand
- * @package Ojs\WorkflowBundle\Command
+ * @package Dergipark\DergiparkWorkflowBundle\Command
  */
 class NormalizeJournalWorkflowCommand extends ContainerAwareCommand
 {
@@ -45,7 +45,7 @@ class NormalizeJournalWorkflowCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('ojs:normalize:journal:workflow')
+            ->setName('dergipark:normalize:journal:workflow')
             ->setDescription('Normalize journal workflows.')
         ;
     }

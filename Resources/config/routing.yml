@@ -1,31 +1,31 @@
-ojs_workflow:
+dergipark_workflow:
     resource: "routing/workflow.yml"
     prefix:   /journal/{journalId}/workflow/
 
-ojs_workflow_review_form:
+dergipark_workflow_review_form:
     resource: "routing/journal_review_form.yml"
     prefix:   /journal/{journalId}/workflow/{stepId}/review-form
 
-ojs_workflow_export_review_form:
+dergipark_workflow_export_review_form:
     resource: "routing/export_review_form.yml"
     prefix:   /journal/{journalId}/export/review-form
 
-ojs_workflow_step:
+dergipark_workflow_step:
     resource: "routing/wf_setting.yml"
     prefix:   /journal/{journalId}/workflow-setting/
 
-ojs_workflow_article_workflow:
+dergipark_workflow_article_workflow:
     resource: "routing/article_workflow.yml"
     prefix:   /journal/{journalId}/article-workflow/
 
-ojs_workflow_restart:
+dergipark_workflow_restart:
     resource: "routing/restart_workflow.yml"
     prefix:   /journal/{journalId}/restart-workflow
 
-ojs_workflow_article:
+dergipark_workflow_article:
     resource: "routing/article.yml"
     prefix:   /journal/{journalId}/article
 
-ojs_workflow_users:
+dergipark_workflow_users:
     resource: "routing/users.yml"
     prefix:   /journal/{journalId}/workflow/{workflowId}/users

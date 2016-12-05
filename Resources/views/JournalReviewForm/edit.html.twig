@@ -11,7 +11,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets '@OjsWorkflowBundle/Resources/public/css/review-form/*'  output="assets/prod/css/review_form.css" %}
+    {% stylesheets '@DergiparkWorkflowBundle/Resources/public/css/review-form/*'  output="assets/prod/css/review_form.css" %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
 {% endblock %}
@@ -43,7 +43,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts '@OjsWorkflowBundle/Resources/public/js/review-form/*' output="assets/prod/js/review_form.js" %}
+    {% javascripts '@DergiparkWorkflowBundle/Resources/public/js/review-form/*' output="assets/prod/js/review_form.js" %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}

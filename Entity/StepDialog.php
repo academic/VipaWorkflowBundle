@@ -1,17 +1,17 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Dergipark\WorkflowBundle\Entity;
 
-use Ojs\WorkflowBundle\Params\StepDialogStatus;
+use Dergipark\WorkflowBundle\Params\StepDialogStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Ojs\JournalBundle\Entity\ArticleTrait;
 use Ojs\JournalBundle\Entity\JournalTrait;
 use Ojs\UserBundle\Entity\User;
-use Ojs\WorkflowBundle\Params\ArticleWorkflowStatus;
+use Dergipark\WorkflowBundle\Params\ArticleWorkflowStatus;
 
 /**
  * Class StepDialog
- * @package Ojs\WorkflowBundle\Entity
+ * @package Dergipark\WorkflowBundle\Entity
  */
 class StepDialog
 {

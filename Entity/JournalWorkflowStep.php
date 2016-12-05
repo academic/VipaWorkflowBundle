@@ -1,6 +1,6 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Dergipark\WorkflowBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Ojs\JournalBundle\Entity\JournalTrait;

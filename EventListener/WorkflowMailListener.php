@@ -1,15 +1,15 @@
 <?php
 
-namespace Ojs\WorkflowBundle\EventListener;
+namespace Dergipark\WorkflowBundle\EventListener;
 
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\WorkflowBundle\Entity\ArticleWorkflowSetting;
-use Ojs\WorkflowBundle\Entity\JournalWorkflowStep;
-use Ojs\WorkflowBundle\Entity\StepDialog;
-use Ojs\WorkflowBundle\Event\WorkflowEvent;
-use Ojs\WorkflowBundle\Event\WorkflowEvents;
-use Ojs\WorkflowBundle\Params\JournalWorkflowSteps;
-use Ojs\WorkflowBundle\Params\StepActionTypes;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
+use Dergipark\WorkflowBundle\Entity\ArticleWorkflowSetting;
+use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
+use Dergipark\WorkflowBundle\Entity\StepDialog;
+use Dergipark\WorkflowBundle\Event\WorkflowEvent;
+use Dergipark\WorkflowBundle\Event\WorkflowEvents;
+use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
+use Dergipark\WorkflowBundle\Params\StepActionTypes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Ojs\CoreBundle\Service\OjsMailer;
@@ -132,7 +132,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'article.author'    => $accessor->getValue($event, 'article.submitterUser.username'),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -163,7 +163,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -196,7 +196,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'           => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId'     => $event->journal->getId(),
                     'workflowId'    => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -229,7 +229,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -260,7 +260,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         }
         $transformParams = [
             'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-            'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+            'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                 'journalId' => $event->journal->getId(),
                 'workflowId' => $event->workflow->getId(),
             ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -294,7 +294,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -331,7 +331,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -375,7 +375,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -411,7 +411,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -446,7 +446,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -482,7 +482,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -517,7 +517,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -551,7 +551,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -585,7 +585,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -619,7 +619,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -654,7 +654,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -690,7 +690,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -722,7 +722,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         $reviewerUser = $event->dialog->users->first();
         $transformParams = [
             'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-            'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+            'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                 'journalId' => $event->journal->getId(),
                 'workflowId' => $event->workflow->getId(),
             ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -765,7 +765,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -795,7 +795,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         $reviewerUser = $event->dialog->users->first();
         $transformParams = [
             'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-            'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+            'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                 'journalId' => $event->journal->getId(),
                 'workflowId' => $event->workflow->getId(),
             ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -835,7 +835,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -866,7 +866,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         }
         $transformParams = [
             'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-            'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+            'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                 'journalId' => $event->journal->getId(),
                 'workflowId' => $event->workflow->getId(),
             ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -894,7 +894,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -927,7 +927,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         }
         $transformParams = [
             'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-            'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+            'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                 'journalId' => $event->journal->getId(),
                 'workflowId' => $event->workflow->getId(),
             ], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -955,7 +955,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         foreach ($mailUsers as $user) {
             $transformParams = [
                 'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
+                'related.link'      => $this->router->generate('dergipark_workflow_article_workflow', [
                     'journalId' => $event->journal->getId(),
                     'workflowId' => $event->workflow->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL),

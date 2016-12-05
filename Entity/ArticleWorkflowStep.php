@@ -1,14 +1,14 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Dergipark\WorkflowBundle\Entity;
 
-use Ojs\WorkflowBundle\Params\StepStatus;
+use Dergipark\WorkflowBundle\Params\StepStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Ojs\UserBundle\Entity\User;
 
 /**
  * Class ArticleWorkflowStep
- * @package Ojs\WorkflowBundle\Entity
+ * @package Dergipark\WorkflowBundle\Entity
  */
 class ArticleWorkflowStep
 {
