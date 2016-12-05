@@ -477,7 +477,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         $mailUsers = $this->mergeUserBags(
             $this->getJournalEditors(),
             [$event->article->getSubmitterUser()],
-            ($event->workflow->getStepByOrder(JournalWorkflowSteps::ARRANGEMENT_ORDER))->getGrantedUsers()
+            $event->workflow->getStepByOrder(JournalWorkflowSteps::ARRANGEMENT_ORDER)->getGrantedUsers()
         );
         foreach ($mailUsers as $user) {
             $transformParams = [
@@ -512,7 +512,7 @@ class WorkflowMailListener implements EventSubscriberInterface
         $mailUsers = $this->mergeUserBags(
             $this->getJournalEditors(),
             [$event->article->getSubmitterUser()],
-            ($event->workflow->getStepByOrder(JournalWorkflowSteps::REVIEW_ORDER))->getGrantedUsers()
+            $event->workflow->getStepByOrder(JournalWorkflowSteps::REVIEW_ORDER)->getGrantedUsers()
         );
         foreach ($mailUsers as $user) {
             $transformParams = [
