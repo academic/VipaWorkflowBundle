@@ -1,27 +1,27 @@
 dp_workflow_dialog_posts:
   path:     /posts
-  defaults: { _controller: "DergiparkWorkflowBundle:DialogPost:getPosts" }
+  defaults: { _controller: "OjsWorkflowBundle:DialogPost:getPosts" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_dialog_posts_new_comment:
   path:     /new-comment
-  defaults: { _controller: "DergiparkWorkflowBundle:DialogPost:postComment" }
+  defaults: { _controller: "OjsWorkflowBundle:DialogPost:postComment" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_dialog_posts_browse_files:
   path:     /browse-files
-  defaults: { _controller: "DergiparkWorkflowBundle:DialogPost:browseFiles" }
+  defaults: { _controller: "OjsWorkflowBundle:DialogPost:browseFiles" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_dialog_posts_new_file:
   path:     /new-file
-  defaults: { _controller: "DergiparkWorkflowBundle:DialogPost:postFile" }
+  defaults: { _controller: "OjsWorkflowBundle:DialogPost:postFile" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true

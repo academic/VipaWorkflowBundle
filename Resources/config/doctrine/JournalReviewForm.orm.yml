@@ -1,7 +1,7 @@
-Dergipark\WorkflowBundle\Entity\JournalReviewForm:
+Ojs\WorkflowBundle\Entity\JournalReviewForm:
   type: entity
   table: bc_journal_review_form
-  repositoryClass: Dergipark\WorkflowBundle\Entity\JournalReviewFormRepository
+  repositoryClass: Ojs\WorkflowBundle\Entity\JournalReviewFormRepository
   type: entity
   id:
     id:
@@ -25,7 +25,7 @@ Dergipark\WorkflowBundle\Entity\JournalReviewForm:
       nullable: true
   manyToOne:
     step:
-      targetEntity: Dergipark\WorkflowBundle\Entity\JournalWorkflowStep
+      targetEntity: Ojs\WorkflowBundle\Entity\JournalWorkflowStep
       joinColumn:
         name: journal_step_id
         referencedColumnName: id

@@ -1,8 +1,8 @@
 {% for dialog in dialogs %}
     {% if dialog.dialogType == actionType('ASSIGN_REVIEWER') %}
-        {% include 'DergiparkWorkflowBundle:StepDialog/dialog:_assign_reviewer.html.twig' %}
+        {% include 'OjsWorkflowBundle:StepDialog/dialog:_assign_reviewer.html.twig' %}
     {% else %}
-        {% include 'DergiparkWorkflowBundle:StepDialog/dialog:_general_dialog.html.twig' %}
+        {% include 'OjsWorkflowBundle:StepDialog/dialog:_general_dialog.html.twig' %}
     {% endif %}
 {% endfor %}
 <script>

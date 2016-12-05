@@ -1,6 +1,6 @@
 services:
-  dergipark.workflow_extension:
-    class: Dergipark\WorkflowBundle\Service\Twig\DPWorkflowTwigExtension
+  ojs.workflow_extension:
+    class: Ojs\WorkflowBundle\Service\Twig\DPWorkflowTwigExtension
     arguments:
       - "@doctrine.orm.entity_manager"
       - "@router"
@@ -16,7 +16,7 @@ services:
       - { name: twig.extension }
 
   dp.workflow.left_menu_listener:
-    class: Dergipark\WorkflowBundle\EventListener\LeftMenuListener
+    class: Ojs\WorkflowBundle\EventListener\LeftMenuListener
     arguments:
       - "@security.authorization_checker"
       - "@ojs.journal_service"
@@ -25,7 +25,7 @@ services:
       - { name: kernel.event_subscriber }
 
   dp.workflow_service:
-    class: Dergipark\WorkflowBundle\Service\WorkflowService
+    class: Ojs\WorkflowBundle\Service\WorkflowService
     arguments:
       - "@doctrine.orm.entity_manager"
       - "@ojs.journal_service"
@@ -37,42 +37,42 @@ services:
       - "@event_dispatcher"
 
   dp.workflow_permission_service:
-    class: Dergipark\WorkflowBundle\Service\WorkflowPermissionService
+    class: Ojs\WorkflowBundle\Service\WorkflowPermissionService
     arguments:
       - "@ojs.journal_service"
       - "@security.token_storage"
       - "@doctrine.orm.entity_manager"
 
   dp.wf_logger_service:
-    class: Dergipark\WorkflowBundle\Service\WorkflowLoggerService
+    class: Ojs\WorkflowBundle\Service\WorkflowLoggerService
     arguments:
       - "@doctrine.orm.entity_manager"
       - "@ojs.journal_service"
       - "@translator"
 
   dp.workflow.article_submit_event_listener:
-    class: Dergipark\WorkflowBundle\EventListener\ArticleSubmitEventListener
+    class: Ojs\WorkflowBundle\EventListener\ArticleSubmitEventListener
     arguments: ["@dp.workflow_service"]
     tags:
       - { name: kernel.event_subscriber }
 
   dp_workflow.workflow_events:
-    class: Dergipark\WorkflowBundle\Event\WorkflowEvents
+    class: Ojs\WorkflowBundle\Event\WorkflowEvents
     tags:
       - { name: ojs.mail.event}
 
   dp.worklfow.mail_listener:
-    class: Dergipark\WorkflowBundle\EventListener\WorkflowMailListener
+    class: Ojs\WorkflowBundle\EventListener\WorkflowMailListener
     arguments: ["@router", "@doctrine.orm.entity_manager", "@ojs_mailer", "@translator"]
     tags:
       - { name: kernel.event_subscriber }
 
   dp.worklfow.article_list_event_listener:
-    class: Dergipark\WorkflowBundle\EventListener\ArticleListEventListener
+    class: Ojs\WorkflowBundle\EventListener\ArticleListEventListener
     arguments: ["@ojs.journal_service", "@doctrine.orm.entity_manager", "@router", "@translator"]
     tags:
       - { name: kernel.event_subscriber }
 
   dp.workflow_export_grid_action:
-    class: Dergipark\WorkflowBundle\Service\ExportGridAction
+    class: Ojs\WorkflowBundle\Service\ExportGridAction
     arguments: ["@translator"]

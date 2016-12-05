@@ -17,7 +17,7 @@ $(document).ready(function() {
         stepGrantedUsersSetup: function($this, $stepOrder) {
             $.fancybox({
                 type: 'ajax',
-                href: Routing.generate('dergipark_workflow_step_users_setup', {journalId: journalId, stepOrder: $stepOrder}),
+                href: Routing.generate('ojs_workflow_step_users_setup', {journalId: journalId, stepOrder: $stepOrder}),
                 autoSize: false,
                 width: '600px',
                 maxWidth: '600px',
@@ -40,7 +40,7 @@ $(document).ready(function() {
         setupWorkflowGrantedUsers: function($this) {
             $.fancybox({
                 type: 'ajax',
-                href: Routing.generate('dergipark_article_workflow_granted_users_setup', {
+                href: Routing.generate('ojs_article_workflow_granted_users_setup', {
                     journalId: journalId,
                     workflowId: workflowId
                 }),
@@ -72,14 +72,14 @@ $(document).ready(function() {
         showSubmissionDetail: function () {
             $.fancybox({
                 type: 'ajax',
-                href: Routing.generate('dergipark_workflow_article_detail', {
+                href: Routing.generate('ojs_workflow_article_detail', {
                     journalId: journalId,
                     workflowId: workflowId
                 })
             });
         },
         loadStep: function ($stepOrder) {
-            $.get(Routing.generate('dergipark_workflow_timeline_step', {
+            $.get(Routing.generate('ojs_workflow_timeline_step', {
                 journalId: journalId,
                 workflowId: workflowId,
                 stepOrder: $stepOrder
@@ -162,7 +162,7 @@ $(document).ready(function() {
         showHistoryLog: function ($this) {
             $.fancybox({
                 type: 'ajax',
-                href: Routing.generate('dergipark_workflow_history_log', {
+                href: Routing.generate('ojs_workflow_history_log', {
                     journalId: journalId,
                     workflowId: workflowId
                 })
@@ -171,7 +171,7 @@ $(document).ready(function() {
         showPermissionTable: function ($this) {
             $.fancybox({
                 type: 'ajax',
-                href: Routing.generate('dergipark_workflow_permission_table', {
+                href: Routing.generate('ojs_workflow_permission_table', {
                     journalId: journalId,
                     workflowId: workflowId
                 })
@@ -476,7 +476,7 @@ $(document).ready(function() {
                             Translator.trans('successful'),
                             Translator.trans('successful.go.to.other.workflows'), "success"
                         );
-                        window.location = Routing.generate('dergipark_workflow_flow_active', {
+                        window.location = Routing.generate('ojs_workflow_flow_active', {
                             journalId: journalId
                         });
                     }else{
@@ -660,7 +660,7 @@ $(document).ready(function() {
             });
         },
         browseReviewerUsers: function ($this, $dialogId) {
-            var browseUrl = Routing.generate('dergipark_workflow_reviewers_browse', {
+            var browseUrl = Routing.generate('ojs_workflow_reviewers_browse', {
                 journalId: journalId,
                 workflowId: workflowId,
                 stepOrder: stepOrder
@@ -669,7 +669,7 @@ $(document).ready(function() {
             browseWindow.focus();
         },
         browseSectionEditorUsers: function ($this, $dialogId) {
-            var browseUrl = Routing.generate('dergipark_workflow_section_editors_browse', {
+            var browseUrl = Routing.generate('ojs_workflow_section_editors_browse', {
                 journalId: journalId,
                 workflowId: workflowId,
                 stepOrder: stepOrder
@@ -692,7 +692,7 @@ $(document).ready(function() {
         createReviewerUser: function(){
             $.fancybox({
                 type: 'ajax',
-                href: Routing.generate('dergipark_workflow_create_reviewer_user', {
+                href: Routing.generate('ojs_workflow_create_reviewer_user', {
                     journalId: journalId,
                     workflowId: workflowId,
                     stepOrder: stepOrder

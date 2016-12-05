@@ -1,13 +1,13 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\Service;
+namespace Ojs\WorkflowBundle\Service;
 
 use APY\DataGridBundle\Grid\Action\RowAction;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class ExportGridAction
- * @package Dergipark\WorkflowBundle\Service
+ * @package Ojs\WorkflowBundle\Service
  */
 class ExportGridAction
 {

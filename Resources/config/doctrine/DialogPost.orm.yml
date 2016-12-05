@@ -1,7 +1,7 @@
-Dergipark\WorkflowBundle\Entity\DialogPost:
+Ojs\WorkflowBundle\Entity\DialogPost:
   type: entity
   table: bc_wf_dialog_post
-  repositoryClass: Dergipark\WorkflowBundle\Entity\DialogPostRepository
+  repositoryClass: Ojs\WorkflowBundle\Entity\DialogPostRepository
   type: entity
   id:
     id:
@@ -33,18 +33,18 @@ Dergipark\WorkflowBundle\Entity\DialogPost:
       nullable: true
   manyToOne:
     dialog:
-      targetEntity: Dergipark\WorkflowBundle\Entity\StepDialog
+      targetEntity: Ojs\WorkflowBundle\Entity\StepDialog
       joinColumn:
         name: dialog_id
         referencedColumnName: id
     relatedPost:
-      targetEntity: Dergipark\WorkflowBundle\Entity\DialogPost
+      targetEntity: Ojs\WorkflowBundle\Entity\DialogPost
       joinColumn:
         nullable: true
         name: related_post_id
         referencedColumnName: id
     reviewForm:
-      targetEntity: Dergipark\WorkflowBundle\Entity\StepReviewForm
+      targetEntity: Ojs\WorkflowBundle\Entity\StepReviewForm
       joinColumn:
         name: review_form_id
         referencedColumnName: id

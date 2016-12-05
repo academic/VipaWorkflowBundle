@@ -1,13 +1,13 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\Controller;
+namespace Ojs\WorkflowBundle\Controller;
 
 use APY\DataGridBundle\Grid\Column\ActionsColumn;
 use APY\DataGridBundle\Grid\Source\Entity;
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
-use Dergipark\WorkflowBundle\Entity\JournalReviewForm;
-use Dergipark\WorkflowBundle\Entity\JournalWorkflowStep;
-use Dergipark\WorkflowBundle\Form\Type\JournalReviewFormType;
+use Ojs\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Ojs\WorkflowBundle\Entity\JournalReviewForm;
+use Ojs\WorkflowBundle\Entity\JournalWorkflowStep;
+use Ojs\WorkflowBundle\Form\Type\JournalReviewFormType;
 use Doctrine\ORM\QueryBuilder;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\CoreBundle\Params\ArticleFileParams;
@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 
 /**
  * Class JournalReviewFormController
- * @package Dergipark\WorkflowBundle\Controller
+ * @package Ojs\WorkflowBundle\Controller
  */
 class JournalReviewFormController extends Controller
 {
@@ -43,7 +43,7 @@ class JournalReviewFormController extends Controller
         $step = $em->getRepository(JournalWorkflowStep::class)->find($stepId);
         $this->throw404IfNotFound($step);
 
-        $source = new Entity('DergiparkWorkflowBundle:JournalReviewForm');
+        $source = new Entity('OjsWorkflowBundle:JournalReviewForm');
         $tableAlias = $source->getTableAlias();
         $source->manipulateQuery(
             function (QueryBuilder $qb) use ($step, $tableAlias) {
@@ -76,7 +76,7 @@ class JournalReviewFormController extends Controller
         $data['grid'] = $grid;
         $data['step'] = $step;
 
-        return $grid->getGridResponse('DergiparkWorkflowBundle:JournalReviewForm:index.html.twig', $data);
+        return $grid->getGridResponse('OjsWorkflowBundle:JournalReviewForm:index.html.twig', $data);
     }
 
     /**
@@ -118,7 +118,7 @@ class JournalReviewFormController extends Controller
         }
 
         return $this->render(
-            'DergiparkWorkflowBundle:JournalReviewForm:new.html.twig',
+            'OjsWorkflowBundle:JournalReviewForm:new.html.twig',
             [
                 'entity'    => $entity,
                 'form'      => $form->createView(),
@@ -169,7 +169,7 @@ class JournalReviewFormController extends Controller
             ->add('create', 'submit', ['label' => 'c']);
 
         return $this->render(
-            'DergiparkWorkflowBundle:JournalReviewForm:new.html.twig',
+            'OjsWorkflowBundle:JournalReviewForm:new.html.twig',
             [
                 'entity'    => $entity,
                 'form'      => $form->createView(),
@@ -207,7 +207,7 @@ class JournalReviewFormController extends Controller
             ->refreshToken('dp_workflow_review_form'.$entity->getId());
 
         return $this->render(
-            'DergiparkWorkflowBundle:JournalReviewForm:show.html.twig',
+            'OjsWorkflowBundle:JournalReviewForm:show.html.twig',
             [
                 'entity' => $entity,
                 'token'  => $token,
@@ -247,7 +247,7 @@ class JournalReviewFormController extends Controller
             ->refreshToken('dp_workflow_review_form'.$entity->getId());
 
         return $this->render(
-            'DergiparkWorkflowBundle:JournalReviewForm:edit.html.twig',
+            'OjsWorkflowBundle:JournalReviewForm:edit.html.twig',
             [
                 'entity'    => $entity,
                 'edit_form' => $editForm->createView(),
@@ -331,7 +331,7 @@ class JournalReviewFormController extends Controller
         }
 
         return $this->render(
-            'DergiparkWorkflowBundle:JournalReviewForm:edit.html.twig',
+            'OjsWorkflowBundle:JournalReviewForm:edit.html.twig',
             [
                 'entity'    => $entity,
                 'edit_form' => $editForm->createView(),

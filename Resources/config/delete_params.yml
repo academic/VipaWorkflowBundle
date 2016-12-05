@@ -2,4 +2,4 @@ Ojs\JournalBundle\Entity\Article:
   preDelete:
     - { entityName: 'OjsAnalyticsBundle:ArticleStatistic', field: 'article' }
   checkUse:
-    - { entityName: 'DergiparkWorkflowBundle:ArticleWorkflow', field: 'article' }
+    - { entityName: 'OjsWorkflowBundle:ArticleWorkflow', field: 'article' }

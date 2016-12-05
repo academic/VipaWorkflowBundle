@@ -3,7 +3,7 @@
 {% block breadcrumb %}
     {% set list = [
         {'link': path('ojs_journal_dashboard_index', {journalId: selectedJournal().id}), 'title': 'dashboard'|trans},
-        {'link': path('dergipark_workflow_step_index', {'journalId': selectedJournal().id}),'title': 'title.workflow_settings'|trans},
+        {'link': path('ojs_workflow_step_index', {'journalId': selectedJournal().id}),'title': 'title.workflow_settings'|trans},
         {'title': 'title.review_form_new'|trans}
     ] %}
     {{ breadcrumb(list) }}
@@ -11,7 +11,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets '@DergiparkWorkflowBundle/Resources/public/css/review-form/*'  output="assets/prod/css/review_form.css" %}
+    {% stylesheets '@OjsWorkflowBundle/Resources/public/css/review-form/*'  output="assets/prod/css/review_form.css" %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
 {% endblock %}
@@ -36,7 +36,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts '@DergiparkWorkflowBundle/Resources/public/js/review-form/*' output="assets/prod/js/review_form.js" %}
+    {% javascripts '@OjsWorkflowBundle/Resources/public/js/review-form/*' output="assets/prod/js/review_form.js" %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}

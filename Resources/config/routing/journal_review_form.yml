@@ -1,30 +1,30 @@
 dp_workflow_review_form:
     path:     /
-    defaults: { _controller: "DergiparkWorkflowBundle:JournalReviewForm:index" }
+    defaults: { _controller: "OjsWorkflowBundle:JournalReviewForm:index" }
 
 dp_workflow_review_form_show:
     path:     /{id}/show
-    defaults: { _controller: "DergiparkWorkflowBundle:JournalReviewForm:show" }
+    defaults: { _controller: "OjsWorkflowBundle:JournalReviewForm:show" }
 
 dp_workflow_review_form_new:
     path:     /new
-    defaults: { _controller: "DergiparkWorkflowBundle:JournalReviewForm:new" }
+    defaults: { _controller: "OjsWorkflowBundle:JournalReviewForm:new" }
 
 dp_workflow_review_form_create:
     path:     /create
-    defaults: { _controller: "DergiparkWorkflowBundle:JournalReviewForm:create" }
+    defaults: { _controller: "OjsWorkflowBundle:JournalReviewForm:create" }
     methods: [POST]
 
 dp_workflow_review_form_edit:
     path:     /{id}/edit
-    defaults: { _controller: "DergiparkWorkflowBundle:JournalReviewForm:edit" }
+    defaults: { _controller: "OjsWorkflowBundle:JournalReviewForm:edit" }
 
 dp_workflow_review_form_update:
     path:     /{id}/update
-    defaults: { _controller: "DergiparkWorkflowBundle:JournalReviewForm:update" }
+    defaults: { _controller: "OjsWorkflowBundle:JournalReviewForm:update" }
     methods:  [PUT]
 
 dp_workflow_review_form_delete:
     path:     /{id}/delete
-    defaults: { _controller: "DergiparkWorkflowBundle:JournalReviewForm:delete" }
+    defaults: { _controller: "OjsWorkflowBundle:JournalReviewForm:delete" }
     methods:  [DELETE]

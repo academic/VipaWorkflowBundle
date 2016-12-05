@@ -1,8 +1,8 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\EventListener;
+namespace Ojs\WorkflowBundle\EventListener;
 
-use Dergipark\WorkflowBundle\Service\WorkflowPermissionService;
+use Ojs\WorkflowBundle\Service\WorkflowPermissionService;
 use Ojs\CoreBundle\Acl\AuthorizationChecker;
 use Ojs\JournalBundle\Event\MenuEvent;
 use Ojs\JournalBundle\Event\MenuEvents;
@@ -68,7 +68,7 @@ class LeftMenuListener implements EventSubscriberInterface
             ['title.export.review.forms', 'dp_workflow_export_review_form', 'download'],
         ];
         if($this->wfPermissionService->isHaveEditorRole()){
-            $items[] = ['workflow.setting', 'dergipark_workflow_step_index', 'random'];
+            $items[] = ['workflow.setting', 'ojs_workflow_step_index', 'random'];
         }
         foreach ($items as $item) {
             $label = $item[0];
@@ -98,8 +98,8 @@ class LeftMenuListener implements EventSubscriberInterface
             $menuItem = $menuEvent->getMenuItem();
             $items = [
                 // [field, label, route, icon]
-                ['articles_in_review', 'dergipark_workflow_flow_active', 'flag'],
-                ['wf.flow_history', 'dergipark_workflow_flow_history', 'history'],
+                ['articles_in_review', 'ojs_workflow_flow_active', 'flag'],
+                ['wf.flow_history', 'ojs_workflow_flow_history', 'history'],
             ];
             foreach ($items as $item) {
                 $label = $item[0];

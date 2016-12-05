@@ -1,6 +1,6 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\Entity;
+namespace Ojs\WorkflowBundle\Entity;
 
 use Ojs\JournalBundle\Entity\JournalTrait;
 

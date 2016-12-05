@@ -1,7 +1,7 @@
-Dergipark\WorkflowBundle\Entity\ArticleWorkflowSetting:
+Ojs\WorkflowBundle\Entity\ArticleWorkflowSetting:
   type: entity
   table: bc_wf_article_wf_setting
-  repositoryClass: Dergipark\WorkflowBundle\Entity\ArticleWorkflowSettingRepository
+  repositoryClass: Ojs\WorkflowBundle\Entity\ArticleWorkflowSettingRepository
   cache:
     usage: NONSTRICT_READ_WRITE
   id:
@@ -12,7 +12,7 @@ Dergipark\WorkflowBundle\Entity\ArticleWorkflowSetting:
         strategy: AUTO
   manyToOne:
     workflow:
-      targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflow
+      targetEntity: Ojs\WorkflowBundle\Entity\ArticleWorkflow
       joinColumn:
         name: workflow_id
         referencedColumnName: id

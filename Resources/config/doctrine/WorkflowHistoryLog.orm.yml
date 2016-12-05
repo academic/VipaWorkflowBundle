@@ -1,7 +1,7 @@
-Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog:
+Ojs\WorkflowBundle\Entity\WorkflowHistoryLog:
   type: entity
   table: bc_wf_history_log
-  repositoryClass: Dergipark\WorkflowBundle\Entity\WorkflowHistoryLogRepository
+  repositoryClass: Ojs\WorkflowBundle\Entity\WorkflowHistoryLogRepository
   cache:
     usage: NONSTRICT_READ_WRITE
   id:
@@ -27,7 +27,7 @@ Dergipark\WorkflowBundle\Entity\WorkflowHistoryLog:
       nullable: true
   manyToOne:
     articleWorkflow:
-      targetEntity: Dergipark\WorkflowBundle\Entity\ArticleWorkflow
+      targetEntity: Ojs\WorkflowBundle\Entity\ArticleWorkflow
       joinColumn:
         name: article_workflow_id
         referencedColumnName: id

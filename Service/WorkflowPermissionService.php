@@ -1,11 +1,11 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\Service;
+namespace Ojs\WorkflowBundle\Service;
 
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflowStep;
-use Dergipark\WorkflowBundle\Entity\StepDialog;
-use Dergipark\WorkflowBundle\Params\StepActionTypes;
+use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
+use Ojs\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Ojs\WorkflowBundle\Entity\StepDialog;
+use Ojs\WorkflowBundle\Params\StepActionTypes;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Ojs\JournalBundle\Service\JournalService;

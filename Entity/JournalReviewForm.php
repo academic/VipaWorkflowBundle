@@ -1,13 +1,13 @@
 <?php
 
-namespace Dergipark\WorkflowBundle\Entity;
+namespace Ojs\WorkflowBundle\Entity;
 
 use APY\DataGridBundle\Grid\Mapping as GRID;
 use Ojs\CoreBundle\Entity\DisplayTrait;
 
 /**
  * Class JournalReviewForm
- * @package Dergipark\WorkflowBundle\Entity
+ * @package Ojs\WorkflowBundle\Entity
  * @GRID\Source(columns="id,name,active")
  */
 class JournalReviewForm
