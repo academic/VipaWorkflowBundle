@@ -76,3 +76,9 @@ services:
   dp.workflow_export_grid_action:
     class: Ojs\WorkflowBundle\Service\ExportGridAction
     arguments: ["@translator"]
+
+  dp.worklfow.article_crud_listener:
+    class: Ojs\WorkflowBundle\EventListener\ArticleCrudListener
+    arguments: ["@doctrine.orm.entity_manager", "@dp.workflow_service"]
+    tags:
+      - { name: kernel.event_subscriber }

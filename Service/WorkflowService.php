@@ -1027,4 +1027,15 @@ class WorkflowService
 
         return $token->getUser();
     }
+
+    /**
+     * @param ArticleWorkflow $workflow
+     */
+    public function cleanWorkflow(ArticleWorkflow $workflow)
+    {
+        $workflow->setArticle(null);
+        $workflow->setJournal(null);
+        $workflow->setStatus(ArticleWorkflowStatus::REMOVED);
+        $this->em->persist($workflow);
+    }
 }
