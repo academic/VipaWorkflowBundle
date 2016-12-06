@@ -792,6 +792,13 @@ class WorkflowService
             //collect article submission files
             $articleSubmissionFiles = $workflow->getArticle()->getArticleSubmissionFiles()->toArray();
             $collectFiles = array_merge($collectFiles, $articleSubmissionFiles);
+
+            if(!empty($workflow->getReviewVersionFile())){
+                //collect workflow review version file
+                $collectFiles[] = [
+                    'review_version' => $workflow->getReviewVersionFile()
+                ];
+            }
         }
 
         //collect post files
@@ -851,6 +858,14 @@ class WorkflowService
                     'filename' => $file->getFileName(),
                     'filepath' => '/uploads/articlefiles/'.$file->getFileName(),
                     'collected.from' => $this->translator->trans('action.dialog').'['.date('m.d/H:i', $file->getSendedAt()->getTimestamp()).']',
+                ];
+            }
+            if(is_array($file) && array_key_exists('review_version', $file)){
+                $normalizeFile[] = [
+                    'originalname' => $this->translator->trans('title.workflow.review.version.file'),
+                    'filename' => $file['review_version'],
+                    'filepath' => '/uploads/articlefiles/'.$file['review_version'],
+                    'collected.from' => $this->translator->trans('title.workflow.review.version.file'),
                 ];
             }
         }
