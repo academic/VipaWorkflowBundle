@@ -3,8 +3,8 @@
 namespace Ojs\WorkflowBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Ojs\WorkflowBundle\Entity\ArticleTrait;
-use Ojs\WorkflowBundle\Entity\JournalTrait;
+use Ojs\WorkflowBundle\Entity\WorkflowArticleTrait;
+use Ojs\WorkflowBundle\Entity\WorkflowJournalTrait;
 use Ojs\UserBundle\Entity\User;
 use Ojs\WorkflowBundle\Params\ArticleWorkflowStatus;
 
@@ -14,8 +14,8 @@ use Ojs\WorkflowBundle\Params\ArticleWorkflowStatus;
  */
 class ArticleWorkflow
 {
-    use JournalTrait;
-    use ArticleTrait;
+    use WorkflowJournalTrait;
+    use WorkflowArticleTrait;
 
     /**
      * @var integer

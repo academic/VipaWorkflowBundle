@@ -5,7 +5,7 @@ namespace Ojs\WorkflowBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Ojs\JournalBundle\Entity\Journal;
 
-trait JournalTrait
+trait WorkflowJournalTrait
 {
     /**
      * @var Journal
