@@ -53,6 +53,11 @@ class ArticleWorkflow
     protected $status = ArticleWorkflowStatus::ACTIVE;
 
     /**
+     * @var string
+     */
+    private $reviewVersionFile;
+
+    /**
      * Step constructor.
      *
      */
@@ -270,6 +275,26 @@ class ArticleWorkflow
         }
 
         return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReviewVersionFile()
+    {
+        return $this->reviewVersionFile;
+    }
+
+    /**
+     * @param string $reviewVersionFile
+     *
+     * @return $this
+     */
+    public function setReviewVersionFile(string $reviewVersionFile)
+    {
+        $this->reviewVersionFile = $reviewVersionFile;
+
+        return $this;
     }
 
     public function __toString()

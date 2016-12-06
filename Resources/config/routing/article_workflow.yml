@@ -37,6 +37,14 @@ ojs_workflow_article_detail:
   options:
       expose: true
 
+# upload review version file routing
+ojs_workflow_article_detail_upload_review_version_file:
+  path:     /{workflowId}/article/detail/upload-review-version-file
+  defaults: { _controller: "OjsWorkflowBundle:ArticleWorkflow:uploadReviewVersionFile" }
+  condition: "request.isXmlHttpRequest()"
+  options:
+      expose: true
+
 # step dialog related routing
 ojs_workflow_dialog:
     resource: "dialog.yml"

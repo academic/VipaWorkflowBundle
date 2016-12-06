@@ -10,6 +10,7 @@ use Ojs\WorkflowBundle\Form\Type\ArticleWfGrantedUsersType;
 use Ojs\WorkflowBundle\Params\StepStatus;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\JournalBundle\Entity\Journal;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -112,6 +113,29 @@ class ArticleWorkflowController extends Controller
         }
 
         return $workflowService->getArticleDetail($workflow);
+    }
+
+    /**
+     * @param $workflowId
+     * @return Response
+     */
+    public function uploadReviewVersionFileAction(Request $request, $workflowId)
+    {
+        $file = $request->request->get('file');
+        $em = $this->getDoctrine()->getManager();
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        //#permissioncheck
+        if(!$this->get('dp.workflow_permission_service')->isGrantedForStep($workflow->getCurrentStep())){
+            throw new AccessDeniedException;
+        }
+        $workflow->setReviewVersionFile($file['filename']);
+        $em->persist($workflow);
+        $em->flush();
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
     }
 
     /**

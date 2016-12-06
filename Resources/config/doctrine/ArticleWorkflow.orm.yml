@@ -19,6 +19,9 @@ Ojs\WorkflowBundle\Entity\ArticleWorkflow:
       nullable: false
       options:
         default: 1
+    reviewVersionFile:
+      type: string
+      nullable: true
   manyToOne:
     journal:
       targetEntity: Ojs\JournalBundle\Entity\Journal

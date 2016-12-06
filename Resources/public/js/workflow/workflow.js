@@ -563,6 +563,21 @@ $(document).ready(function() {
             realTemplate.find('th:eq(1)').html(data.result.originalname);
             realTemplate.find('th:eq(2) a').attr('href', data.result.filepath);
         },
+        uploadReviewVersionFile: function (data) {
+            if(typeof data.result.files !== 'undefined'){
+                swal(Translator.trans('wrong.file'), Translator.trans('select.another.file.type'), "warning");
+                return false;
+            }
+            $.post(Routing.generate('ojs_workflow_article_detail_upload_review_version_file', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder
+            }), {file: data.result}, function( data ) {
+                if(data.success == true){
+                    OjsWorkflow.showSubmissionDetail();
+                }
+            });
+        },
         sendSelectedFiles: function($dialogId){
             var files = [];
             var findCheckedFileInputs = $('#browse-files-table').find('input:checked:not([data-file-name=""])');

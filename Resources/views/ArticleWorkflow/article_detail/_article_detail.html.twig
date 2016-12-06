@@ -44,6 +44,29 @@
                         </li>
                     {% endfor %}
                 </ul>
+                {% if workflow.status == workflowStatus('ACTIVE')
+                and journalStepAlias(workflow.currentStep.order) == 'review' %}
+                    <hr>
+                    <h5>{{ 'title.workflow.review.version.file'|trans }}</h5>
+                    <input
+                            type="file"
+                            name="article_file_file_file"
+                            data-url="{{ path('_uploader_upload_articlefiles') }}"
+                            id="workflow-file-upload-hidden-input"
+                            class="hidden" />
+                    <button class="btn btn-default btn-sm"
+                            onclick="OjsWorkflow.uploadCustomFile()">
+                        {{ 'upload.file'|trans }}
+                    </button>
+                    {% if workflow.reviewVersionFile is not empty %}
+                        <a href="/uploads/articlefiles/{{ workflow.reviewVersionFile }}" target="_blank">
+                            {{ 'look.review.version.file'|trans }}
+                            <i class="fa fa-external-link"></i>
+                        </a>
+                    {% else %}
+                        {{ 'not.uploaded'|trans }}
+                    {% endif %}
+                {% endif %}
             </div>
         {% endif %}
         {% if permissionCheck().isReviewerOnWorkflow(workflow) == false or workflowSettings.doubleBlind == false %}
@@ -89,4 +112,12 @@
 
 <script>
     OjsWorkflow.refreshTooltip();
+    $(function () {
+        $('#workflow-file-upload-hidden-input').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+                OjsWorkflow.uploadReviewVersionFile(data);
+            }
+        });
+    });
 </script>
