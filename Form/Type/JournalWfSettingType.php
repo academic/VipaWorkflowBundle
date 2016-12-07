@@ -19,6 +19,7 @@ class JournalWfSettingType extends AbstractType
         $builder
             ->add('doubleBlind', null, [
                 'label' => 'double.blind',
+                'data' => true
             ])
             ->add('reviewerWaitDay', null, [
                 'label' => 'reviewer.wait.day'
