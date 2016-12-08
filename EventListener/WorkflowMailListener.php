@@ -2,13 +2,13 @@
 
 namespace Ojs\WorkflowBundle\EventListener;
 
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflow;
-use Dergipark\WorkflowBundle\Entity\ArticleWorkflowSetting;
-use Dergipark\WorkflowBundle\Entity\StepDialog;
-use Dergipark\WorkflowBundle\Event\WorkflowEvent;
-use Dergipark\WorkflowBundle\Event\WorkflowEvents;
-use Dergipark\WorkflowBundle\Params\JournalWorkflowSteps;
-use Dergipark\WorkflowBundle\Params\StepActionTypes;
+use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
+use Ojs\WorkflowBundle\Entity\ArticleWorkflowSetting;
+use Ojs\WorkflowBundle\Entity\StepDialog;
+use Ojs\WorkflowBundle\Event\WorkflowEvent;
+use Ojs\WorkflowBundle\Event\WorkflowEvents;
+use Ojs\WorkflowBundle\Params\JournalWorkflowSteps;
+use Ojs\WorkflowBundle\Params\StepActionTypes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Ojs\CoreBundle\Service\Mailer;
@@ -533,7 +533,7 @@ class WorkflowMailListener implements EventSubscriberInterface
     )
     {
         $linkParams = ['journalId'  => $event->journal->getId(), 'workflowId' => $event->workflow->getId()];
-        $link = $this->router->generate('dergipark_workflow_article_workflow', $linkParams, UrlGeneratorInterface::ABSOLUTE_URL);
+        $link = $this->router->generate('ojs_workflow_article_workflow', $linkParams, UrlGeneratorInterface::ABSOLUTE_URL);
 
         $params = [
             'related.link'  => $link,
