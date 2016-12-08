@@ -528,7 +528,7 @@ class WorkflowMailListener implements EventSubscriberInterface
     private function sendWorkflowMail(
         WorkflowEvent $event,
         string $name,
-        array $users = [],
+        $users = [],
         array $extraParams = []
     )
     {
@@ -540,6 +540,10 @@ class WorkflowMailListener implements EventSubscriberInterface
             'article.title' => $event->article->getTitle(),
             'journal'       => $event->journal->getTitle(),
         ];
+
+        if ($users instanceof ArrayCollection) {
+            $users = $users->toArray();
+        }
 
         $params = array_merge($params, $extraParams);
         $this->mailer->sendEventMail($name, $users, $params, $event->journal);
