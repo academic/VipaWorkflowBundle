@@ -5,10 +5,10 @@ namespace Ojs\WorkflowBundle\Controller;
 use APY\DataGridBundle\Grid\Action\MassAction;
 use APY\DataGridBundle\Grid\Column\ActionsColumn;
 use APY\DataGridBundle\Grid\Source\Entity;
-use Ojs\WorkflowBundle\Entity\DialogPost;
-use Ojs\WorkflowBundle\Params\DialogPostTypes;
 use Doctrine\ORM\QueryBuilder;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
+use Ojs\WorkflowBundle\Entity\DialogPost;
+use Ojs\WorkflowBundle\Params\DialogPostTypes;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -35,19 +35,20 @@ class ExportReviewFormController extends Controller
         $tableAlias = $source->getTableAlias();
         $source->manipulateQuery(
             function (QueryBuilder $qb) use ($tableAlias, $isEditor, $currentUser) {
-                 $qb
-                    ->where($tableAlias.'.type = :formResponseType')
-                    ->setParameter('formResponseType', DialogPostTypes::TYPE_FORM_RESPONSE)
-                 ;
-                if(!$isEditor){
+                $qb
+                    ->andWhere($tableAlias.'.type = :formResponseType')
+                    ->setParameter('formResponseType', DialogPostTypes::TYPE_FORM_RESPONSE);
+
+                if (!$isEditor) {
                     $qb
                         ->andWhere($tableAlias.'.sendedBy = :currentUser')
-                        ->setParameter('currentUser', $currentUser)
-                        ;
+                        ->setParameter('currentUser', $currentUser);
                 }
+
                 return $qb;
             }
         );
+
         $grid->setSource($source);
 
         //setup mass actions
