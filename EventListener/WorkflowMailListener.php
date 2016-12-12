@@ -4,7 +4,6 @@ namespace Ojs\WorkflowBundle\EventListener;
 
 use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
 use Ojs\WorkflowBundle\Entity\ArticleWorkflowSetting;
-use Ojs\WorkflowBundle\Entity\JournalWorkflowStep;
 use Ojs\WorkflowBundle\Entity\StepDialog;
 use Ojs\WorkflowBundle\Event\WorkflowEvent;
 use Ojs\WorkflowBundle\Event\WorkflowEvents;
@@ -12,7 +11,7 @@ use Ojs\WorkflowBundle\Params\JournalWorkflowSteps;
 use Ojs\WorkflowBundle\Params\StepActionTypes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
-use Ojs\CoreBundle\Service\OjsMailer;
+use Ojs\CoreBundle\Service\Mailer;
 use Ojs\UserBundle\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -34,9 +33,9 @@ class WorkflowMailListener implements EventSubscriberInterface
     private $em;
 
     /**
-     * @var OjsMailer
+     * @var Mailer
      */
-    private $ojsMailer;
+    private $mailer;
 
     /**
      * @var PropertyAccessor
@@ -50,21 +49,20 @@ class WorkflowMailListener implements EventSubscriberInterface
 
     /**
      * WorkflowMailListener constructor.
-     *
-     * @param RouterInterface       $router
-     * @param EntityManager         $em
-     * @param OjsMailer             $ojsMailer
-     * @param TranslatorInterface   $translator
+     * @param RouterInterface $router
+     * @param EntityManager $em
+     * @param Mailer $mailer
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         RouterInterface $router,
         EntityManager $em,
-        OjsMailer $ojsMailer,
+        Mailer $mailer,
         TranslatorInterface $translator
     ) {
         $this->router       = $router;
         $this->em           = $em;
-        $this->ojsMailer    = $ojsMailer;
+        $this->mailer    = $mailer;
         $this->accessor     = PropertyAccess::createPropertyAccessor();
         $this->translator   = $translator;
     }
@@ -74,31 +72,31 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return array(
-            WorkflowEvents::WORKFLOW_STARTED                => 'onWorkflowStarted',
-            WorkflowEvents::REVIEW_FORM_RESPONSE            => 'onReviewFormResponse',
-            WorkflowEvents::REVIEW_FORM_RESPONSE_PREVIEW    => 'onReviewFormResponsePreview',
-            WorkflowEvents::REVIEW_FORM_REQUEST             => [['dialogAcceptedCheck'], ['onReviewFormRequest']],
-            WorkflowEvents::WORKFLOW_GRANT_USER             => 'onWorkflowGrantUser',
-            WorkflowEvents::DIALOG_POST_COMMENT             => [['dialogAcceptedCheck'], ['onDialogPostComment']],
-            WorkflowEvents::DIALOG_POST_FILE                => [['dialogAcceptedCheck'], ['onDialogPostFile']],
-            WorkflowEvents::CREATE_SPESIFIC_DIALOG          => 'onCreateSpecificDialog',
-            WorkflowEvents::CREATE_DIALOG_WITH_AUTHOR       => 'onCreateDialogWithAuthor',
-            WorkflowEvents::CREATE_BASIC_DIALOG             => 'onCreateBasicDialog',
-            WorkflowEvents::STEP_GOTO_ARRANGEMET            => 'onStepGotoArrangement',
-            WorkflowEvents::STEP_GOTO_REVIEWING             => 'onStepGotoReviewing',
-            WorkflowEvents::ACCEPT_SUBMISSION_DIRECTLY      => 'onAcceptSubmissionDirectly',
-            WorkflowEvents::WORKFLOW_FINISH_ACTION          => 'onWorkflowFinishAction',
-            WorkflowEvents::DECLINE_SUBMISSION              => 'onDeclineSubmission',
-            WorkflowEvents::CLOSE_DIALOG                    => 'onCloseDialog',
-            WorkflowEvents::REOPEN_DIALOG                   => 'onReopenDialog',
-            WorkflowEvents::REMOVE_DIALOG                   => 'onRemoveDialog',
-            WorkflowEvents::REVIEWER_INVITE                 => 'onReviewerInvite',
-            WorkflowEvents::REVIEWER_REMIND                 => 'onReviewerRemind',
-            WorkflowEvents::ACCEPT_REVIEW                   => 'onAcceptReview',
-            WorkflowEvents::REJECT_REVIEW                   => 'onRejectReview',
-            WorkflowEvents::REVIEWER_USER_CREATED           => 'onReviewerCreated',
-        );
+        return [
+            WorkflowEvents::WORKFLOW_STARTED             => 'onWorkflowStarted',
+            WorkflowEvents::REVIEW_FORM_RESPONSE         => 'onReviewFormResponse',
+            WorkflowEvents::REVIEW_FORM_RESPONSE_PREVIEW => 'onReviewFormResponsePreview',
+            WorkflowEvents::REVIEW_FORM_REQUEST          => [['dialogAcceptedCheck'], ['onReviewFormRequest']],
+            WorkflowEvents::WORKFLOW_GRANT_USER          => 'onWorkflowGrantUser',
+            WorkflowEvents::DIALOG_POST_COMMENT          => [['dialogAcceptedCheck'], ['onDialogPostComment']],
+            WorkflowEvents::DIALOG_POST_FILE             => [['dialogAcceptedCheck'], ['onDialogPostFile']],
+            WorkflowEvents::CREATE_SPESIFIC_DIALOG       => 'onCreateSpecificDialog',
+            WorkflowEvents::CREATE_DIALOG_WITH_AUTHOR    => 'onCreateDialogWithAuthor',
+            WorkflowEvents::CREATE_BASIC_DIALOG          => 'onCreateBasicDialog',
+            WorkflowEvents::STEP_GOTO_ARRANGEMET         => 'onStepGotoArrangement',
+            WorkflowEvents::STEP_GOTO_REVIEWING          => 'onStepGotoReviewing',
+            WorkflowEvents::ACCEPT_SUBMISSION_DIRECTLY   => 'onAcceptSubmissionDirectly',
+            WorkflowEvents::WORKFLOW_FINISH_ACTION       => 'onWorkflowFinishAction',
+            WorkflowEvents::DECLINE_SUBMISSION           => 'onDeclineSubmission',
+            WorkflowEvents::CLOSE_DIALOG                 => 'onCloseDialog',
+            WorkflowEvents::REOPEN_DIALOG                => 'onReopenDialog',
+            WorkflowEvents::REMOVE_DIALOG                => 'onRemoveDialog',
+            WorkflowEvents::REVIEWER_INVITE              => 'onReviewerInvite',
+            WorkflowEvents::REVIEWER_REMIND              => 'onReviewerRemind',
+            WorkflowEvents::ACCEPT_REVIEW                => 'onAcceptReview',
+            WorkflowEvents::REJECT_REVIEW                => 'onRejectReview',
+            WorkflowEvents::REVIEWER_USER_CREATED        => 'onReviewerCreated',
+        ];
     }
 
     /**
@@ -108,10 +106,11 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function dialogAcceptedCheck(WorkflowEvent $event)
     {
-        if($event->dialog === null) {
+        if ($event->dialog === null) {
             return null;
         }
-        if($event->dialog->getDialogType() == StepActionTypes::ASSIGN_REVIEWER && !$event->dialog->isAccepted()) {
+
+        if ($event->dialog->getDialogType() == StepActionTypes::ASSIGN_REVIEWER && !$event->dialog->isAccepted()) {
             $event->stopPropagation();
         }
 
@@ -123,31 +122,10 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onWorkflowStarted(WorkflowEvent $event)
     {
-        $accessor = $this->accessor;
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::WORKFLOW_STARTED);
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags($event->workflow->relatedUsers);
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'article.author'    => $accessor->getValue($event, 'article.submitterUser.username'),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+        $accessor = PropertyAccess::createPropertyAccessor();
+        $users = $this->mergeUserBags($event->workflow->relatedUsers);
+        $params = ['article.author' => $accessor->getValue($event, 'article.submitterUser.username')];
+        $this->sendWorkflowMail($event, WorkflowEvents::WORKFLOW_STARTED, $users, $params);
     }
 
     /**
@@ -155,32 +133,13 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReviewFormResponse(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEW_FORM_RESPONSE);
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags([$event->dialog->getCreatedDialogBy()]);
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-                'dialog.title'     => $this->getDialogTitle($event->dialog),
-                'form.name'     => $event->post->getReviewForm()->getName(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+        $params = [
+            'dialog.title' => $this->getDialogTitle($event->dialog),
+            'form.name'    => $event->post->getReviewForm()->getName(),
+        ];
+
+        $users = $this->mergeUserBags([$event->dialog->getCreatedDialogBy()]);
+        $this->sendWorkflowMail($event, WorkflowEvents::REVIEW_FORM_RESPONSE, $users, $params);
     }
 
     /**
@@ -188,32 +147,13 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReviewFormResponsePreview(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEW_FORM_RESPONSE_PREVIEW);
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags([$event->workflow->getArticle()->getSubmitterUser()]);
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'           => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId'     => $event->journal->getId(),
-                    'workflowId'    => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-                'dialog.title'      => $this->getDialogTitle($event->dialog),
-                'form.name'         => $event->post->getReviewForm()->getName(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+        $params = [
+            'dialog.title' => $this->getDialogTitle($event->dialog),
+            'form.name'    => $event->post->getReviewForm()->getName(),
+        ];
+
+        $users = $this->mergeUserBags([$event->workflow->getArticle()->getSubmitterUser()]);
+        $this->sendWorkflowMail($event, WorkflowEvents::REVIEW_FORM_RESPONSE_PREVIEW, $users, $params);
     }
 
     /**
@@ -221,32 +161,13 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReviewFormRequest(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEW_FORM_REQUEST);
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags($event->dialog->getUsers());
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-                'dialog.title'     => $this->getDialogTitle($event->dialog),
-                'form.name'     => $event->post->getReviewForm()->getName(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+        $params = [
+            'dialog.title' => $this->getDialogTitle($event->dialog),
+            'form.name'    => $event->post->getReviewForm()->getName(),
+        ];
+
+        $users = $this->mergeUserBags($event->dialog->getUsers());
+        $this->sendWorkflowMail($event, WorkflowEvents::REVIEW_FORM_REQUEST, $users, $params);
     }
 
     /**
@@ -254,27 +175,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onWorkflowGrantUser(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::WORKFLOW_GRANT_USER);
-        if(!$getMailEvent){
-            return;
-        }
-        $transformParams = [
-            'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-            'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                'journalId' => $event->journal->getId(),
-                'workflowId' => $event->workflow->getId(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL),
-            'journal'           => $event->journal->getTitle(),
-            'receiver.username' => $event->user->getUsername(),
-            'receiver.fullName' => $event->user->getFullName(),
-            'article.title'     => $event->article->getTitle(),
-        ];
-        $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-        $this->ojsMailer->sendToUser(
-            $event->user,
-            $getMailEvent->getSubject(),
-            $template
-        );
+        $this->sendWorkflowMail($event, WorkflowEvents::WORKFLOW_GRANT_USER, $event->user);
     }
 
     /**
@@ -282,36 +183,15 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onDialogPostComment(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::DIALOG_POST_COMMENT);
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags(
-            $event->dialog->getUsers(),
-            [$event->dialog->getCreatedDialogBy()]
-        );
-        $mailUsers = $this->removeUsersFromBag($mailUsers, $this->ojsMailer->currentUser());
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-                'dialog.title'     => $this->getDialogTitle($event->dialog),
-                'post.content'     => $event->post->getText(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+        $users = $this->mergeUserBags($event->dialog->getUsers(), [$event->dialog->getCreatedDialogBy()]);
+        $users = $this->removeUsersFromBag($users, $this->mailer->currentUser());
+
+        $params = [
+            'dialog.title' => $this->getDialogTitle($event->dialog),
+            'post.content' => $event->post->getText(),
+        ];
+
+        $this->sendWorkflowMail($event, WorkflowEvents::DIALOG_POST_COMMENT, $users, $params);
     }
 
     /**
@@ -319,36 +199,15 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onDialogPostFile(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::DIALOG_POST_FILE);
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags(
-            $event->dialog->getUsers(),
-            [$event->dialog->getCreatedDialogBy()]
-        );
-        $mailUsers = $this->removeUsersFromBag($mailUsers, $this->ojsMailer->currentUser());
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-                'dialog.title'     => $this->getDialogTitle($event->dialog),
-                'file.name'     => $event->post->getFileOriginalName(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+        $users = $this->mergeUserBags($event->dialog->getUsers(), [$event->dialog->getCreatedDialogBy()]);
+        $users = $this->removeUsersFromBag($users, $this->mailer->currentUser());
+
+        $params = [
+            'dialog.title' => $this->getDialogTitle($event->dialog),
+            'file.name'    => $event->post->getFileOriginalName(),
+        ];
+
+        $this->sendWorkflowMail($event, WorkflowEvents::DIALOG_POST_FILE, $users, $params);
     }
 
     /**
@@ -356,42 +215,24 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onCreateSpecificDialog(WorkflowEvent $event)
     {
-        if($event->dialog->getDialogType() == StepActionTypes::ASSIGN_REVIEWER){
+        if ($event->dialog->getDialogType() == StepActionTypes::ASSIGN_REVIEWER) {
             return;
         }
-        $eventName = WorkflowEvents::CREATE_SPESIFIC_DIALOG;
-        if($event->dialog->getDialogType() == StepActionTypes::ASSIGN_SECTION_EDITOR){
-            $eventName = WorkflowEvents::CREATE_SPESIFIC_DIALOG.'.assign.section.editor';
+
+        $name = WorkflowEvents::CREATE_SPESIFIC_DIALOG;
+
+        if ($event->dialog->getDialogType() == StepActionTypes::ASSIGN_SECTION_EDITOR) {
+            $name .= '.assign.section.editor';
         }
-        $getMailEvent = $this->ojsMailer->getEventByName($eventName);
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags(
+
+        $users = $this->mergeUserBags(
+            $event->step->grantedUsers,
             $event->dialog->getUsers(),
-            [$event->dialog->getCreatedDialogBy()],
-            $event->step->grantedUsers
+            [$event->dialog->getCreatedDialogBy()]
         );
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-                'dialog.title'     => $this->getDialogTitle($event->dialog),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+
+        $params = ['dialog.title' => $this->getDialogTitle($event->dialog)];
+        $this->sendWorkflowMail($event, $name, $users, $params);
     }
 
     /**
@@ -399,34 +240,13 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onCreateDialogWithAuthor(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::CREATE_DIALOG_WITH_AUTHOR);
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags(
+        $users = $this->mergeUserBags(
+            $event->step->grantedUsers,
             $event->dialog->getUsers(),
-            [$event->dialog->getCreatedDialogBy()],
-            $event->step->grantedUsers
+            [$event->dialog->getCreatedDialogBy()]
         );
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+
+        $this->sendWorkflowMail($event, WorkflowEvents::CREATE_DIALOG_WITH_AUTHOR, $users);
     }
 
     /**
@@ -434,35 +254,14 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onCreateBasicDialog(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::CREATE_BASIC_DIALOG);
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags(
+        $users = $this->mergeUserBags(
+            $event->step->grantedUsers,
             $event->dialog->getUsers(),
-            [$event->dialog->getCreatedDialogBy()],
-            $event->step->grantedUsers
+            [$event->dialog->getCreatedDialogBy()]
         );
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-                'dialog.title'      => $event->dialog->getTitle(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+
+        $params = ['dialog.title' => $event->dialog->getTitle()];
+        $this->sendWorkflowMail($event, WorkflowEvents::CREATE_BASIC_DIALOG, $users, $params);
     }
 
     /**
@@ -470,34 +269,13 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onStepGotoArrangement(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::STEP_GOTO_ARRANGEMET);
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags(
+        $users = $this->mergeUserBags(
             $this->getJournalEditors(),
             [$event->article->getSubmitterUser()],
-            ($event->workflow->getStepByOrder(JournalWorkflowSteps::ARRANGEMENT_ORDER))->getGrantedUsers()
+            $event->workflow->getStepByOrder(JournalWorkflowSteps::ARRANGEMENT_ORDER)->getGrantedUsers()
         );
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+
+        $this->sendWorkflowMail($event, WorkflowEvents::STEP_GOTO_ARRANGEMET, $users);
     }
 
     /**
@@ -505,34 +283,13 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onStepGotoReviewing(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::STEP_GOTO_REVIEWING);
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags(
+        $users = $this->mergeUserBags(
             $this->getJournalEditors(),
             [$event->article->getSubmitterUser()],
-            ($event->workflow->getStepByOrder(JournalWorkflowSteps::REVIEW_ORDER))->getGrantedUsers()
+            $event->workflow->getStepByOrder(JournalWorkflowSteps::REVIEW_ORDER)->getGrantedUsers()
         );
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+
+        $this->sendWorkflowMail($event, WorkflowEvents::STEP_GOTO_REVIEWING, $users);
     }
 
     /**
@@ -540,33 +297,8 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onAcceptSubmissionDirectly(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::ACCEPT_SUBMISSION_DIRECTLY);
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags(
-            $event->workflow->relatedUsers,
-            $this->getJournalEditors()
-        );
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+        $users = $this->mergeUserBags($event->workflow->relatedUsers, $this->getJournalEditors());
+        $this->sendWorkflowMail($event, WorkflowEvents::ACCEPT_SUBMISSION_DIRECTLY, $users);
     }
 
     /**
@@ -574,33 +306,8 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onWorkflowFinishAction(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::WORKFLOW_FINISH_ACTION);
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags(
-            $this->getJournalEditors(),
-            [$event->article->getSubmitterUser()]
-        );
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+        $users = $this->mergeUserBags($this->getJournalEditors(), [$event->article->getSubmitterUser()]);
+        $this->sendWorkflowMail($event, WorkflowEvents::WORKFLOW_FINISH_ACTION, $users);
     }
 
     /**
@@ -608,33 +315,8 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onDeclineSubmission(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::DECLINE_SUBMISSION);
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags(
-            $this->getJournalEditors(),
-            [$event->article->getSubmitterUser()]
-        );
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+        $users = $this->mergeUserBags($this->getJournalEditors(), [$event->article->getSubmitterUser()]);
+        $this->sendWorkflowMail($event, WorkflowEvents::DECLINE_SUBMISSION, $users);
     }
 
     /**
@@ -642,35 +324,14 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onCloseDialog(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::CLOSE_DIALOG);
-        if(!$getMailEvent){
-            return;
-        }
         $mailUsers = $this->mergeUserBags(
             $event->workflow->grantedUsers,
             $event->step->grantedUsers,
             $event->dialog->users
         );
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-                'dialog.title'      => $this->getDialogTitle($event->dialog)
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+
+        $params = ['dialog.title' => $this->getDialogTitle($event->dialog)];
+        $this->sendWorkflowMail($event, WorkflowEvents::CLOSE_DIALOG, $mailUsers, $params);
     }
 
     /**
@@ -678,35 +339,14 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReopenDialog(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REOPEN_DIALOG);
-        if(!$getMailEvent){
-            return;
-        }
         $mailUsers = $this->mergeUserBags(
             $event->workflow->grantedUsers,
             $event->step->grantedUsers,
             $event->dialog->users
         );
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-                'dialog.title'      => $this->getDialogTitle($event->dialog)
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+
+        $params = ['dialog.title' => $this->getDialogTitle($event->dialog)];
+        $this->sendWorkflowMail($event, WorkflowEvents::REOPEN_DIALOG, $mailUsers, $params);
     }
 
     /**
@@ -714,73 +354,30 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReviewerInvite(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_INVITE.'.to.reviewer');
-        if(!$getMailEvent){
-            goto sendmailtoeditors;
-        }
         $settings = $this->getWorkflowSettings($event->workflow);
         $reviewerUser = $event->dialog->users->first();
-        $transformParams = [
-            'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-            'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                'journalId' => $event->journal->getId(),
-                'workflowId' => $event->workflow->getId(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL),
-            'journal'           => $event->journal->getTitle(),
-            'receiver.username' => $reviewerUser->getUsername(),
-            'receiver.fullName' => $reviewerUser->getFullName(),
-            'article.title'     => $event->article->getTitle(),
-            'accept.link'     => $this->router->generate('dp_workflow_dialog_accept_review' ,[
-                'journalId' => $event->journal->getId(),
-                'workflowId' => $event->workflow->getId(),
-                'stepOrder' => $event->step->getId(),
-                'dialogId' => $event->dialog->getId(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL),
-            'reject.link'     => $this->router->generate('dp_workflow_dialog_reject_review' ,[
-                'journalId' => $event->journal->getId(),
-                'workflowId' => $event->workflow->getId(),
-                'stepOrder' => $event->step->getId(),
-                'dialogId' => $event->dialog->getId(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL),
-            'dayLimit' => $settings->getReviewerWaitDay(),
-            'article.abstract' => $event->article->getAbstract(),
-            'article.authors' => implode(', ', $event->article->getArticleAuthors()->toArray()),
+
+        $linkParams = [
+            'workflowId' => $event->workflow->getId(),
+            'journalId'  => $event->journal->getId(),
+            'dialogId'   => $event->dialog->getId(),
+            'stepOrder'  => $event->step->getId(),
         ];
-        $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-        $this->ojsMailer->sendToUser(
-            $reviewerUser,
-            $getMailEvent->getSubject(),
-            $template
-        );
 
-        sendmailtoeditors:
+        $acceptLink = $this->router->generate('dp_workflow_dialog_accept_review', $linkParams, UrlGeneratorInterface::ABSOLUTE_URL);
+        $rejectLink = $this->router->generate('dp_workflow_dialog_reject_review', $linkParams, UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_INVITE.'.to.editor');
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags(
-            [$event->dialog->createdDialogBy]
-        );
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+        $params = [
+            'accept.link'      => $acceptLink,
+            'reject.link'      => $rejectLink,
+            'dayLimit'         => $settings->getReviewerWaitDay(),
+            'article.abstract' => $event->article->getAbstract(),
+            'article.authors'  => implode(', ', $event->article->getArticleAuthors()->toArray()),
+        ];
+
+        $editors = $this->mergeUserBags([$event->dialog->createdDialogBy]);
+        $this->sendWorkflowMail($event, WorkflowEvents::REVIEWER_INVITE.'.to.reviewer', [$reviewerUser], $params);
+        $this->sendWorkflowMail($event, WorkflowEvents::REVIEWER_INVITE.'.to.editor', $editors);
     }
 
     /**
@@ -788,69 +385,25 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReviewerRemind(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_REMIND.'.to.reviewer');
-        if(!$getMailEvent){
-            goto sendmailtoeditors;
-        }
-        $reviewerUser = $event->dialog->users->first();
-        $transformParams = [
-            'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-            'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                'journalId' => $event->journal->getId(),
-                'workflowId' => $event->workflow->getId(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL),
-            'journal'           => $event->journal->getTitle(),
-            'receiver.username' => $reviewerUser->getUsername(),
-            'receiver.fullName' => $reviewerUser->getFullName(),
-            'article.title'     => $event->article->getTitle(),
-            'accept.link'     => $this->router->generate('dp_workflow_dialog_accept_review' ,[
-                'journalId' => $event->journal->getId(),
-                'workflowId' => $event->workflow->getId(),
-                'stepOrder' => $event->step->getId(),
-                'dialogId' => $event->dialog->getId(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL),
-            'reject.link'     => $this->router->generate('dp_workflow_dialog_reject_review' ,[
-                'journalId' => $event->journal->getId(),
-                'workflowId' => $event->workflow->getId(),
-                'stepOrder' => $event->step->getId(),
-                'dialogId' => $event->dialog->getId(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL),
+        $linkParams = [
+            'stepOrder'  => $event->step->getId(),
+            'dialogId'   => $event->dialog->getId(),
+            'journalId'  => $event->journal->getId(),
+            'workflowId' => $event->workflow->getId(),
         ];
-        $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-        $this->ojsMailer->sendToUser(
-            $reviewerUser,
-            $getMailEvent->getSubject(),
-            $template
-        );
 
-        sendmailtoeditors:
+        $acceptLink = $this->router->generate('dp_workflow_dialog_accept_review', $linkParams, UrlGeneratorInterface::ABSOLUTE_URL);
+        $rejectLink = $this->router->generate('dp_workflow_dialog_reject_review', $linkParams, UrlGeneratorInterface::ABSOLUTE_URL);
+        $reviewerUser = $event->dialog->users->first();
 
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_REMIND.'.to.editor');
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags(
-            [$event->dialog->createdDialogBy]
-        );
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+        $reviewerParams = [
+            'accept.link'     => $acceptLink,
+            'reject.link'     => $rejectLink,
+        ];
+
+        $editors = $this->mergeUserBags([$event->dialog->createdDialogBy]);
+        $this->sendWorkflowMail($event, WorkflowEvents::REVIEWER_REMIND.'.to.reviewer', [$reviewerUser], $reviewerParams);
+        $this->sendWorkflowMail($event, WorkflowEvents::REVIEWER_REMIND.'.to.editor', $editors);
     }
 
     /**
@@ -858,60 +411,16 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onAcceptReview(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::ACCEPT_REVIEW.'.to.reviewer');
-        /** @var User $reviewerUser */
         $reviewerUser = $event->dialog->users->first();
-        if(!$getMailEvent){
-            goto sendmailtoeditors;
-        }
-        $transformParams = [
-            'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-            'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                'journalId' => $event->journal->getId(),
-                'workflowId' => $event->workflow->getId(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL),
-            'journal'           => $event->journal->getTitle(),
-            'receiver.username' => $reviewerUser->getUsername(),
-            'receiver.fullName' => $reviewerUser->getFullName(),
-            'article.title'     => $event->article->getTitle(),
+        $editors = $this->mergeUserBags([$event->dialog->createdDialogBy]);
+
+        $params = [
+            'reviewer.username' => $reviewerUser->getUsername(),
+            'reviewer.fullName' => $reviewerUser->getFullName(),
         ];
-        $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-        $this->ojsMailer->sendToUser(
-            $reviewerUser,
-            $getMailEvent->getSubject(),
-            $template
-        );
 
-        sendmailtoeditors:
-
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::ACCEPT_REVIEW.'.to.editor');
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags(
-            [$event->dialog->createdDialogBy]
-        );
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-                'reviewer.username' => $reviewerUser->getUsername(),
-                'reviewer.fullName' => $reviewerUser->getFullName(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+        $this->sendWorkflowMail($event, WorkflowEvents::ACCEPT_REVIEW.'.to.reviewer', [$reviewerUser]);
+        $this->sendWorkflowMail($event, WorkflowEvents::ACCEPT_REVIEW.'.to.editor', $editors, $params);
     }
 
     /**
@@ -919,60 +428,16 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onRejectReview(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REJECT_REVIEW.'.to.reviewer');
-        /** @var User $reviewerUser */
         $reviewerUser = $event->dialog->users->first();
-        if(!$getMailEvent){
-            goto sendmailtoeditors;
-        }
-        $transformParams = [
-            'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-            'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                'journalId' => $event->journal->getId(),
-                'workflowId' => $event->workflow->getId(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL),
-            'journal'           => $event->journal->getTitle(),
-            'receiver.username' => $reviewerUser->getUsername(),
-            'receiver.fullName' => $reviewerUser->getFullName(),
-            'article.title'     => $event->article->getTitle(),
+        $editors = $this->mergeUserBags([$event->dialog->createdDialogBy]);
+
+        $params = [
+            'reviewer.username' => $reviewerUser->getUsername(),
+            'reviewer.fullName' => $reviewerUser->getFullName(),
         ];
-        $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-        $this->ojsMailer->sendToUser(
-            $reviewerUser,
-            $getMailEvent->getSubject(),
-            $template
-        );
 
-        sendmailtoeditors:
-
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REJECT_REVIEW.'.to.editor');
-        if(!$getMailEvent){
-            return;
-        }
-        $mailUsers = $this->mergeUserBags(
-            [$event->dialog->createdDialogBy]
-        );
-        foreach ($mailUsers as $user) {
-            $transformParams = [
-                'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-                'related.link'      => $this->router->generate('ojs_workflow_article_workflow', [
-                    'journalId' => $event->journal->getId(),
-                    'workflowId' => $event->workflow->getId(),
-                ], UrlGeneratorInterface::ABSOLUTE_URL),
-                'journal'           => $event->journal->getTitle(),
-                'receiver.username' => $user->getUsername(),
-                'receiver.fullName' => $user->getFullName(),
-                'article.title'     => $event->article->getTitle(),
-                'reviewer.username' => $reviewerUser->getUsername(),
-                'reviewer.fullName' => $reviewerUser->getFullName(),
-            ];
-            $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-            $this->ojsMailer->sendToUser(
-                $user,
-                $getMailEvent->getSubject(),
-                $template
-            );
-        }
+        $this->sendWorkflowMail($event, WorkflowEvents::REJECT_REVIEW.'.to.reviewer', [$reviewerUser]);
+        $this->sendWorkflowMail($event, WorkflowEvents::REJECT_REVIEW.'.to.editor', $editors, $params);
     }
 
     /**
@@ -980,24 +445,8 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onReviewerCreated(WorkflowEvent $event)
     {
-        $getMailEvent = $this->ojsMailer->getEventByName(WorkflowEvents::REVIEWER_USER_CREATED);
-        if(!$getMailEvent){
-            return;
-        }
-        $passwordResetLink = $this->router->generate('fos_user_resetting_request', [], UrlGeneratorInterface::ABSOLUTE_URL);
-        $transformParams = [
-            'done.by'    => $this->ojsMailer->currentUser()->getUsername(),
-            'password.reset.link'   => $passwordResetLink,
-            'journal'           => $event->journal->getTitle(),
-            'receiver.username' => $event->user->getUsername(),
-            'receiver.fullName' => $event->user->getFullName(),
-        ];
-        $template = $this->ojsMailer->transformTemplate($getMailEvent->getTemplate(), $transformParams);
-        $this->ojsMailer->sendToUser(
-            $event->user,
-            $getMailEvent->getSubject(),
-            $template
-        );
+        $link = $this->router->generate('fos_user_resetting_request', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $this->sendWorkflowMail($event, WorkflowEvents::REVIEWER_USER_CREATED, [$event->user], ['password.reset.link' => $link]);
     }
 
     /**
@@ -1074,5 +523,29 @@ class WorkflowMailListener implements EventSubscriberInterface
         return $this->em->getRepository(ArticleWorkflowSetting::class)->findOneBy([
             'workflow' => $workflow,
         ]);
+    }
+
+    private function sendWorkflowMail(
+        WorkflowEvent $event,
+        string $name,
+        $users = [],
+        array $extraParams = []
+    )
+    {
+        $linkParams = ['journalId'  => $event->journal->getId(), 'workflowId' => $event->workflow->getId()];
+        $link = $this->router->generate('ojs_workflow_article_workflow', $linkParams, UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $params = [
+            'related.link'  => $link,
+            'article.title' => $event->article->getTitle(),
+            'journal'       => $event->journal->getTitle(),
+        ];
+
+        if ($users instanceof ArrayCollection) {
+            $users = $users->toArray();
+        }
+
+        $params = array_merge($params, $extraParams);
+        $this->mailer->sendEventMail($name, $users, $params, $event->journal);
     }
 }
