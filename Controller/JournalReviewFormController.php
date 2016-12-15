@@ -48,7 +48,7 @@ class JournalReviewFormController extends Controller
         $source->manipulateQuery(
             function (QueryBuilder $qb) use ($step, $tableAlias) {
                 return $qb
-                    ->where($tableAlias.'.step = :step')
+                    ->andWhere($tableAlias.'.step = :step')
                     ->setParameter('step', $step);
             }
         );
