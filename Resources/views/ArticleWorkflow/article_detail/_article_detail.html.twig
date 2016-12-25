@@ -20,6 +20,12 @@
                 {% else %}
                     <div>{{ 'keywords'|trans }} ({{ translation.locale }}): {{ translation.keywords }}</div>
                 {% endif %}
+                {% if article.articleType is not null %}
+                    <div>{{ 'article.type'|trans }}: {{ article.articleType }} </div>
+                {% endif %}
+                {% if article.submissionDate is not null %}
+                    <div>{{ 'submissionDate'|trans }}: {{ article.submissionDate|date('Y-m-d') }} </div>
+                {% endif %}
             </div>
         {% endfor %}
         {% if article.articleSubmissionFiles|length > 0 and permissionCheck().isGrantedForStep(workflow.currentStep) %}
