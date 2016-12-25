@@ -34,7 +34,7 @@
         </tr>
         <tr>
             <td>{{ 'user.id'|trans }}</td>
-            <td>{{ 'user.username'|trans }}</td>
+            <td>{{ 'user'|trans }}</td>
             <td>{{ 'user.lastlogin'|trans }}</td>
             <td>{{ 'user.subjects'|trans }}</td>
             <td>{{ 'finished.review.dialog.count'|trans }}</td>
@@ -51,7 +51,7 @@
             {% if reviewerStats[reviewer.id] is defined %}
                 <tr>
                     <td class="text-center">{{ reviewer.id }}</td>
-                    <td class="list-username">{{ profileLink(reviewer) }}</td>
+                    <td class="list-username">{{ profileLink(reviewer, true) }}</td>
                     <td>{{ reviewer.lastLogin|date('d/m/Y') }}</td>
                     <td class="list-subjects">{{ reviewer.subjects|join('<br>')|raw }}</td>
                     <td>{{ reviewerStats[reviewer.id].closed_issues_count }}</td>

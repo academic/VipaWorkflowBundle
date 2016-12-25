@@ -174,17 +174,21 @@ class DPWorkflowTwigExtension extends \Twig_Extension
         return $this->wfPermissionService;
     }
 
-    public function getProfileLink(User $user)
+    public function getProfileLink(User $user, $name = false)
     {
         $currentUser = $this->getUser();
         if($currentUser->getUsername() == $user->getUsername()){
             $username = $this->translator->trans('you');
         }else{
-            $username = $user->getUsername();
+            if($name){
+                $username = $user->getFullName();
+            }else{
+                $username = '@'.$user->getUsername();
+            }
         }
         $link = $this->router->generate('ojs_user_profile', ['slug' => $user->getUsername()]);
         $tooltip = (string)$user;
-        $template = '<a target="_blank" data-toggle="tooltip" title="'.$tooltip.'" href="'.$link.'">@'.$username.'</a>';
+        $template = '<a target="_blank" data-toggle="tooltip" title="'.$tooltip.'" href="'.$link.'">'.$username.'</a>';
 
         return $template;
     }
