@@ -758,7 +758,11 @@ $(document).ready(function() {
                 }
             });
             $('#form-render-div-wrap input[type="radio"]').each(function(){
-                $(this).removeAttr('checked');
+                if(this.checked){
+                    $(this).attr('checked', 'checked');
+                }else{
+                    $(this).removeAttr('checked');
+                }
             });
             $('#form-render-div-wrap textarea').each(function(){
                 var $textareaVal = $(this).val();
