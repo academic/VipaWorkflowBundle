@@ -72,6 +72,10 @@
                 elements[i].readOnly = true;
                 elements[i].disabled = true;
             }
+
+            $('#form-render-wrap input[type="radio"]').each(function(){
+                $(this).removeAttr('checked');
+            });
         });
     </script>
 {% endblock %}
