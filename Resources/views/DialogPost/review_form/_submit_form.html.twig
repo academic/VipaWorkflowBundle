@@ -56,6 +56,10 @@
             $('.render-wrap').formRender({
                 formData: $(template).text()
             });
+
+            $('#form-render-div-wrap input[type="radio"]').each(function(){
+                $(this).removeAttr('checked');
+            });
         });
     </script>
 {% endblock %}
