@@ -71,7 +71,7 @@ class RestartArticleWorkflowCommand extends ContainerAwareCommand
         /**
          * @var Article $article
          */
-        $article = $this->em->getRepository(Article::class)->findBy(['id' => $input->getArgument('articleId')]);
+        $article = $this->em->getRepository(Article::class)->find($input->getArgument('articleId'));
 
         /**
          * @var ArticleWorkflow[] $allWorkflows
@@ -85,18 +85,17 @@ class RestartArticleWorkflowCommand extends ContainerAwareCommand
         $this->io->progressStart(count($allWorkflows));
         $counter = 1;
 
-        if ($articleWorkflow) {
             foreach ($allWorkflows as $articleWorkflow) {
 
+                if ($articleWorkflow) {
+                    $this->workflowService->closeOldWorklfows($articleWorkflow->getArticle(), true);
+                    $this->workflowService->cleanWorkflow($articleWorkflow);
 
-                $this->workflowService->cleanWorkflow($articleWorkflow);
-                $this->workflowService->closeOldWorklfows($articleWorkflow->getArticle(), true);
-
-                $this->io->progressAdvance(1);
-                $counter = $counter + 1;
+                    $this->io->progressAdvance(1);
+                    $counter = $counter + 1;
+                 }
             }
-        }
-
+    
         $this->workflowService->prepareArticleWorkflow($article);
 
 
