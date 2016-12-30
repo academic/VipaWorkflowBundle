@@ -1,0 +1,2 @@
+# load ojs workflows samples [once in every two hour]
+0 */2 * * * [PROJECT_PATH]/app/console ojs:normalize:journal:workflow
