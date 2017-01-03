@@ -75,6 +75,9 @@
                 <button class="btn btn-primary btn-xs browse-users-button" onclick="OjsWorkflow.browseReviewerUsers();" type="button">
                     {{ 'browse.review.users'|trans }}
                 </button>
+                <button class="btn btn-primary btn-xs browse-users-button" onclick="OjsWorkflow.browseOtherReviewerUsers();" type="button">
+                    {{ 'browse.review.users.other'|trans }}
+                </button>
             </div>
             {{ form_row(form.users) }}
         {{ form_end(form) }}

@@ -683,6 +683,15 @@ $(document).ready(function() {
             browseWindow = window.open(browseUrl);
             browseWindow.focus();
         },
+        browseOtherReviewerUsers: function ($this, $dialogId) {
+            var browseUrl = Routing.generate('ojs_workflow_other_reviewers_browse', {
+                journalId: journalId,
+                workflowId: workflowId,
+                stepOrder: stepOrder
+            });
+            browseWindow = window.open(browseUrl);
+            browseWindow.focus();
+        },
         browseSectionEditorUsers: function ($this, $dialogId) {
             var browseUrl = Routing.generate('ojs_workflow_section_editors_browse', {
                 journalId: journalId,

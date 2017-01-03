@@ -31,7 +31,33 @@ class UsersController extends Controller
             throw new AccessDeniedException;
         }
 
-        $reviewerUsers = $em->getRepository('OjsUserBundle:User')->findUsersByJournalRole(
+        $reviewerUsers = $em->getRepository(User::class)->findUsersByJournalRole(
+            ['ROLE_REVIEWER'],
+            $journal
+        );
+
+        return $this->render('OjsWorkflowBundle:Users:_reviewers_browse.html.twig', [
+            'reviewerUsers' => $reviewerUsers,
+            'reviewerStats' => $this->collectReviewerStats(),
+        ]);
+    }
+    /**
+     * @param Request $request
+     * @param $workflowId
+     * @return Response
+     */
+    public function browseOtherReviewersAction(Request $request, $workflowId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $this->throw404IfNotFound($workflow);
+        if($journal->getId() !== $workflow->getJournal()->getId()){
+            throw new AccessDeniedException;
+        }
+
+        $reviewerUsers = $em->getRepository(User::class)->findUsersByJournalRole(
             ['ROLE_REVIEWER']
         );
 
