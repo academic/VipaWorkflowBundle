@@ -34,8 +34,13 @@ class ExportReviewFormController extends Controller
         $source = new Entity(DialogPost::class);
         $tableAlias = $source->getTableAlias();
         $source->manipulateQuery(
-            function (QueryBuilder $qb) use ($tableAlias, $isEditor, $currentUser) {
+            function (QueryBuilder $qb) use ($tableAlias, $isEditor, $currentUser, $journal) {
                 $qb
+                    ->join($tableAlias.'.dialog','d')
+                    ->join('d.step','ws')
+                    ->join('ws.articleWorkflow','aw')
+                    ->andWhere('aw.journal = :journal')
+                    ->setParameter('journal', $journal->getId())
                     ->andWhere($tableAlias.'.type = :formResponseType')
                     ->setParameter('formResponseType', DialogPostTypes::TYPE_FORM_RESPONSE);
 
