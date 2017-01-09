@@ -6,6 +6,7 @@ use Ojs\AdminBundle\Events\MergeEvent;
 use Ojs\AdminBundle\Events\MergeEvents;
 use Ojs\UserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
+use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
 use Ojs\WorkflowBundle\Entity\JournalWorkflowStep;
 use Ojs\WorkflowBundle\Entity\StepDialog;
 use Ojs\WorkflowBundle\Service\WorkflowService;
@@ -71,6 +72,8 @@ class MergeUserListener implements EventSubscriberInterface
             $this->migrateStepDialogs($primaryUser, $slaveUser);
             $this->migrateStepDialogUsers($primaryUser, $slaveUser);
             $this->migrateJournalWorkflowStep($primaryUser, $slaveUser);
+            $this->migrateArticleWorkflowGrandted($primaryUser, $slaveUser);
+            $this->migrateArticleWorkflowRelated($primaryUser, $slaveUser);
         }
         return true;
     }
@@ -138,6 +141,50 @@ class MergeUserListener implements EventSubscriberInterface
             $journalWorkflowStep->addGrantedUser($primaryUser);
             $journalWorkflowStep->removeGrantedUser($slaveUser);
             $this->em->persist($journalWorkflowStep);
+        }
+
+        return true;
+    }
+
+    private function migrateArticleWorkflowGrandted(User $primaryUser, User $slaveUser)
+    {
+        /**  @var ArticleWorkflow[] $articleWorkflows */
+        $articleWorkflows = $this->em->getRepository(ArticleWorkflow::class)->createQueryBuilder('aw')
+            ->where(':slaveUser MEMBER OF aw.grantedUsers')
+            ->setParameter('slaveUser', $slaveUser)
+            ->getQuery()
+            ->getResult();
+
+        if (!$articleWorkflows) {
+            return;
+        }
+
+        foreach ($articleWorkflows as $articleWorkflow) {
+            $articleWorkflow->addGrantedUser($primaryUser);
+            $articleWorkflow->removeGrantedUser($slaveUser);
+            $this->em->persist($articleWorkflow);
+        }
+
+        return true;
+    }
+
+    private function migrateArticleWorkflowRelated(User $primaryUser, User $slaveUser)
+    {
+        /**  @var ArticleWorkflow[] $articleWorkflows */
+        $articleWorkflows = $this->em->getRepository(ArticleWorkflow::class)->createQueryBuilder('aw')
+            ->where(':slaveUser MEMBER OF aw.relatedUsers')
+            ->setParameter('slaveUser', $slaveUser)
+            ->getQuery()
+            ->getResult();
+
+        if (!$articleWorkflows) {
+            return;
+        }
+
+        foreach ($articleWorkflows as $articleWorkflow) {
+            $articleWorkflow->addRelatedUser($primaryUser);
+            $articleWorkflow->removeRelatedUser($slaveUser);
+            $this->em->persist($articleWorkflow);
         }
 
         return true;
