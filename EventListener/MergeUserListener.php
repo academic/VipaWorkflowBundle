@@ -7,6 +7,7 @@ use Ojs\AdminBundle\Events\MergeEvents;
 use Ojs\UserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
+use Ojs\WorkflowBundle\Entity\ArticleWorkflowStep;
 use Ojs\WorkflowBundle\Entity\DialogPost;
 use Ojs\WorkflowBundle\Entity\JournalWorkflowStep;
 use Ojs\WorkflowBundle\Entity\StepDialog;
@@ -76,6 +77,7 @@ class MergeUserListener implements EventSubscriberInterface
             $this->migrateArticleWorkflowGrandted($primaryUser, $slaveUser);
             $this->migrateArticleWorkflowRelated($primaryUser, $slaveUser);
             $this->migrateDialogPost($primaryUser, $slaveUser);
+            $this->migrateArticleWorkflowStep($primaryUser, $slaveUser);
         }
         return true;
     }
@@ -129,6 +131,11 @@ class MergeUserListener implements EventSubscriberInterface
         return true;
     }
 
+    /**
+     * @param User $primaryUser
+     * @param User $slaveUser
+     * @return bool|void
+     */
     private function migrateJournalWorkflowStep(User $primaryUser, User $slaveUser)
     {
         /**  @var JournalWorkflowStep[] $journalWorkflowSteps */
@@ -151,6 +158,11 @@ class MergeUserListener implements EventSubscriberInterface
         return true;
     }
 
+    /**
+     * @param User $primaryUser
+     * @param User $slaveUser
+     * @return bool|void
+     */
     private function migrateArticleWorkflowGrandted(User $primaryUser, User $slaveUser)
     {
         /**  @var ArticleWorkflow[] $articleWorkflows */
@@ -173,6 +185,11 @@ class MergeUserListener implements EventSubscriberInterface
         return true;
     }
 
+    /**
+     * @param User $primaryUser
+     * @param User $slaveUser
+     * @return bool|void
+     */
     private function migrateArticleWorkflowRelated(User $primaryUser, User $slaveUser)
     {
         /**  @var ArticleWorkflow[] $articleWorkflows */
@@ -213,6 +230,34 @@ class MergeUserListener implements EventSubscriberInterface
             $this->em->persist($dialogPost);
         }
         
+        return true;
+    }
+
+
+    /**
+     * @param User $primaryUser
+     * @param User $slaveUser
+     * @return bool|void
+     */
+    private function migrateArticleWorkflowStep(User $primaryUser, User $slaveUser)
+    {
+        /**  @var ArticleWorkflowStep[] $articleWorkflowSteps */
+        $articleWorkflowSteps = $this->em->getRepository(ArticleWorkflowStep::class)->createQueryBuilder('aws')
+            ->where(':slaveUser MEMBER OF aws.grantedUsers')
+            ->setParameter('slaveUser', $slaveUser)
+            ->getQuery()
+            ->getResult();
+
+        if (!$articleWorkflowSteps) {
+            return;
+        }
+
+        foreach ($articleWorkflowSteps as $articleWorkflowStep) {
+            $articleWorkflowStep->addGrantedUser($primaryUser);
+            $articleWorkflowStep->removeGrantedUser($slaveUser);
+            $this->em->persist($articleWorkflowStep);
+        }
+
         return true;
     }
 }
