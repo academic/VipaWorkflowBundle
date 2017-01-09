@@ -7,6 +7,7 @@ use Ojs\AdminBundle\Events\MergeEvents;
 use Ojs\UserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
+use Ojs\WorkflowBundle\Entity\DialogPost;
 use Ojs\WorkflowBundle\Entity\JournalWorkflowStep;
 use Ojs\WorkflowBundle\Entity\StepDialog;
 use Ojs\WorkflowBundle\Service\WorkflowService;
@@ -74,6 +75,7 @@ class MergeUserListener implements EventSubscriberInterface
             $this->migrateJournalWorkflowStep($primaryUser, $slaveUser);
             $this->migrateArticleWorkflowGrandted($primaryUser, $slaveUser);
             $this->migrateArticleWorkflowRelated($primaryUser, $slaveUser);
+            $this->migrateDialogPost($primaryUser, $slaveUser);
         }
         return true;
     }
@@ -81,6 +83,7 @@ class MergeUserListener implements EventSubscriberInterface
     /**
      * @param User $primaryUser
      * @param User $slaveUser
+     * @return bool|void
      */
     private function migrateStepDialogs(User $primaryUser, User $slaveUser)
     {
@@ -94,6 +97,8 @@ class MergeUserListener implements EventSubscriberInterface
             $stepDialog->setCreatedDialogBy($primaryUser);
             $this->em->persist($stepDialog);
         }
+
+        return true;
     }
 
     /**
@@ -187,6 +192,27 @@ class MergeUserListener implements EventSubscriberInterface
             $this->em->persist($articleWorkflow);
         }
 
+        return true;
+    }
+
+    /**
+     * @param User $primaryUser
+     * @param User $slaveUser
+     * @return bool|void
+     */
+    private function migrateDialogPost(User $primaryUser, User $slaveUser)
+    {
+        $dialogPosts = $this->em->getRepository(DialogPost::class)->findBy(['sendedBy' => $slaveUser->getId()]);
+
+        if (!$dialogPosts) {
+            return;
+        }
+
+        foreach ($dialogPosts as $dialogPost) {
+            $dialogPost->setSendedBy($primaryUser);
+            $this->em->persist($dialogPost);
+        }
+        
         return true;
     }
 }
