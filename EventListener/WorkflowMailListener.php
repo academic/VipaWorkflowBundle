@@ -293,7 +293,10 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onAcceptSubmissionDirectly(WorkflowEvent $event)
     {
-        $users = $this->mergeUserBags($event->workflow->relatedUsers, $this->getJournalEditors());
+        $users = $this->mergeUserBags(
+            $this->getJournalEditors(),
+            [$event->article->getSubmitterUser()]
+        );
         $this->sendWorkflowMail($event, WorkflowEvents::ACCEPT_SUBMISSION_DIRECTLY, $users);
     }
 
