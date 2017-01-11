@@ -282,7 +282,6 @@ class WorkflowMailListener implements EventSubscriberInterface
     public function onStepGotoReviewing(WorkflowEvent $event)
     {
         $users = $this->mergeUserBags(
-            $this->getJournalEditors(),
             [$event->article->getSubmitterUser()],
             $event->workflow->getStepByOrder(JournalWorkflowSteps::REVIEW_ORDER)->getGrantedUsers()
         );
