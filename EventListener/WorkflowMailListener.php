@@ -227,8 +227,7 @@ class WorkflowMailListener implements EventSubscriberInterface
 
         $users = $this->mergeUserBags(
             $event->step->grantedUsers,
-            $event->dialog->getUsers(),
-            [$event->dialog->getCreatedDialogBy()]
+            $event->dialog->getUsers()
         );
 
         $params = ['dialog.title' => $this->getDialogTitle($event->dialog)];
