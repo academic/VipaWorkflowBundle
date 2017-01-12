@@ -305,7 +305,9 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onWorkflowFinishAction(WorkflowEvent $event)
     {
-        $users = $this->mergeUserBags($this->getJournalEditors(), [$event->article->getSubmitterUser()]);
+        $users = $this->mergeUserBags(
+            $this->getJournalEditors()
+        );
         $this->sendWorkflowMail($event, WorkflowEvents::WORKFLOW_FINISH_ACTION, $users);
     }
 
