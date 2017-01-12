@@ -227,7 +227,8 @@ class WorkflowMailListener implements EventSubscriberInterface
 
         $users = $this->mergeUserBags(
             $event->step->grantedUsers,
-            $event->dialog->getUsers()
+            $event->dialog->getUsers(),
+            [$event->dialog->createdDialogBy]
         );
 
         $params = ['dialog.title' => $this->getDialogTitle($event->dialog)];
@@ -241,7 +242,8 @@ class WorkflowMailListener implements EventSubscriberInterface
     {
         $users = $this->mergeUserBags(
             $event->step->grantedUsers,
-            $event->dialog->getUsers()
+            $event->dialog->getUsers(),
+            [$event->dialog->createdDialogBy]
         );
 
         $this->sendWorkflowMail($event, WorkflowEvents::CREATE_DIALOG_WITH_AUTHOR, $users);
@@ -269,6 +271,7 @@ class WorkflowMailListener implements EventSubscriberInterface
     {
         $users = $this->mergeUserBags(
             [$event->article->getSubmitterUser()],
+            [$event->dialog->getCreatedDialogBy()],
             $event->workflow->getStepByOrder(JournalWorkflowSteps::ARRANGEMENT_ORDER)->getGrantedUsers()
         );
 
@@ -282,7 +285,8 @@ class WorkflowMailListener implements EventSubscriberInterface
     {
         $users = $this->mergeUserBags(
             [$event->article->getSubmitterUser()],
-            $event->workflow->getStepByOrder(JournalWorkflowSteps::REVIEW_ORDER)->getGrantedUsers()
+            $event->workflow->getStepByOrder(JournalWorkflowSteps::REVIEW_ORDER)->getGrantedUsers(),
+            [$event->dialog->getCreatedDialogBy()]
         );
 
         $this->sendWorkflowMail($event, WorkflowEvents::STEP_GOTO_REVIEWING, $users);
@@ -306,7 +310,7 @@ class WorkflowMailListener implements EventSubscriberInterface
     public function onWorkflowFinishAction(WorkflowEvent $event)
     {
         $users = $this->mergeUserBags(
-            $this->getJournalEditors()
+            [$event->dialog->getCreatedDialogBy()]
         );
         $this->sendWorkflowMail($event, WorkflowEvents::WORKFLOW_FINISH_ACTION, $users);
     }
@@ -316,7 +320,7 @@ class WorkflowMailListener implements EventSubscriberInterface
      */
     public function onDeclineSubmission(WorkflowEvent $event)
     {
-        $users = $this->mergeUserBags($this->getJournalEditors(), [$event->article->getSubmitterUser()]);
+        $users = $this->mergeUserBags([$event->article->getSubmitterUser()]);
         $this->sendWorkflowMail($event, WorkflowEvents::DECLINE_SUBMISSION, $users);
     }
 
