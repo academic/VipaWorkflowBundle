@@ -1,0 +1,9 @@
+<div class="well">
+    {{ include('::flashbag.html.twig') }}
+    {{ form(form) }}
+    <button class="btn btn-success pull-right" onclick="OjsWorkflow.postAddReviewerUser(this)">
+        {{ 'create.reviewer.user'|trans }}
+    </button>
+    <br>
+</div>
+<script src="{{ asset('bundles/tetranzselect2entity/js/select2entity.js') }}"></script>
