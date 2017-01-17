@@ -62,7 +62,7 @@ class MergeUserListener implements EventSubscriberInterface
         }
         
         /** @var User[] $slaveUsers */
-        $slaveUsers = $event->getPrimaryUser();
+        $slaveUsers = $event->getSlaveUsers();
         if(!$slaveUsers){
             return;
         }
