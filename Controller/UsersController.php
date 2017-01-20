@@ -4,6 +4,7 @@ namespace Ojs\WorkflowBundle\Controller;
 
 use Ojs\WorkflowBundle\Event\WorkflowEvent;
 use Ojs\WorkflowBundle\Event\WorkflowEvents;
+use Ojs\WorkflowBundle\Form\Type\AddReviewerUserType;
 use Ojs\WorkflowBundle\Form\Type\ReviewerUserType;
 use Ojs\CoreBundle\Controller\OjsController as Controller;
 use Ojs\JournalBundle\Entity\JournalUser;
@@ -31,8 +32,9 @@ class UsersController extends Controller
             throw new AccessDeniedException;
         }
 
-        $reviewerUsers = $em->getRepository('OjsUserBundle:User')->findUsersByJournalRole(
-            ['ROLE_REVIEWER']
+        $reviewerUsers = $em->getRepository(User::class)->findUsersByJournalRole(
+            ['ROLE_REVIEWER'],
+            $journal
         );
 
         return $this->render('OjsWorkflowBundle:Users:_reviewers_browse.html.twig', [
@@ -209,6 +211,62 @@ GROUP BY users.id;";
         }
 
         return $this->render('OjsWorkflowBundle:Users:_create_reviewer.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $workflowId
+     * @return Response
+     */
+    public function addReviewerUserAction(Request $request, $workflowId)
+    {
+        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $this->throw404IfNotFound($journal);
+        $workflowService = $this->get('dp.workflow_service');
+        $workflow = $workflowService->getArticleWorkflow($workflowId);
+        $dispatcher = $this->get('event_dispatcher');
+        $em = $this->getDoctrine()->getManager();
+
+        $reviewerRole = $em->getRepository(Role::class)->findOneBy([
+            'role' => 'ROLE_REVIEWER',
+        ]);
+
+        $form = $this->createForm(new AddReviewerUserType(), null, [
+            'action' => $this->generateUrl('ojs_workflow_add_reviewer_user', [
+                'journalId' => $journal->getId(),
+                'workflowId' => $workflow->getId(),
+            ])
+        ]);
+        
+        $form->handleRequest($request);
+
+        if($request->getMethod() == 'POST' && $form->isValid()){
+            $data = $form->getData();
+            /** @var User reviewerUser */
+            $reviewerUser = $data['reviewerUser'];
+
+
+            $journalReviewerUser = new JournalUser();
+            $journalReviewerUser
+                ->setJournal($journal)
+                ->setUser($reviewerUser)
+                ->addRole($reviewerRole)
+            ;
+            $em->persist($journalReviewerUser);
+
+            $em->flush();
+
+            //dispatch event
+            $event = new WorkflowEvent($reviewerUser);
+            $event->setWorkflow($workflow);
+            $dispatcher->dispatch(WorkflowEvents::REVIEWER_USER_CREATED, $event);
+
+            return $workflowService->getMessageBlock('successful_add_reviewer_user');
+        }
+
+        return $this->render('OjsWorkflowBundle:Users:_add_reviewer.html.twig', [
             'form' => $form->createView(),
         ]);
     }

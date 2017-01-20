@@ -1,0 +1,20 @@
+<div class="well">
+    {{ include('::flashbag.html.twig') }}
+    {{ form(form) }}
+    <button class="btn btn-success pull-right" onclick="OjsWorkflow.postAddReviewerUser(this)">
+        {{ 'add.reviewer.user'|trans }}
+    </button>
+    <br>
+</div>
+<style>
+    .select2-dropdown {
+        z-index: 9001;
+        width:400px;
+    }
+    .select2 {
+        width:400px;
+    }
+</style>
+<script>
+    $('.select2entity').select2entity();
+</script>

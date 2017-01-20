@@ -15,3 +15,9 @@ ojs_workflow_create_reviewer_user:
   defaults: { _controller: "OjsWorkflowBundle:Users:createReviewerUser" }
   options:
       expose: true
+
+ojs_workflow_add_reviewer_user:
+  path:     /add-reviewer-user
+  defaults: { _controller: "OjsWorkflowBundle:Users:addReviewerUser" }
+  options:
+      expose: true
