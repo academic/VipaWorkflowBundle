@@ -102,3 +102,12 @@
         setTimeout(function(){ location.reload(); }, 4000);
     </script>
 {% endblock %}
+
+
+{% block successful_add_reviewer_user %}
+    <script>
+        $.fancybox.close();
+        swal(Translator.trans('great'), Translator.trans('_reviewer_user.created.message'), "success");
+        setTimeout(function(){ location.reload(); }, 4000);
+    </script>
+{% endblock %}

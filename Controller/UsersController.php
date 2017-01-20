@@ -42,31 +42,6 @@ class UsersController extends Controller
             'reviewerStats' => $this->collectReviewerStats(),
         ]);
     }
-    /**
-     * @param Request $request
-     * @param $workflowId
-     * @return Response
-     */
-    public function browseOtherReviewersAction(Request $request, $workflowId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
-        $workflowService = $this->get('dp.workflow_service');
-        $workflow = $workflowService->getArticleWorkflow($workflowId);
-        $this->throw404IfNotFound($workflow);
-        if($journal->getId() !== $workflow->getJournal()->getId()){
-            throw new AccessDeniedException;
-        }
-
-        $reviewerUsers = $em->getRepository(User::class)->findUsersByJournalRole(
-            ['ROLE_REVIEWER']
-        );
-
-        return $this->render('OjsWorkflowBundle:Users:_reviewers_browse.html.twig', [
-            'reviewerUsers' => $reviewerUsers,
-            'reviewerStats' => $this->collectReviewerStats(),
-        ]);
-    }
 
     private function collectReviewerStats()
     {
@@ -271,7 +246,7 @@ GROUP BY users.id;";
             $data = $form->getData();
             /** @var User reviewerUser */
             $reviewerUser = $data['reviewerUser'];
-            
+
 
             $journalReviewerUser = new JournalUser();
             $journalReviewerUser
@@ -288,7 +263,7 @@ GROUP BY users.id;";
             $event->setWorkflow($workflow);
             $dispatcher->dispatch(WorkflowEvents::REVIEWER_USER_CREATED, $event);
 
-            return $workflowService->getMessageBlock('successful_create_reviewer_user');
+            return $workflowService->getMessageBlock('successful_add_reviewer_user');
         }
 
         return $this->render('OjsWorkflowBundle:Users:_add_reviewer.html.twig', [

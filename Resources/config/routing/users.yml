@@ -4,12 +4,6 @@ ojs_workflow_reviewers_browse:
   options:
       expose: true
 
-ojs_workflow_other_reviewers_browse:
-  path:     /other-browse-reviewers
-  defaults: { _controller: "OjsWorkflowBundle:Users:browseOtherReviewers" }
-  options:
-      expose: true
-
 ojs_workflow_section_editors_browse:
   path:     /browse-section-editors
   defaults: { _controller: "OjsWorkflowBundle:Users:browseSectionEditors" }

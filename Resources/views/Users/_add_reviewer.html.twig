@@ -2,8 +2,19 @@
     {{ include('::flashbag.html.twig') }}
     {{ form(form) }}
     <button class="btn btn-success pull-right" onclick="OjsWorkflow.postAddReviewerUser(this)">
-        {{ 'create.reviewer.user'|trans }}
+        {{ 'add.reviewer.user'|trans }}
     </button>
     <br>
 </div>
-<script src="{{ asset('bundles/tetranzselect2entity/js/select2entity.js') }}"></script>
+<style>
+    .select2-dropdown {
+        z-index: 9001;
+        width:400px;
+    }
+    .select2 {
+        width:400px;
+    }
+</style>
+<script>
+    $('.select2entity').select2entity();
+</script>

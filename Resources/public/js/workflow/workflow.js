@@ -683,15 +683,6 @@ $(document).ready(function() {
             browseWindow = window.open(browseUrl);
             browseWindow.focus();
         },
-        browseOtherReviewerUsers: function ($this, $dialogId) {
-            var browseUrl = Routing.generate('ojs_workflow_other_reviewers_browse', {
-                journalId: journalId,
-                workflowId: workflowId,
-                stepOrder: stepOrder
-            });
-            browseWindow = window.open(browseUrl);
-            browseWindow.focus();
-        },
         browseSectionEditorUsers: function ($this, $dialogId) {
             var browseUrl = Routing.generate('ojs_workflow_section_editors_browse', {
                 journalId: journalId,
@@ -755,7 +746,7 @@ $(document).ready(function() {
             });
         },
         postAddReviewerUser: function ($this) {
-            var dialogForm = $('form[name="reviewer_user"]');
+            var dialogForm = $('form[name="add_reviewer_user"]');
             $.post( dialogForm.attr('action'), dialogForm.serialize(), function( data ) {
                 $.fancybox({
                     content: data,
