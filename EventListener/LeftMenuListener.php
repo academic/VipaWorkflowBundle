@@ -1,12 +1,12 @@
 <?php
 
-namespace Ojs\WorkflowBundle\EventListener;
+namespace Vipa\WorkflowBundle\EventListener;
 
-use Ojs\WorkflowBundle\Service\WorkflowPermissionService;
-use Ojs\CoreBundle\Acl\AuthorizationChecker;
-use Ojs\JournalBundle\Event\MenuEvent;
-use Ojs\JournalBundle\Event\MenuEvents;
-use Ojs\JournalBundle\Service\JournalService;
+use Vipa\WorkflowBundle\Service\WorkflowPermissionService;
+use Vipa\CoreBundle\Acl\AuthorizationChecker;
+use Vipa\JournalBundle\Event\MenuEvent;
+use Vipa\JournalBundle\Event\MenuEvents;
+use Vipa\JournalBundle\Service\JournalService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class LeftMenuListener implements EventSubscriberInterface
@@ -68,7 +68,7 @@ class LeftMenuListener implements EventSubscriberInterface
             ['title.export.review.forms', 'dp_workflow_export_review_form', 'download'],
         ];
         if($this->wfPermissionService->isHaveEditorRole()){
-            $items[] = ['workflow.setting', 'ojs_workflow_step_index', 'random'];
+            $items[] = ['workflow.setting', 'vipa_workflow_step_index', 'random'];
         }
         foreach ($items as $item) {
             $label = $item[0];
@@ -98,8 +98,8 @@ class LeftMenuListener implements EventSubscriberInterface
             $menuItem = $menuEvent->getMenuItem();
             $items = [
                 // [field, label, route, icon]
-                ['articles_in_review', 'ojs_workflow_flow_active', 'flag'],
-                ['wf.flow_history', 'ojs_workflow_flow_history', 'history'],
+                ['articles_in_review', 'vipa_workflow_flow_active', 'flag'],
+                ['wf.flow_history', 'vipa_workflow_flow_history', 'history'],
             ];
             foreach ($items as $item) {
                 $label = $item[0];

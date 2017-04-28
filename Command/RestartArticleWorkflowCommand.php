@@ -1,11 +1,11 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Command;
+namespace Vipa\WorkflowBundle\Command;
 
 use Doctrine\ORM\EntityManager;
-use Ojs\JournalBundle\Entity\Article;
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\WorkflowBundle\Service\WorkflowService;
+use Vipa\JournalBundle\Entity\Article;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflow;
+use Vipa\WorkflowBundle\Service\WorkflowService;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class CleanArticleWorkflowCommand
- * @package Ojs\WorkflowBundle\Command
+ * @package Vipa\WorkflowBundle\Command
  */
 class RestartArticleWorkflowCommand extends ContainerAwareCommand
 {
@@ -43,7 +43,7 @@ class RestartArticleWorkflowCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('ojs:restart:article:workflow')
+            ->setName('vipa:restart:article:workflow')
             ->setDescription('Restart article workflow.')
             ->addArgument('articleId', InputArgument::REQUIRED, 'Article ID?');
     }

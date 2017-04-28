@@ -1,14 +1,14 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Vipa\WorkflowBundle\Entity;
 
-use Ojs\WorkflowBundle\Params\StepStatus;
+use Vipa\WorkflowBundle\Params\StepStatus;
 use Doctrine\Common\Collections\ArrayCollection;
-use Ojs\UserBundle\Entity\User;
+use Vipa\UserBundle\Entity\User;
 
 /**
  * Class ArticleWorkflowStep
- * @package Ojs\WorkflowBundle\Entity
+ * @package Vipa\WorkflowBundle\Entity
  */
 class ArticleWorkflowStep
 {

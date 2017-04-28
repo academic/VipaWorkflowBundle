@@ -1,36 +1,36 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Service;
+namespace Vipa\WorkflowBundle\Service;
 
 use Doctrine\ORM\EntityManager;
-use Ojs\UserBundle\Entity\User;
-use Ojs\JournalBundle\Entity\Article;
-use Ojs\JournalBundle\Entity\Journal;
-use Ojs\JournalBundle\Entity\ArticleFile;
-use Ojs\CoreBundle\Params\ArticleStatuses;
-use Ojs\JournalBundle\Service\JournalService;
+use Vipa\UserBundle\Entity\User;
+use Vipa\JournalBundle\Entity\Article;
+use Vipa\JournalBundle\Entity\Journal;
+use Vipa\JournalBundle\Entity\ArticleFile;
+use Vipa\CoreBundle\Params\ArticleStatuses;
+use Vipa\JournalBundle\Service\JournalService;
 use Symfony\Component\HttpFoundation\Response;
-use Ojs\WorkflowBundle\Entity\DialogPost;
-use Ojs\WorkflowBundle\Params\StepStatus;
-use Ojs\WorkflowBundle\Entity\StepDialog;
-use Ojs\WorkflowBundle\Event\WorkflowEvent;
+use Vipa\WorkflowBundle\Entity\DialogPost;
+use Vipa\WorkflowBundle\Params\StepStatus;
+use Vipa\WorkflowBundle\Entity\StepDialog;
+use Vipa\WorkflowBundle\Event\WorkflowEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Ojs\WorkflowBundle\Event\WorkflowEvents;
-use Ojs\WorkflowBundle\Entity\StepReviewForm;
-use Ojs\JournalBundle\Entity\ArticleSubmissionFile;
-use Ojs\WorkflowBundle\Params\StepActionTypes;
-use Ojs\WorkflowBundle\Params\DialogPostTypes;
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\WorkflowBundle\Params\StepDialogStatus;
+use Vipa\WorkflowBundle\Event\WorkflowEvents;
+use Vipa\WorkflowBundle\Entity\StepReviewForm;
+use Vipa\JournalBundle\Entity\ArticleSubmissionFile;
+use Vipa\WorkflowBundle\Params\StepActionTypes;
+use Vipa\WorkflowBundle\Params\DialogPostTypes;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflow;
+use Vipa\WorkflowBundle\Params\StepDialogStatus;
 use Symfony\Component\Translation\TranslatorInterface;
-use Ojs\WorkflowBundle\Entity\JournalReviewForm;
-use Ojs\WorkflowBundle\Entity\WorkflowHistoryLog;
-use Ojs\WorkflowBundle\Entity\ArticleWorkflowStep;
-use Ojs\WorkflowBundle\Entity\JournalWorkflowStep;
-use Ojs\WorkflowBundle\Params\JournalWorkflowSteps;
-use Ojs\WorkflowBundle\Params\ArticleWorkflowStatus;
-use Ojs\WorkflowBundle\Entity\ArticleWorkflowSetting;
-use Ojs\WorkflowBundle\Entity\JournalWorkflowSetting;
+use Vipa\WorkflowBundle\Entity\JournalReviewForm;
+use Vipa\WorkflowBundle\Entity\WorkflowHistoryLog;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Vipa\WorkflowBundle\Entity\JournalWorkflowStep;
+use Vipa\WorkflowBundle\Params\JournalWorkflowSteps;
+use Vipa\WorkflowBundle\Params\ArticleWorkflowStatus;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflowSetting;
+use Vipa\WorkflowBundle\Entity\JournalWorkflowSetting;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -536,7 +536,7 @@ class WorkflowService
      */
     public function getMessageBlock($block, $params = [])
     {
-        $template = $this->twig->loadTemplate('OjsWorkflowBundle:ArticleWorkflow:_message_blocks.html.twig');
+        $template = $this->twig->loadTemplate('VipaWorkflowBundle:ArticleWorkflow:_message_blocks.html.twig');
 
         return new Response($template->renderBlock($block, $params));
     }
@@ -549,7 +549,7 @@ class WorkflowService
      */
     public function getFormBlock($block, $params = [])
     {
-        $template = $this->twig->loadTemplate('OjsWorkflowBundle:ArticleWorkflow:_action_forms.html.twig');
+        $template = $this->twig->loadTemplate('VipaWorkflowBundle:ArticleWorkflow:_action_forms.html.twig');
 
         return new Response($template->renderBlock($block, $params));
     }
@@ -952,7 +952,7 @@ class WorkflowService
     public function getArticleDetail(ArticleWorkflow $workflow)
     {
         $article = $workflow->getArticle();
-        $template = $this->twig->render('OjsWorkflowBundle:ArticleWorkflow/article_detail:_article_detail.html.twig', [
+        $template = $this->twig->render('VipaWorkflowBundle:ArticleWorkflow/article_detail:_article_detail.html.twig', [
             'article' => $article,
             'workflow' => $workflow,
             'workflowSettings' => $this->workflowSettings($workflow),

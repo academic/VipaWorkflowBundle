@@ -1,9 +1,9 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Event;
+namespace Vipa\WorkflowBundle\Event;
 
-use Ojs\CoreBundle\Events\EventDetail;
-use Ojs\CoreBundle\Events\MailEventsInterface;
+use Vipa\CoreBundle\Events\EventDetail;
+use Vipa\CoreBundle\Events\MailEventsInterface;
 
 final class WorkflowEvents implements MailEventsInterface
 {

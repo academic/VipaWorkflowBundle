@@ -1,15 +1,15 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Service;
+namespace Vipa\WorkflowBundle\Service;
 
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\WorkflowBundle\Entity\ArticleWorkflowStep;
-use Ojs\WorkflowBundle\Entity\StepDialog;
-use Ojs\WorkflowBundle\Params\StepActionTypes;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflow;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Vipa\WorkflowBundle\Entity\StepDialog;
+use Vipa\WorkflowBundle\Params\StepActionTypes;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Ojs\JournalBundle\Service\JournalService;
-use Ojs\UserBundle\Entity\User;
+use Vipa\JournalBundle\Service\JournalService;
+use Vipa\UserBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class WorkflowPermissionService

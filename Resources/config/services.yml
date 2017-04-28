@@ -1,11 +1,11 @@
 services:
-  ojs.workflow_extension:
-    class: Ojs\WorkflowBundle\Service\Twig\DPWorkflowTwigExtension
+  vipa.workflow_extension:
+    class: Vipa\WorkflowBundle\Service\Twig\DPWorkflowTwigExtension
     arguments:
       - "@doctrine.orm.entity_manager"
       - "@router"
       - "@translator"
-      - "@ojs.journal_service"
+      - "@vipa.journal_service"
       - "@security.token_storage"
       - "@session"
       - "@request_stack"
@@ -16,19 +16,19 @@ services:
       - { name: twig.extension }
 
   dp.workflow.left_menu_listener:
-    class: Ojs\WorkflowBundle\EventListener\LeftMenuListener
+    class: Vipa\WorkflowBundle\EventListener\LeftMenuListener
     arguments:
       - "@security.authorization_checker"
-      - "@ojs.journal_service"
+      - "@vipa.journal_service"
       - "@dp.workflow_permission_service"
     tags:
       - { name: kernel.event_subscriber }
 
   dp.workflow_service:
-    class: Ojs\WorkflowBundle\Service\WorkflowService
+    class: Vipa\WorkflowBundle\Service\WorkflowService
     arguments:
       - "@doctrine.orm.entity_manager"
-      - "@ojs.journal_service"
+      - "@vipa.journal_service"
       - "@security.token_storage"
       - "@dp.wf_logger_service"
       - "@dp.workflow_permission_service"
@@ -37,48 +37,48 @@ services:
       - "@event_dispatcher"
 
   dp.workflow_permission_service:
-    class: Ojs\WorkflowBundle\Service\WorkflowPermissionService
+    class: Vipa\WorkflowBundle\Service\WorkflowPermissionService
     arguments:
-      - "@ojs.journal_service"
+      - "@vipa.journal_service"
       - "@security.token_storage"
       - "@doctrine.orm.entity_manager"
 
   dp.wf_logger_service:
-    class: Ojs\WorkflowBundle\Service\WorkflowLoggerService
+    class: Vipa\WorkflowBundle\Service\WorkflowLoggerService
     arguments:
       - "@doctrine.orm.entity_manager"
-      - "@ojs.journal_service"
+      - "@vipa.journal_service"
       - "@translator"
 
   dp.workflow.article_submit_event_listener:
-    class: Ojs\WorkflowBundle\EventListener\ArticleSubmitEventListener
+    class: Vipa\WorkflowBundle\EventListener\ArticleSubmitEventListener
     arguments: ["@dp.workflow_service"]
     tags:
       - { name: kernel.event_subscriber }
 
   dp_workflow.workflow_events:
-    class: Ojs\WorkflowBundle\Event\WorkflowEvents
+    class: Vipa\WorkflowBundle\Event\WorkflowEvents
     tags:
-      - { name: ojs.mail.event}
+      - { name: vipa.mail.event}
 
   dp.worklfow.mail_listener:
-    class: Ojs\WorkflowBundle\EventListener\WorkflowMailListener
-    arguments: ["@router", "@doctrine.orm.entity_manager", "@ojs_mailer", "@translator"]
+    class: Vipa\WorkflowBundle\EventListener\WorkflowMailListener
+    arguments: ["@router", "@doctrine.orm.entity_manager", "@vipa_mailer", "@translator"]
     tags:
       - { name: kernel.event_subscriber }
 
   dp.worklfow.article_list_event_listener:
-    class: Ojs\WorkflowBundle\EventListener\ArticleListEventListener
-    arguments: ["@ojs.journal_service", "@doctrine.orm.entity_manager", "@router", "@translator"]
+    class: Vipa\WorkflowBundle\EventListener\ArticleListEventListener
+    arguments: ["@vipa.journal_service", "@doctrine.orm.entity_manager", "@router", "@translator"]
     tags:
       - { name: kernel.event_subscriber }
 
   dp.workflow_export_grid_action:
-    class: Ojs\WorkflowBundle\Service\ExportGridAction
+    class: Vipa\WorkflowBundle\Service\ExportGridAction
     arguments: ["@translator"]
 
   dp.worklfow.article_crud_listener:
-    class: Ojs\WorkflowBundle\EventListener\ArticleCrudListener
+    class: Vipa\WorkflowBundle\EventListener\ArticleCrudListener
     arguments: ["@doctrine.orm.entity_manager", "@dp.workflow_service"]
     tags:
       - { name: kernel.event_subscriber }

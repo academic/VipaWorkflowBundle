@@ -1,14 +1,14 @@
 <?php
 
-namespace Ojs\WorkflowBundle\EventListener;
+namespace Vipa\WorkflowBundle\EventListener;
 
 use APY\DataGridBundle\Grid\Action\RowAction;
 use APY\DataGridBundle\Grid\Column\ActionsColumn;
 use APY\DataGridBundle\Grid\Row;
-use Ojs\CoreBundle\Params\ArticleStatuses;
-use Ojs\JournalBundle\Event\ListEvent;
-use Ojs\JournalBundle\Event\Article\ArticleEvents;
-use Ojs\JournalBundle\Service\JournalService;
+use Vipa\CoreBundle\Params\ArticleStatuses;
+use Vipa\JournalBundle\Event\ListEvent;
+use Vipa\JournalBundle\Event\Article\ArticleEvents;
+use Vipa\JournalBundle\Service\JournalService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\RouterInterface;
@@ -83,7 +83,7 @@ class ArticleListEventListener implements EventSubscriberInterface
         $actionColumn = $grid->getColumn("actions");
         $rowActions = $actionColumn->getRowActions();
 
-        $rowAction = new RowAction('<i class="fa fa-random"></i>', 'ojs_workflow_restart_workflow');
+        $rowAction = new RowAction('<i class="fa fa-random"></i>', 'vipa_workflow_restart_workflow');
         $rowAction->setRouteParameters(['id', 'journalId' => $journal->getId()]);
 
         $rowAction->manipulateRender(

@@ -1,14 +1,14 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Event;
+namespace Vipa\WorkflowBundle\Event;
 
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\WorkflowBundle\Entity\ArticleWorkflowStep;
-use Ojs\WorkflowBundle\Entity\DialogPost;
-use Ojs\WorkflowBundle\Entity\StepDialog;
-use Ojs\JournalBundle\Entity\Article;
-use Ojs\JournalBundle\Entity\Journal;
-use Ojs\UserBundle\Entity\User;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflow;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Vipa\WorkflowBundle\Entity\DialogPost;
+use Vipa\WorkflowBundle\Entity\StepDialog;
+use Vipa\JournalBundle\Entity\Article;
+use Vipa\JournalBundle\Entity\Journal;
+use Vipa\UserBundle\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
 
 final class WorkflowEvent extends Event

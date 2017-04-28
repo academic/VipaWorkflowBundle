@@ -1,9 +1,9 @@
-{% extends '::ojsbase.html.twig' %}
+{% extends '::vipabase.html.twig' %}
 {% block title %}{{ 'title.workflow_settings'|trans }} {{ parent() }}{% endblock %}
 
 {% block breadcrumb %}
     {% set list = [
-    {'link': path('ojs_journal_dashboard_index', {journalId: selectedJournal().id}), 'title': 'dashboard'|trans},
+    {'link': path('vipa_journal_dashboard_index', {journalId: selectedJournal().id}), 'title': 'dashboard'|trans},
     {'title': 'title.workflow_settings'|trans}
     ] %}
     {{ breadcrumb(list) }}
@@ -19,7 +19,7 @@
         <i class="fa fa-warning"></i>
         {{ 'wf.each.change.will.effect.hereafter'|trans }}
     </div>
-    <button class="btn btn-default btn-sm" onclick="OjsWorkflow.basicJournalWfSetting(this)" href="{{ path('ojs_workflow_basic_settings', {journalId: selectedJournal().id}) }}">
+    <button class="btn btn-default btn-sm" onclick="VipaWorkflow.basicJournalWfSetting(this)" href="{{ path('vipa_workflow_basic_settings', {journalId: selectedJournal().id}) }}">
         {{ 'workflow.reviewer_settings'|trans }}
     </button>
     <hr>
@@ -37,10 +37,10 @@
                     <th>{{ ('wf.step.'~journalStepAlias(step.order))|trans }}</th>
                     <th>{{ step.order }}</th>
                     <th>
-                        <button class="btn btn-primary btn-sm" onclick="OjsWorkflow.stepGrantedUsersSetup(this, {{ step.order }})">
+                        <button class="btn btn-primary btn-sm" onclick="VipaWorkflow.stepGrantedUsersSetup(this, {{ step.order }})">
                             <i class="fa fa-users" data-toggle="tooltip" data-title="{{ 'wf.step.granted.users.setup'|trans }}"></i>
                         </button>
-                        <button class="btn btn-success btn-sm" onclick="OjsWorkflow.showStepDetail(this, {{ step.order }})">
+                        <button class="btn btn-success btn-sm" onclick="VipaWorkflow.showStepDetail(this, {{ step.order }})">
                             <i class="fa fa-info-circle" data-toggle="tooltip"  data-title="{{ 'show.step.detail'|trans }}"></i>
                         </button>
                         <a class="btn btn-primary btn-sm" href="{{ path('dp_workflow_review_form', {journalId: selectedJournal().id, stepId: step.id}) }}">
@@ -77,5 +77,5 @@
         var journalId = {{ journal.id }};
     </script>
     <script src="{{ url('bazinga_jstranslation_js') }}"></script>
-    <script src="{{ asset('bundles/ojsworkflow/js/workflow/workflow.js') }}"></script>
+    <script src="{{ asset('bundles/vipaworkflow/js/workflow/workflow.js') }}"></script>
 {% endblock %}

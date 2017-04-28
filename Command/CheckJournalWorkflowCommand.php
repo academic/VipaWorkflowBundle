@@ -1,12 +1,12 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Command;
+namespace Vipa\WorkflowBundle\Command;
 
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflow;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflowStep;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
-use Ojs\WorkflowBundle\Params\StepStatus;
+use Vipa\WorkflowBundle\Params\StepStatus;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class CheckJournalWorkflowCommand
- * @package Ojs\WorkflowBundle\Command
+ * @package Vipa\WorkflowBundle\Command
  */
 class CheckJournalWorkflowCommand extends ContainerAwareCommand
 {
@@ -41,7 +41,7 @@ class CheckJournalWorkflowCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('ojs:check:journal:workflow')
+            ->setName('vipa:check:journal:workflow')
             ->setDescription('Checking journal workflows.')
             ->addArgument('journalId', InputArgument::REQUIRED, 'Journal ID?')
         ;

@@ -1,7 +1,7 @@
 dp_workflow_export_review_form:
     path:     /
-    defaults: { _controller: "OjsWorkflowBundle:ExportReviewForm:index" }
+    defaults: { _controller: "VipaWorkflowBundle:ExportReviewForm:index" }
 
 dp_workflow_export_review_form_single_print:
     path:     /{id}
-    defaults: { _controller: "OjsWorkflowBundle:ExportReviewForm:singlePrint" }
+    defaults: { _controller: "VipaWorkflowBundle:ExportReviewForm:singlePrint" }

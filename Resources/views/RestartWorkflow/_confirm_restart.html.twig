@@ -1,10 +1,10 @@
-{% extends '::ojsbase.html.twig' %}
+{% extends '::vipabase.html.twig' %}
 {% block title %}{{ 'title.articles'|trans }} {{ parent() }}{% endblock %}
 
 {% block breadcrumb %}
     {% set list = [
-    {'link': path('ojs_journal_dashboard_index', {journalId: selectedJournal().id}), 'title': 'dashboard'|trans},
-    {'link': path('ojs_journal_article_index', {journalId: selectedJournal().id}), 'title': 'title.articles'|trans},
+    {'link': path('vipa_journal_dashboard_index', {journalId: selectedJournal().id}), 'title': 'dashboard'|trans},
+    {'link': path('vipa_journal_article_index', {journalId: selectedJournal().id}), 'title': 'title.articles'|trans},
     {'title': 'wf.restart.confirm'|trans}
     ] %}
     {{ breadcrumb(list) }}
@@ -17,7 +17,7 @@
         <div class="alert alert-info">
              {{ 'workflow.exists.info'|trans }}
         </div>
-        <a href="{{ path('ojs_workflow_article_workflow', {'journalId': selectedJournal().id, 'workflowId' : currentWorkflow.id}) }}"
+        <a href="{{ path('vipa_workflow_article_workflow', {'journalId': selectedJournal().id, 'workflowId' : currentWorkflow.id}) }}"
            class="btn btn-success pull-right">
             {{ 'view.current.process'|trans }}
         </a>

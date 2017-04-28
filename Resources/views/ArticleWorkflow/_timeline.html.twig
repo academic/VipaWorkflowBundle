@@ -1,10 +1,10 @@
-{% extends '::ojsbase.html.twig' %}
+{% extends '::vipabase.html.twig' %}
 {% block title %}{{ timeline.article.title }}:{{ 'wf.article.timeline'|trans }} {{ parent() }}{% endblock %}
 
 {% block breadcrumb %}
     {% set list = [
-    {'link':  path('ojs_journal_dashboard_index', {journalId: timeline.journal.id}), 'title': 'dashboard'|trans},
-    {'link':  path('ojs_workflow_flow_active', {journalId: timeline.journal.id}), 'title': 'wf.active_articles'|trans},
+    {'link':  path('vipa_journal_dashboard_index', {journalId: timeline.journal.id}), 'title': 'dashboard'|trans},
+    {'link':  path('vipa_workflow_flow_active', {journalId: timeline.journal.id}), 'title': 'wf.active_articles'|trans},
     {'title': 'wf.article.timeline'|trans ~ ': ' ~ timeline.article.title  }
     ] %}
     {{ breadcrumb(list) }}
@@ -12,7 +12,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets '@OjsWorkflowBundle/Resources/public/css/workflow/*'  output="assets/prod/css/article_workflow.css" %}
+    {% stylesheets '@VipaWorkflowBundle/Resources/public/css/workflow/*'  output="assets/prod/css/article_workflow.css" %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
 {% endblock %}
@@ -20,7 +20,7 @@
 {% block body %}
     {% include '::flashbag.html.twig' %}
 
-    {% include 'OjsWorkflowBundle:ArticleWorkflow:_steps_breadcrumb.html.twig' %}
+    {% include 'VipaWorkflowBundle:ArticleWorkflow:_steps_breadcrumb.html.twig' %}
     <br><hr class="top30">
     <div class="timeline">
     </div>
@@ -52,12 +52,12 @@
         var articleId = {{ timeline.article.id }};
     </script>
     <script src="{{ url('bazinga_jstranslation_js') }}"></script>
-    {% javascripts '@OjsWorkflowBundle/Resources/public/js/workflow/*' output="assets/prod/js/article_workflow.js" %}
+    {% javascripts '@VipaWorkflowBundle/Resources/public/js/workflow/*' output="assets/prod/js/article_workflow.js" %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script>
         $(document).ready(function() {
-            OjsWorkflow.loadStep({{ timeline.workflow.currentStep.order }});
+            VipaWorkflow.loadStep({{ timeline.workflow.currentStep.order }});
         });
     </script>
 {% endblock %}

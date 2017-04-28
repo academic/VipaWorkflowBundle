@@ -1,63 +1,63 @@
-ojs_workflow_article_workflow:
+vipa_workflow_article_workflow:
   path:     /{workflowId}
-  defaults: { _controller: "OjsWorkflowBundle:ArticleWorkflow:timeline" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleWorkflow:timeline" }
 
-ojs_workflow_timeline_step:
+vipa_workflow_timeline_step:
   path:     /{workflowId}/step/{stepOrder}
-  defaults: { _controller: "OjsWorkflowBundle:ArticleWorkflow:step" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleWorkflow:step" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
-ojs_workflow_history_log:
+vipa_workflow_history_log:
   path:     /{workflowId}/history/log
-  defaults: { _controller: "OjsWorkflowBundle:ArticleWorkflow:historyLog" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleWorkflow:historyLog" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
-ojs_workflow_permission_table:
+vipa_workflow_permission_table:
   path:     /{workflowId}/permission/table
-  defaults: { _controller: "OjsWorkflowBundle:ArticleWorkflow:permissionTable" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleWorkflow:permissionTable" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
-ojs_article_workflow_granted_users_setup:
+vipa_article_workflow_granted_users_setup:
   path:     /{workflowId}/granted/users/setup
-  defaults: { _controller: "OjsWorkflowBundle:ArticleWorkflow:grantedUsersSetup" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleWorkflow:grantedUsersSetup" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
-ojs_workflow_article_detail:
+vipa_workflow_article_detail:
   path:     /{workflowId}/article/detail
-  defaults: { _controller: "OjsWorkflowBundle:ArticleWorkflow:articleDetail" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleWorkflow:articleDetail" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 # upload review version file routing
-ojs_workflow_article_detail_upload_review_version_file:
+vipa_workflow_article_detail_upload_review_version_file:
   path:     /{workflowId}/article/detail/upload-review-version-file
-  defaults: { _controller: "OjsWorkflowBundle:ArticleWorkflow:uploadReviewVersionFile" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleWorkflow:uploadReviewVersionFile" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 # step dialog related routing
-ojs_workflow_dialog:
+vipa_workflow_dialog:
     resource: "dialog.yml"
     prefix:   /{workflowId}/step/{stepOrder}
 
 # dialog post related routing
-ojs_workflow_dialog_post:
+vipa_workflow_dialog_post:
     resource: "post.yml"
     prefix:   /{workflowId}/step/{stepOrder}/dialog/{dialogId}
 
 dp_workflow_sync_step_review_forms:
   path:     /{workflowId}/step/{stepOrder}/sync/review-forms
-  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:syncReviewForms" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleReviewForm:syncReviewForms" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true

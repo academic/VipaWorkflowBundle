@@ -28,5 +28,5 @@ function focusOrCreateTab(url) {
 }
 
 chrome.browserAction.onClicked.addListener(function(tab) {
-  focusOrCreateTab('http://ojs.dev/#workflow-test');
+  focusOrCreateTab('http://vipa.dev/#workflow-test');
 });

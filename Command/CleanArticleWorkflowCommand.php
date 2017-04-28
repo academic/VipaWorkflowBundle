@@ -1,10 +1,10 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Command;
+namespace Vipa\WorkflowBundle\Command;
 
 use Doctrine\ORM\EntityManager;
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\WorkflowBundle\Service\WorkflowService;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflow;
+use Vipa\WorkflowBundle\Service\WorkflowService;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class CleanArticleWorkflowCommand
- * @package Ojs\WorkflowBundle\Command
+ * @package Vipa\WorkflowBundle\Command
  */
 class CleanArticleWorkflowCommand extends ContainerAwareCommand
 {
@@ -42,7 +42,7 @@ class CleanArticleWorkflowCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('ojs:clean:article:workflow')
+            ->setName('vipa:clean:article:workflow')
             ->setDescription('Clean article workflow.')
             ->addArgument('workflowId', InputArgument::REQUIRED, 'Workflow ID?');
     }

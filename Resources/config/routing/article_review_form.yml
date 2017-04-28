@@ -1,32 +1,32 @@
 dp_workflow_dialog_posts_browse_review_forms:
   path:     /
-  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:reviewForms" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleReviewForm:reviewForms" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_dialog_posts_show_review_form:
   path:     /show/{id}
-  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:showForm" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleReviewForm:showForm" }
   options:
       expose: true
 
 dp_workflow_dialog_posts_submit_review_form:
   path:     /submit-form/{id}
   methods: [POST, GET]
-  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:submitForm" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleReviewForm:submitForm" }
   options:
       expose: true
 
 dp_workflow_dialog_posts_review_form_response_preview:
   path:     /form-response-preview/{postId}
-  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:previewReviewFormResponse" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleReviewForm:previewReviewFormResponse" }
   options:
       expose: true
 
 dp_workflow_dialog_posts_new_review_form:
   path:     /new-review-form
-  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:postReviewForm" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleReviewForm:postReviewForm" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
@@ -34,14 +34,14 @@ dp_workflow_dialog_posts_new_review_form:
 #review form response send logic routes
 dp_workflow_dialog_posts_browse_review_form_responses:
   path:     /browse/responses
-  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:reviewFormResponses" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleReviewForm:reviewFormResponses" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true
 
 dp_workflow_dialog_posts_new_review_form_response_preview:
   path:     /new-review-form-response-preview
-  defaults: { _controller: "OjsWorkflowBundle:ArticleReviewForm:postReviewFormResponsePreview" }
+  defaults: { _controller: "VipaWorkflowBundle:ArticleReviewForm:postReviewFormResponsePreview" }
   condition: "request.isXmlHttpRequest()"
   options:
       expose: true

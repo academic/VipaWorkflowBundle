@@ -1,9 +1,9 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Form\Type;
+namespace Vipa\WorkflowBundle\Form\Type;
 
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\JournalBundle\Form\Type\JournalUsersFieldType;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflow;
+use Vipa\JournalBundle\Form\Type\JournalUsersFieldType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

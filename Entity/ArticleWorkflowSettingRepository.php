@@ -1,13 +1,13 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Vipa\WorkflowBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 
 /**
  * Class ArticleWorkflowSettingRepository
- * @package Ojs\WorkflowBundle\Entity
+ * @package Vipa\WorkflowBundle\Entity
  */
 class ArticleWorkflowSettingRepository extends EntityRepository
 {

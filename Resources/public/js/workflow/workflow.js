@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $('.fancybox').fancybox({});
-    OjsWorkflow = {
+    VipaWorkflow = {
         basicJournalWfSetting: function($this) {
             $this = $($this);
             $.fancybox({
@@ -17,7 +17,7 @@ $(document).ready(function() {
         stepGrantedUsersSetup: function($this, $stepOrder) {
             $.fancybox({
                 type: 'ajax',
-                href: Routing.generate('ojs_workflow_step_users_setup', {journalId: journalId, stepOrder: $stepOrder}),
+                href: Routing.generate('vipa_workflow_step_users_setup', {journalId: journalId, stepOrder: $stepOrder}),
                 autoSize: false,
                 width: '600px',
                 maxWidth: '600px',
@@ -40,7 +40,7 @@ $(document).ready(function() {
         setupWorkflowGrantedUsers: function($this) {
             $.fancybox({
                 type: 'ajax',
-                href: Routing.generate('ojs_article_workflow_granted_users_setup', {
+                href: Routing.generate('vipa_article_workflow_granted_users_setup', {
                     journalId: journalId,
                     workflowId: workflowId
                 }),
@@ -72,14 +72,14 @@ $(document).ready(function() {
         showSubmissionDetail: function () {
             $.fancybox({
                 type: 'ajax',
-                href: Routing.generate('ojs_workflow_article_detail', {
+                href: Routing.generate('vipa_workflow_article_detail', {
                     journalId: journalId,
                     workflowId: workflowId
                 })
             });
         },
         loadStep: function ($stepOrder) {
-            $.get(Routing.generate('ojs_workflow_timeline_step', {
+            $.get(Routing.generate('vipa_workflow_timeline_step', {
                 journalId: journalId,
                 workflowId: workflowId,
                 stepOrder: $stepOrder
@@ -119,7 +119,7 @@ $(document).ready(function() {
                 dialogId: $dialogId
             }), function( data ) {
                 if(data.success == true){
-                    OjsWorkflow.loadDialogs();
+                    VipaWorkflow.loadDialogs();
                     swal(
                         Translator.trans('successful'),
                         Translator.trans('successful.finished.action'), "success"
@@ -135,7 +135,7 @@ $(document).ready(function() {
                 dialogId: $dialogId
             }), function( data ) {
                 if(data.success == true){
-                    OjsWorkflow.loadDialogs();
+                    VipaWorkflow.loadDialogs();
                     swal(
                         Translator.trans('successful'),
                         Translator.trans('successful.reopen.action'), "success"
@@ -151,7 +151,7 @@ $(document).ready(function() {
                 dialogId: $dialogId
             }), function( data ) {
                 if(data.success == true){
-                    OjsWorkflow.loadDialogs();
+                    VipaWorkflow.loadDialogs();
                     swal(
                         Translator.trans('successful'),
                         Translator.trans('successful.remove.action'), "success"
@@ -162,7 +162,7 @@ $(document).ready(function() {
         showHistoryLog: function ($this) {
             $.fancybox({
                 type: 'ajax',
-                href: Routing.generate('ojs_workflow_history_log', {
+                href: Routing.generate('vipa_workflow_history_log', {
                     journalId: journalId,
                     workflowId: workflowId
                 })
@@ -171,7 +171,7 @@ $(document).ready(function() {
         showPermissionTable: function ($this) {
             $.fancybox({
                 type: 'ajax',
-                href: Routing.generate('ojs_workflow_permission_table', {
+                href: Routing.generate('vipa_workflow_permission_table', {
                     journalId: journalId,
                     workflowId: workflowId
                 })
@@ -395,7 +395,7 @@ $(document).ready(function() {
                             Translator.trans('successful'),
                             Translator.trans('successful.go.on.arrangement'), "success"
                         );
-                        OjsWorkflow.loadStep(3);
+                        VipaWorkflow.loadStep(3);
                     }else{
                         alert('Some error occured');
                     }
@@ -422,7 +422,7 @@ $(document).ready(function() {
                             Translator.trans('successful'),
                             Translator.trans('successful.go.on.reviewing'), "success"
                         );
-                        OjsWorkflow.loadStep(2);
+                        VipaWorkflow.loadStep(2);
                     }else{
                         alert('Some error occured');
                     }
@@ -476,7 +476,7 @@ $(document).ready(function() {
                             Translator.trans('successful'),
                             Translator.trans('successful.go.to.other.workflows'), "success"
                         );
-                        window.location = Routing.generate('ojs_workflow_flow_active', {
+                        window.location = Routing.generate('vipa_workflow_flow_active', {
                             journalId: journalId
                         });
                     }else{
@@ -526,7 +526,7 @@ $(document).ready(function() {
                 comment: $comment
             }, function( data ) {
                 if(data.success == true){
-                    OjsWorkflow.loadPosts($dialogId);
+                    VipaWorkflow.loadPosts($dialogId);
                     $($this).parent().parent().find('.dialog-comment-input').val('');
                     swal(Translator.trans('excellent'), Translator.trans('your.messages.sended'), "success");
                 }
@@ -568,13 +568,13 @@ $(document).ready(function() {
                 swal(Translator.trans('wrong.file'), Translator.trans('select.another.file.type'), "warning");
                 return false;
             }
-            $.post(Routing.generate('ojs_workflow_article_detail_upload_review_version_file', {
+            $.post(Routing.generate('vipa_workflow_article_detail_upload_review_version_file', {
                 journalId: journalId,
                 workflowId: workflowId,
                 stepOrder: stepOrder
             }), {file: data.result}, function( data ) {
                 if(data.success == true){
-                    OjsWorkflow.showSubmissionDetail();
+                    VipaWorkflow.showSubmissionDetail();
                 }
             });
         },
@@ -597,7 +597,7 @@ $(document).ready(function() {
             }, function( data ) {
                 if(data.success == true){
                     $.fancybox.close();
-                    OjsWorkflow.loadPosts($dialogId);
+                    VipaWorkflow.loadPosts($dialogId);
                     swal(Translator.trans('excellent'), Translator.trans('your.files.sended'), "success");
                 }
             });
@@ -633,7 +633,7 @@ $(document).ready(function() {
             }, function( data ) {
                 if(data.success == true){
                     $.fancybox.close();
-                    OjsWorkflow.loadPosts($dialogId);
+                    VipaWorkflow.loadPosts($dialogId);
                     swal(Translator.trans('excellent'), Translator.trans('your.review.forms.sended'), "success");
                 }
             });
@@ -669,13 +669,13 @@ $(document).ready(function() {
             }, function( data ) {
                 if(data.success == true){
                     $.fancybox.close();
-                    OjsWorkflow.loadPosts($dialogId);
+                    VipaWorkflow.loadPosts($dialogId);
                     swal(Translator.trans('excellent'), Translator.trans('your.review.form.responses.sended'), "success");
                 }
             });
         },
         browseReviewerUsers: function ($this, $dialogId) {
-            var browseUrl = Routing.generate('ojs_workflow_reviewers_browse', {
+            var browseUrl = Routing.generate('vipa_workflow_reviewers_browse', {
                 journalId: journalId,
                 workflowId: workflowId,
                 stepOrder: stepOrder
@@ -684,7 +684,7 @@ $(document).ready(function() {
             browseWindow.focus();
         },
         browseSectionEditorUsers: function ($this, $dialogId) {
-            var browseUrl = Routing.generate('ojs_workflow_section_editors_browse', {
+            var browseUrl = Routing.generate('vipa_workflow_section_editors_browse', {
                 journalId: journalId,
                 workflowId: workflowId,
                 stepOrder: stepOrder
@@ -702,12 +702,12 @@ $(document).ready(function() {
         addUserToUsersDialogViaButton: function (button, $id, $text) {
             $button = $(button);
             $button.html(Translator.trans('added.successfully')).attr('disabled', 'disabled');
-            OjsWorkflow.addUserToUsersDialog($id, $text);
+            VipaWorkflow.addUserToUsersDialog($id, $text);
         },
         createReviewerUser: function(){
             $.fancybox({
                 type: 'ajax',
-                href: Routing.generate('ojs_workflow_create_reviewer_user', {
+                href: Routing.generate('vipa_workflow_create_reviewer_user', {
                     journalId: journalId,
                     workflowId: workflowId,
                     stepOrder: stepOrder
@@ -734,7 +734,7 @@ $(document).ready(function() {
         addReviewerUser: function(){
             $.fancybox({
                 type: 'ajax',
-                href: Routing.generate('ojs_workflow_add_reviewer_user', {
+                href: Routing.generate('vipa_workflow_add_reviewer_user', {
                     journalId: journalId,
                     workflowId: workflowId,
                     stepOrder: stepOrder
@@ -766,7 +766,7 @@ $(document).ready(function() {
             }), function( data ) {
                 if(data.success == true){
                     swal(Translator.trans('excellent'), Translator.trans('review.forms.sync.successful'), "success");
-                    OjsWorkflow.browseReviewForms($this, $dialogId);
+                    VipaWorkflow.browseReviewForms($this, $dialogId);
                 }
             });
         },
@@ -801,7 +801,7 @@ $(document).ready(function() {
             });
         },
         submitReviewForm: function($dialogId, $id){
-            OjsWorkflow.normalizeReviewSubmissionFom();
+            VipaWorkflow.normalizeReviewSubmissionFom();
             var formContents = $('#form-render-div-wrap').clone().html();
             $.post(Routing.generate('dp_workflow_dialog_posts_submit_review_form', {
                 journalId: journalId,
@@ -835,7 +835,7 @@ $(document).ready(function() {
                 dialogId: $dialogId
             }), function( data ) {
                 if(data.success == true){
-                    OjsWorkflow.loadStep(stepOrder);
+                    VipaWorkflow.loadStep(stepOrder);
                     swal(Translator.trans('excellent'), Translator.trans('reviewer.invitation.mail.sended'), "success");
                 }
             });
@@ -848,7 +848,7 @@ $(document).ready(function() {
                 dialogId: $dialogId
             }), function( data ) {
                 if(data.success == true){
-                    OjsWorkflow.loadStep(stepOrder);
+                    VipaWorkflow.loadStep(stepOrder);
                     swal(Translator.trans('excellent'), Translator.trans('reviewer.remind.mail.sended'), "success");
                 }
             });
@@ -861,7 +861,7 @@ $(document).ready(function() {
                 dialogId: $dialogId
             }), function( data ) {
                 if(data.success == true){
-                    OjsWorkflow.loadStep(stepOrder);
+                    VipaWorkflow.loadStep(stepOrder);
                     swal(Translator.trans('excellent'), Translator.trans('you.accepted.review'), "success");
                 }
             });

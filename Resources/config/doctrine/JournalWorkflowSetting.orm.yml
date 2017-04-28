@@ -1,7 +1,7 @@
-Ojs\WorkflowBundle\Entity\JournalWorkflowSetting:
+Vipa\WorkflowBundle\Entity\JournalWorkflowSetting:
   type: entity
   table: bc_wf_journal_wf_setting
-  repositoryClass: Ojs\WorkflowBundle\Entity\JournalWorkflowSettingRepository
+  repositoryClass: Vipa\WorkflowBundle\Entity\JournalWorkflowSettingRepository
   cache:
     usage: NONSTRICT_READ_WRITE
   id:
@@ -12,7 +12,7 @@ Ojs\WorkflowBundle\Entity\JournalWorkflowSetting:
         strategy: AUTO
   manyToOne:
     journal:
-      targetEntity: Ojs\JournalBundle\Entity\Journal
+      targetEntity: Vipa\JournalBundle\Entity\Journal
       joinColumn:
         name: journal_id
         referencedColumnName: id

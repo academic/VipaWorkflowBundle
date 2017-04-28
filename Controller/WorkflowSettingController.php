@@ -1,12 +1,12 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Controller;
+namespace Vipa\WorkflowBundle\Controller;
 
-use Ojs\WorkflowBundle\Entity\JournalWorkflowSetting;
-use Ojs\WorkflowBundle\Entity\JournalWorkflowStep;
-use Ojs\WorkflowBundle\Form\Type\JournalWfSettingType;
-use Ojs\WorkflowBundle\Form\Type\JournalWfStepType;
-use Ojs\CoreBundle\Controller\OjsController as Controller;
+use Vipa\WorkflowBundle\Entity\JournalWorkflowSetting;
+use Vipa\WorkflowBundle\Entity\JournalWorkflowStep;
+use Vipa\WorkflowBundle\Form\Type\JournalWfSettingType;
+use Vipa\WorkflowBundle\Form\Type\JournalWfStepType;
+use Vipa\CoreBundle\Controller\VipaController as Controller;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +20,7 @@ class WorkflowSettingController extends Controller
     {
         $permissionService = $this->get('dp.workflow_permission_service');
         $em = $this->getDoctrine()->getManager();
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         //#permissioncheck
         if(!$permissionService->isHaveEditorRole()){
             throw new AccessDeniedException;
@@ -28,8 +28,8 @@ class WorkflowSettingController extends Controller
         $journalSteps = $em->getRepository(JournalWorkflowStep::class)->findBy([
             'journal' => $journal,
         ], ['order' => 'ASC']);
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
-        return $this->render('OjsWorkflowBundle:WorkflowSetting:_workflow_setting.html.twig',[
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
+        return $this->render('VipaWorkflowBundle:WorkflowSetting:_workflow_setting.html.twig',[
             'journal' => $journal,
             'steps' => $journalSteps,
         ]);
@@ -46,7 +46,7 @@ class WorkflowSettingController extends Controller
         if(!$permissionService->isHaveEditorRole()){
             throw new AccessDeniedException;
         }
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
 
@@ -58,7 +58,7 @@ class WorkflowSettingController extends Controller
         }
         $journalWorkflowSetting->setJournal($journal);
         $form = $this->createForm(new JournalWfSettingType(), $journalWorkflowSetting, [
-            'action' => $this->generateUrl('ojs_workflow_basic_settings', [
+            'action' => $this->generateUrl('vipa_workflow_basic_settings', [
                 'journalId' => $journal->getId(),
             ])
         ]);
@@ -70,7 +70,7 @@ class WorkflowSettingController extends Controller
             $this->successFlashBag('successful.update');
         }
 
-        return $this->render('OjsWorkflowBundle:WorkflowSetting:_basic_journal_wf_setting.html.twig', [
+        return $this->render('VipaWorkflowBundle:WorkflowSetting:_basic_journal_wf_setting.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -86,7 +86,7 @@ class WorkflowSettingController extends Controller
         if(!$permissionService->isHaveEditorRole()){
             throw new AccessDeniedException;
         }
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
 
@@ -101,7 +101,7 @@ class WorkflowSettingController extends Controller
         $journalWorkflowStep->setOrder($stepOrder);
 
         $form = $this->createForm(new JournalWfStepType(), $journalWorkflowStep, [
-            'action' => $this->generateUrl('ojs_workflow_step_users_setup', [
+            'action' => $this->generateUrl('vipa_workflow_step_users_setup', [
                 'journalId' => $journal->getId(),
                 'stepOrder' => $stepOrder,
             ])
@@ -114,7 +114,7 @@ class WorkflowSettingController extends Controller
             $this->successFlashBag('successful.update');
         }
 
-        return $this->render('OjsWorkflowBundle:WorkflowSetting:_workflow_step_setting.html.twig', [
+        return $this->render('VipaWorkflowBundle:WorkflowSetting:_workflow_step_setting.html.twig', [
             'form' => $form->createView(),
         ]);
     }

@@ -1,6 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <button class="btn btn-success btn-xs" onclick="OjsWorkflow.showStepDetail(this, {{ step.order }})">
+        <button class="btn btn-success btn-xs" onclick="VipaWorkflow.showStepDetail(this, {{ step.order }})">
             <i class="fa fa-info-circle" data-toggle="tooltip"  data-title="{{ 'show.step.detail'|trans }}"></i>
             {{ 'what.i.can.do.in.this.step'|trans }}
         </button>
@@ -12,40 +12,40 @@
                 </button>
                 <ul class="dropdown-menu step-actions-menu">
                     <li>
-                        <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                        <a onclick="VipaWorkflow.createSpecificDialog(this)"
                            data-action-type="{{ actionType('ASSIGN_LAYOUT_EDITOR') }}">
                             {{ 'assign.layout.editor'|trans }}
                         </a>
                     </li>
                     <li>
-                        <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                        <a onclick="VipaWorkflow.createSpecificDialog(this)"
                            data-action-type="{{ actionType('ASSIGN_COPY_EDITOR') }}">
                             {{ 'assign.copy.editor'|trans }}
                         </a>
                     </li>
                     <li>
-                        <a onclick="OjsWorkflow.createSpecificDialog(this)"
+                        <a onclick="VipaWorkflow.createSpecificDialog(this)"
                            data-action-type="{{ actionType('ASSIGN_PROOF_READER') }}">
                             {{ 'assign.proof.reader'|trans }}
                         </a>
                     </li>
                     <li role="separator" class="divider"></li>
                     <li>
-                        <a onclick="OjsWorkflow.createAssignAuthorDialog(this)"
+                        <a onclick="VipaWorkflow.createAssignAuthorDialog(this)"
                            data-action-type="{{ actionType('ASK_AUTHOR_FOR_CORRECTION') }}">
                             {{ 'ask.author.for.correction'|trans }}
                         </a>
                     </li>
                     <li role="separator" class="divider"></li>
                     <li>
-                        <a onclick="OjsWorkflow.createBasicDialog(this)"
+                        <a onclick="VipaWorkflow.createBasicDialog(this)"
                            data-action-type="{{ actionType('CREATE_ISSUE') }}">
                             {{ 'create.issue'|trans }}
                         </a>
                     </li>
                     <li role="separator" class="divider"></li>
                     <li>
-                        <a onclick="OjsWorkflow.finishWorkflow(this)"
+                        <a onclick="VipaWorkflow.finishWorkflow(this)"
                            data-action-type="{{ actionType('FINISH_WORKFLOW') }}">
                             {{ 'finish.workflow'|trans }}
                         </a>
@@ -63,5 +63,5 @@
 
 <script>
     var stepOrder = 3;
-    OjsWorkflow.loadDialogs();
+    VipaWorkflow.loadDialogs();
 </script>

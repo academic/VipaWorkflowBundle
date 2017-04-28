@@ -1,10 +1,10 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Vipa\WorkflowBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Ojs\JournalBundle\Entity\JournalTrait;
-use Ojs\UserBundle\Entity\User;
+use Vipa\JournalBundle\Entity\JournalTrait;
+use Vipa\UserBundle\Entity\User;
 
 /**
  * JournalWorkflowStep

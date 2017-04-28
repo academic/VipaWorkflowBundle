@@ -1,16 +1,16 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Vipa\WorkflowBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Ojs\WorkflowBundle\Entity\WorkflowArticleTrait;
-use Ojs\WorkflowBundle\Entity\WorkflowJournalTrait;
-use Ojs\UserBundle\Entity\User;
-use Ojs\WorkflowBundle\Params\ArticleWorkflowStatus;
+use Vipa\WorkflowBundle\Entity\WorkflowArticleTrait;
+use Vipa\WorkflowBundle\Entity\WorkflowJournalTrait;
+use Vipa\UserBundle\Entity\User;
+use Vipa\WorkflowBundle\Params\ArticleWorkflowStatus;
 
 /**
  * Class ArticleWorkflow
- * @package Ojs\WorkflowBundle\Entity
+ * @package Vipa\WorkflowBundle\Entity
  */
 class ArticleWorkflow
 {

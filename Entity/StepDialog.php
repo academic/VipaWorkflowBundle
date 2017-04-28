@@ -1,17 +1,17 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Vipa\WorkflowBundle\Entity;
 
-use Ojs\WorkflowBundle\Params\StepDialogStatus;
+use Vipa\WorkflowBundle\Params\StepDialogStatus;
 use Doctrine\Common\Collections\ArrayCollection;
-use Ojs\JournalBundle\Entity\ArticleTrait;
-use Ojs\JournalBundle\Entity\JournalTrait;
-use Ojs\UserBundle\Entity\User;
-use Ojs\WorkflowBundle\Params\ArticleWorkflowStatus;
+use Vipa\JournalBundle\Entity\ArticleTrait;
+use Vipa\JournalBundle\Entity\JournalTrait;
+use Vipa\UserBundle\Entity\User;
+use Vipa\WorkflowBundle\Params\ArticleWorkflowStatus;
 
 /**
  * Class StepDialog
- * @package Ojs\WorkflowBundle\Entity
+ * @package Vipa\WorkflowBundle\Entity
  */
 class StepDialog
 {

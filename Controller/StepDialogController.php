@@ -1,19 +1,19 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Controller;
+namespace Vipa\WorkflowBundle\Controller;
 
-use Ojs\WorkflowBundle\Entity\ArticleWorkflowStep;
-use Ojs\WorkflowBundle\Entity\DialogPost;
-use Ojs\WorkflowBundle\Entity\StepDialog;
-use Ojs\WorkflowBundle\Event\WorkflowEvent;
-use Ojs\WorkflowBundle\Event\WorkflowEvents;
-use Ojs\WorkflowBundle\Form\Type\DialogType;
-use Ojs\WorkflowBundle\Params\StepActionTypes;
-use Ojs\WorkflowBundle\Params\StepDialogStatus;
-use Ojs\WorkflowBundle\Params\StepStatus;
-use Ojs\CoreBundle\Controller\OjsController as Controller;
-use Ojs\JournalBundle\Entity\Journal;
-use Ojs\JournalBundle\Form\Type\JournalUsersFieldType;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Vipa\WorkflowBundle\Entity\DialogPost;
+use Vipa\WorkflowBundle\Entity\StepDialog;
+use Vipa\WorkflowBundle\Event\WorkflowEvent;
+use Vipa\WorkflowBundle\Event\WorkflowEvents;
+use Vipa\WorkflowBundle\Form\Type\DialogType;
+use Vipa\WorkflowBundle\Params\StepActionTypes;
+use Vipa\WorkflowBundle\Params\StepDialogStatus;
+use Vipa\WorkflowBundle\Params\StepStatus;
+use Vipa\CoreBundle\Controller\VipaController as Controller;
+use Vipa\JournalBundle\Entity\Journal;
+use Vipa\JournalBundle\Form\Type\JournalUsersFieldType;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,7 +25,7 @@ class StepDialogController extends Controller
 {
     public function getDialogsAction($workflowId, $stepOrder)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $translator = $this->get('translator');
         $em = $this->getDoctrine()->getManager();
@@ -42,7 +42,7 @@ class StepDialogController extends Controller
         ]);
         $dialogs = $workflowService->getUserRelatedStepDialogs($workflow, $step);
 
-        return $this->render('OjsWorkflowBundle:StepDialog:_step_dialogs.html.twig', [
+        return $this->render('VipaWorkflowBundle:StepDialog:_step_dialogs.html.twig', [
             'dialogs' => $dialogs,
             'step' => $step,
         ]);
@@ -59,7 +59,7 @@ class StepDialogController extends Controller
         //set vars
         $actionType = $request->get('actionType');
         $actionAlias = StepActionTypes::$typeAlias[$actionType];
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $user = $this->getUser();
 
         $this->throw404IfNotFound($journal);
@@ -169,7 +169,7 @@ class StepDialogController extends Controller
         //set vars
         $actionType = StepActionTypes::ASK_AUTHOR_FOR_CORRECTION;
         $actionAlias = StepActionTypes::$typeAlias[$actionType];
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $user = $this->getUser();
 
         $this->throw404IfNotFound($journal);
@@ -247,7 +247,7 @@ class StepDialogController extends Controller
         //set vars
         $actionType = $request->get('actionType');
         $actionAlias = StepActionTypes::$typeAlias[$actionType];
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $user = $this->getUser();
 
         $this->throw404IfNotFound($journal);
@@ -324,7 +324,7 @@ class StepDialogController extends Controller
         //set vars
         $actionType = StepActionTypes::ASSIGN_REVIEWER;
         $actionAlias = StepActionTypes::$typeAlias[$actionType];
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $user = $this->getUser();
 
         $this->throw404IfNotFound($journal);
@@ -405,7 +405,7 @@ class StepDialogController extends Controller
      */
     public function acceptGotoArrangementAction($workflowId, $stepOrder)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
 
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
@@ -448,7 +448,7 @@ class StepDialogController extends Controller
      */
     public function gotoReviewingAction($workflowId, $stepOrder)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $workflowService = $this->get('dp.workflow_service');
@@ -487,7 +487,7 @@ class StepDialogController extends Controller
      */
     public function acceptSubmissionAction($workflowId)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $permissionService = $this->get('dp.workflow_permission_service');
         //#permissioncheck
@@ -514,7 +514,7 @@ class StepDialogController extends Controller
         return new JsonResponse([
             'success' => true,
             'data' => [
-                'redirectUrl' => $this->generateUrl('ojs_journal_article_show', [
+                'redirectUrl' => $this->generateUrl('vipa_journal_article_show', [
                     'journalId' => $workflow->getArticle()->getJournal()->getId(),
                     'id' => $workflow->getArticle()->getId(),
                 ])
@@ -529,7 +529,7 @@ class StepDialogController extends Controller
      */
     public function finishWorkflowAction($workflowId, $stepOrder)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $dispatcher = $this->get('event_dispatcher');
@@ -560,7 +560,7 @@ class StepDialogController extends Controller
         return new JsonResponse([
             'success' => true,
             'data' => [
-                'redirectUrl' => $this->generateUrl('ojs_journal_article_show', [
+                'redirectUrl' => $this->generateUrl('vipa_journal_article_show', [
                     'journalId' => $workflow->getArticle()->getJournal()->getId(),
                     'id' => $workflow->getArticle()->getId(),
                 ])
@@ -575,7 +575,7 @@ class StepDialogController extends Controller
      */
     public function declineSubmissionAction($workflowId, $stepOrder)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $dispatcher = $this->get('event_dispatcher');
@@ -618,7 +618,7 @@ class StepDialogController extends Controller
      */
     public function finishDialogAction($workflowId, $stepOrder, $dialogId)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $dispatcher = $this->get('event_dispatcher');
@@ -658,7 +658,7 @@ class StepDialogController extends Controller
      */
     public function reopenDialogAction($workflowId, $stepOrder, $dialogId)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $dispatcher = $this->get('event_dispatcher');
@@ -698,7 +698,7 @@ class StepDialogController extends Controller
      */
     public function removeDialogAction($workflowId, $stepOrder, $dialogId)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $em = $this->getDoctrine()->getManager();
         $permissionService = $this->get('dp.workflow_permission_service');
@@ -824,7 +824,7 @@ class StepDialogController extends Controller
                 'success' => true,
             ]);
         }else{
-            return $this->redirectToRoute('ojs_workflow_article_workflow', [
+            return $this->redirectToRoute('vipa_workflow_article_workflow', [
                 'workflowId' => $workflow->getId(),
                 'journalId' => $workflow->getJournal()->getId(),
             ]);
@@ -858,12 +858,12 @@ class StepDialogController extends Controller
         if($request->isXmlHttpRequest()){
             return new JsonResponse([
                 'success' => true,
-                'redirectUrl' => $this->generateUrl('ojs_workflow_flow_active', [
+                'redirectUrl' => $this->generateUrl('vipa_workflow_flow_active', [
                     'journalId' => $journal->getId(),
                 ])
             ]);
         }else{
-            return $this->redirectToRoute('ojs_workflow_flow_active', [
+            return $this->redirectToRoute('vipa_workflow_flow_active', [
                 'journalId' => $journal->getId(),
             ]);
         }

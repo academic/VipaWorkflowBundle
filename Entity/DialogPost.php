@@ -1,14 +1,14 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Vipa\WorkflowBundle\Entity;
 
-use Ojs\WorkflowBundle\Params\DialogPostTypes;
-use Ojs\UserBundle\Entity\User;
+use Vipa\WorkflowBundle\Params\DialogPostTypes;
+use Vipa\UserBundle\Entity\User;
 use APY\DataGridBundle\Grid\Mapping as GRID;
 
 /**
  * Class DialogPost
- * @package Ojs\WorkflowBundle\Entity
+ * @package Vipa\WorkflowBundle\Entity
  * @GRID\Source(columns="id, sendedAt, sendedBy.username, reviewForm.name")
  */
 class DialogPost

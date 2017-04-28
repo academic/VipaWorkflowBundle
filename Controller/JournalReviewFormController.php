@@ -1,20 +1,20 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Controller;
+namespace Vipa\WorkflowBundle\Controller;
 
 use APY\DataGridBundle\Grid\Column\ActionsColumn;
 use APY\DataGridBundle\Grid\Source\Entity;
-use Ojs\WorkflowBundle\Entity\ArticleWorkflowStep;
-use Ojs\WorkflowBundle\Entity\JournalReviewForm;
-use Ojs\WorkflowBundle\Entity\JournalWorkflowStep;
-use Ojs\WorkflowBundle\Form\Type\JournalReviewFormType;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflowStep;
+use Vipa\WorkflowBundle\Entity\JournalReviewForm;
+use Vipa\WorkflowBundle\Entity\JournalWorkflowStep;
+use Vipa\WorkflowBundle\Form\Type\JournalReviewFormType;
 use Doctrine\ORM\QueryBuilder;
-use Ojs\CoreBundle\Controller\OjsController as Controller;
-use Ojs\CoreBundle\Params\ArticleFileParams;
-use Ojs\JournalBundle\Entity\Article;
-use Ojs\JournalBundle\Entity\ArticleFile;
-use Ojs\JournalBundle\Entity\Journal;
-use Ojs\JournalBundle\Form\Type\ArticleFileType;
+use Vipa\CoreBundle\Controller\VipaController as Controller;
+use Vipa\CoreBundle\Params\ArticleFileParams;
+use Vipa\JournalBundle\Entity\Article;
+use Vipa\JournalBundle\Entity\ArticleFile;
+use Vipa\JournalBundle\Entity\Journal;
+use Vipa\JournalBundle\Form\Type\ArticleFileType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
 
 /**
  * Class JournalReviewFormController
- * @package Ojs\WorkflowBundle\Controller
+ * @package Vipa\WorkflowBundle\Controller
  */
 class JournalReviewFormController extends Controller
 {
@@ -35,7 +35,7 @@ class JournalReviewFormController extends Controller
     public function indexAction($stepId)
     {
         $permisionService = $this->get('dp.workflow_permission_service');
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $em = $this->getDoctrine()->getManager();
         if(!$permisionService->isHaveEditorRole()){
             throw new AccessDeniedException;
@@ -43,7 +43,7 @@ class JournalReviewFormController extends Controller
         $step = $em->getRepository(JournalWorkflowStep::class)->find($stepId);
         $this->throw404IfNotFound($step);
 
-        $source = new Entity('OjsWorkflowBundle:JournalReviewForm');
+        $source = new Entity('VipaWorkflowBundle:JournalReviewForm');
         $tableAlias = $source->getTableAlias();
         $source->manipulateQuery(
             function (QueryBuilder $qb) use ($step, $tableAlias) {
@@ -76,7 +76,7 @@ class JournalReviewFormController extends Controller
         $data['grid'] = $grid;
         $data['step'] = $step;
 
-        return $grid->getGridResponse('OjsWorkflowBundle:JournalReviewForm:index.html.twig', $data);
+        return $grid->getGridResponse('VipaWorkflowBundle:JournalReviewForm:index.html.twig', $data);
     }
 
     /**
@@ -86,7 +86,7 @@ class JournalReviewFormController extends Controller
      */
     public function createAction(Request $request, $stepId)
     {
-        $journalService = $this->get('ojs.journal_service');
+        $journalService = $this->get('vipa.journal_service');
         $journal = $journalService->getSelectedJournal();
         $em = $this->getDoctrine()->getManager();
 
@@ -118,7 +118,7 @@ class JournalReviewFormController extends Controller
         }
 
         return $this->render(
-            'OjsWorkflowBundle:JournalReviewForm:new.html.twig',
+            'VipaWorkflowBundle:JournalReviewForm:new.html.twig',
             [
                 'entity'    => $entity,
                 'form'      => $form->createView(),
@@ -169,7 +169,7 @@ class JournalReviewFormController extends Controller
             ->add('create', 'submit', ['label' => 'c']);
 
         return $this->render(
-            'OjsWorkflowBundle:JournalReviewForm:new.html.twig',
+            'VipaWorkflowBundle:JournalReviewForm:new.html.twig',
             [
                 'entity'    => $entity,
                 'form'      => $form->createView(),
@@ -186,7 +186,7 @@ class JournalReviewFormController extends Controller
      */
     public function showAction($id, $stepId)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $em = $this->getDoctrine()->getManager();
 
         $step = $em->getRepository(JournalWorkflowStep::class)->find($stepId);
@@ -207,7 +207,7 @@ class JournalReviewFormController extends Controller
             ->refreshToken('dp_workflow_review_form'.$entity->getId());
 
         return $this->render(
-            'OjsWorkflowBundle:JournalReviewForm:show.html.twig',
+            'VipaWorkflowBundle:JournalReviewForm:show.html.twig',
             [
                 'entity' => $entity,
                 'token'  => $token,
@@ -222,7 +222,7 @@ class JournalReviewFormController extends Controller
      */
     public function editAction($id, $stepId)
     {
-        $journalService = $this->get('ojs.journal_service');
+        $journalService = $this->get('vipa.journal_service');
         $journal = $journalService->getSelectedJournal();
         $em = $this->getDoctrine()->getManager();
 
@@ -247,7 +247,7 @@ class JournalReviewFormController extends Controller
             ->refreshToken('dp_workflow_review_form'.$entity->getId());
 
         return $this->render(
-            'OjsWorkflowBundle:JournalReviewForm:edit.html.twig',
+            'VipaWorkflowBundle:JournalReviewForm:edit.html.twig',
             [
                 'entity'    => $entity,
                 'edit_form' => $editForm->createView(),
@@ -292,7 +292,7 @@ class JournalReviewFormController extends Controller
      */
     public function updateAction(Request $request, $id, $stepId)
     {
-        $journalService = $this->get('ojs.journal_service');
+        $journalService = $this->get('vipa.journal_service');
         $journal = $journalService->getSelectedJournal();
         $em = $this->getDoctrine()->getManager();
 
@@ -331,7 +331,7 @@ class JournalReviewFormController extends Controller
         }
 
         return $this->render(
-            'OjsWorkflowBundle:JournalReviewForm:edit.html.twig',
+            'VipaWorkflowBundle:JournalReviewForm:edit.html.twig',
             [
                 'entity'    => $entity,
                 'edit_form' => $editForm->createView(),
@@ -347,7 +347,7 @@ class JournalReviewFormController extends Controller
      */
     public function deleteAction(Request $request, $id, $stepId)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $em = $this->getDoctrine()->getManager();
 
         /** @var JournalWorkflowStep $step */
@@ -370,7 +370,7 @@ class JournalReviewFormController extends Controller
         if ($token != $request->get('_token')) {
             throw new TokenNotFoundException("Token Not Found!");
         }
-        $this->get('ojs_core.delete.service')->check($entity);
+        $this->get('vipa_core.delete.service')->check($entity);
         $em->remove($entity);
         $em->flush();
         $this->successFlashBag('successful.remove');

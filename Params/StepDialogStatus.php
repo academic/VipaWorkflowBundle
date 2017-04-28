@@ -1,6 +1,6 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Params;
+namespace Vipa\WorkflowBundle\Params;
 
 class StepDialogStatus
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Ojs\WorkflowBundle;
+namespace Vipa\WorkflowBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class OjsWorkflowBundle extends Bundle
+class VipaWorkflowBundle extends Bundle
 {
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Service;
+namespace Vipa\WorkflowBundle\Service;
 
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\WorkflowBundle\Entity\WorkflowHistoryLog;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflow;
+use Vipa\WorkflowBundle\Entity\WorkflowHistoryLog;
 use Doctrine\ORM\EntityManager;
 use JMS\Serializer\Exception\LogicException;
-use Ojs\JournalBundle\Service\JournalService;
+use Vipa\JournalBundle\Service\JournalService;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class WorkflowLoggerService

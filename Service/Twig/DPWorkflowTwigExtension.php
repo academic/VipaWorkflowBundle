@@ -1,17 +1,17 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Service\Twig;
+namespace Vipa\WorkflowBundle\Service\Twig;
 
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\WorkflowBundle\Entity\ArticleWorkflowSetting;
-use Ojs\WorkflowBundle\Entity\StepDialog;
-use Ojs\WorkflowBundle\Params\JournalWorkflowSteps;
-use Ojs\WorkflowBundle\Params\StepActionTypes;
-use Ojs\WorkflowBundle\Service\WorkflowPermissionService;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflow;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflowSetting;
+use Vipa\WorkflowBundle\Entity\StepDialog;
+use Vipa\WorkflowBundle\Params\JournalWorkflowSteps;
+use Vipa\WorkflowBundle\Params\StepActionTypes;
+use Vipa\WorkflowBundle\Service\WorkflowPermissionService;
 use Doctrine\ORM\EntityManager;
-use Ojs\JournalBundle\Entity\Author;
-use Ojs\JournalBundle\Service\JournalService;
-use Ojs\UserBundle\Entity\User;
+use Vipa\JournalBundle\Entity\Author;
+use Vipa\JournalBundle\Service\JournalService;
+use Vipa\UserBundle\Entity\User;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -131,27 +131,27 @@ class DPWorkflowTwigExtension extends \Twig_Extension
 
     public function getActionType($const)
     {
-        return constant('Ojs\WorkflowBundle\Params\StepActionTypes::'.$const);
+        return constant('Vipa\WorkflowBundle\Params\StepActionTypes::'.$const);
     }
 
     public function getDialogStatus($const)
     {
-        return constant('Ojs\WorkflowBundle\Params\StepDialogStatus::'.$const);
+        return constant('Vipa\WorkflowBundle\Params\StepDialogStatus::'.$const);
     }
 
     public function getWorkflowStatus($const)
     {
-        return constant('Ojs\WorkflowBundle\Params\ArticleWorkflowStatus::'.$const);
+        return constant('Vipa\WorkflowBundle\Params\ArticleWorkflowStatus::'.$const);
     }
 
     public function getStepStatus($const)
     {
-        return constant('Ojs\WorkflowBundle\Params\StepStatus::'.$const);
+        return constant('Vipa\WorkflowBundle\Params\StepStatus::'.$const);
     }
 
     public function getPostType($const)
     {
-        return constant('Ojs\WorkflowBundle\Params\DialogPostTypes::'.$const);
+        return constant('Vipa\WorkflowBundle\Params\DialogPostTypes::'.$const);
     }
 
     public function getJournalStepAlias($stepOrder)
@@ -166,7 +166,7 @@ class DPWorkflowTwigExtension extends \Twig_Extension
 
     public function getName()
     {
-        return 'ojs_workflow_extension';
+        return 'vipa_workflow_extension';
     }
 
     public function getPermissionCheck()
@@ -186,7 +186,7 @@ class DPWorkflowTwigExtension extends \Twig_Extension
                 $username = '@'.$user->getUsername();
             }
         }
-        $link = $this->router->generate('ojs_user_profile', ['slug' => $user->getUsername()]);
+        $link = $this->router->generate('vipa_user_profile', ['slug' => $user->getUsername()]);
         $tooltip = (string)$user;
         $template = '<a target="_blank" data-toggle="tooltip" title="'.$tooltip.'" href="'.$link.'">'.$username.'</a>';
 
@@ -195,7 +195,7 @@ class DPWorkflowTwigExtension extends \Twig_Extension
 
     public function getAuthorSearchLink(Author $author)
     {
-        $link = $this->router->generate('ojs_search_index', [
+        $link = $this->router->generate('vipa_search_index', [
             'q' => (string)$author,
             'section' => 'author',
         ]);
@@ -323,7 +323,7 @@ class DPWorkflowTwigExtension extends \Twig_Extension
      */
     private function renderReviewMessage($block, $params = [])
     {
-        $template = $this->twig->loadTemplate('OjsWorkflowBundle:StepDialog/dialog/messages:_reviewer_message_box.html.twig');
+        $template = $this->twig->loadTemplate('VipaWorkflowBundle:StepDialog/dialog/messages:_reviewer_message_box.html.twig');
 
         return $template->renderBlock($block, $params);
     }

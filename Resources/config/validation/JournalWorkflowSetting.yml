@@ -1,4 +1,4 @@
-Ojs\WorkflowBundle\Entity\JournalWorkflowSetting:
+Vipa\WorkflowBundle\Entity\JournalWorkflowSetting:
     properties:
         reviewerWaitDay:
             - Range:

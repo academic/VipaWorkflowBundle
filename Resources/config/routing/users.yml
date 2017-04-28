@@ -1,23 +1,23 @@
-ojs_workflow_reviewers_browse:
+vipa_workflow_reviewers_browse:
   path:     /browse-reviewers
-  defaults: { _controller: "OjsWorkflowBundle:Users:browseReviewers" }
+  defaults: { _controller: "VipaWorkflowBundle:Users:browseReviewers" }
   options:
       expose: true
 
-ojs_workflow_section_editors_browse:
+vipa_workflow_section_editors_browse:
   path:     /browse-section-editors
-  defaults: { _controller: "OjsWorkflowBundle:Users:browseSectionEditors" }
+  defaults: { _controller: "VipaWorkflowBundle:Users:browseSectionEditors" }
   options:
       expose: true
 
-ojs_workflow_create_reviewer_user:
+vipa_workflow_create_reviewer_user:
   path:     /create-reviewer-user
-  defaults: { _controller: "OjsWorkflowBundle:Users:createReviewerUser" }
+  defaults: { _controller: "VipaWorkflowBundle:Users:createReviewerUser" }
   options:
       expose: true
 
-ojs_workflow_add_reviewer_user:
+vipa_workflow_add_reviewer_user:
   path:     /add-reviewer-user
-  defaults: { _controller: "OjsWorkflowBundle:Users:addReviewerUser" }
+  defaults: { _controller: "VipaWorkflowBundle:Users:addReviewerUser" }
   options:
       expose: true

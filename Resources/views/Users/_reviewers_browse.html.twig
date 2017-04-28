@@ -1,5 +1,5 @@
 {% set hideleft = true %}
-{% extends '::ojsbase.html.twig' %}
+{% extends '::vipabase.html.twig' %}
 {% block header %}{% endblock %}
 {% block title %}{{ '_assign_reviewer.users'|trans }}{% endblock %}
 {% block breadcrumb %}{% endblock %}
@@ -12,11 +12,11 @@
                 <button onclick="window.close();" class="btn btn-danger btn-sm pull-right">
                     {{ 'close'|trans }}
                 </button>
-                <button class="btn btn-success btn-sm pull-left" type="button" onclick="OjsWorkflow.createReviewerUser();">
+                <button class="btn btn-success btn-sm pull-left" type="button" onclick="VipaWorkflow.createReviewerUser();">
                     <i class="fa fa-plus"></i>
                     {{ 'create.reviewer.user'|trans }}
                 </button>
-                <button class="btn btn-default btn-sm pull-left" type="button" onclick="OjsWorkflow.addReviewerUser();" style="margin-left:10px;">
+                <button class="btn btn-default btn-sm pull-left" type="button" onclick="VipaWorkflow.addReviewerUser();" style="margin-left:10px;">
                     <i class="fa fa-plus"></i>
                     {{ 'add.reviewer.user'|trans }}
                 </button>
@@ -66,7 +66,7 @@
                     <td>{{ reviewerStats[reviewer.id].review_remind_count }}</td>
                     <td>
                         <button class="btn btn-xs btn-success"
-                                onclick="window.opener.OjsWorkflow.addUserToUsersDialogViaButton(this, '{{ reviewer.id }}', '{{ reviewer }}')">
+                                onclick="window.opener.VipaWorkflow.addUserToUsersDialogViaButton(this, '{{ reviewer.id }}', '{{ reviewer }}')">
                             {{ 'add'|trans }}
                         </button>
                     </td>
@@ -86,7 +86,7 @@
         var stepOrder = window.opener.stepOrder;
     </script>
     <script src="{{ url('bazinga_jstranslation_js') }}"></script>
-    {% javascripts '@OjsWorkflowBundle/Resources/public/js/workflow/*' output="assets/prod/js/article_workflow.js" %}
+    {% javascripts '@VipaWorkflowBundle/Resources/public/js/workflow/*' output="assets/prod/js/article_workflow.js" %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script>

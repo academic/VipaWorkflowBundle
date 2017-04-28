@@ -1,8 +1,8 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Form\Type;
+namespace Vipa\WorkflowBundle\Form\Type;
 
-use Ojs\UserBundle\Entity\User;
+use Vipa\UserBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

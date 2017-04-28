@@ -1,5 +1,5 @@
 {% set hideleft = true %}
-{% extends '::ojsbase.html.twig' %}
+{% extends '::vipabase.html.twig' %}
 {% block header %}{% endblock %}
 {% block title %}{{ '_assign_section_editor.users'|trans }}{% endblock %}
 {% block breadcrumb %}{% endblock %}
@@ -45,7 +45,7 @@
                 <td class="list-subjects">{{ sectionEditor.subjects|join('<br>')|raw }}</td>
                 <td>
                     <button class="btn btn-xs btn-success"
-                            onclick="window.opener.OjsWorkflow.addUserToUsersDialogViaButton(this, '{{ sectionEditor.id }}', '{{ sectionEditor }}')">
+                            onclick="window.opener.VipaWorkflow.addUserToUsersDialogViaButton(this, '{{ sectionEditor.id }}', '{{ sectionEditor }}')">
                         {{ 'add'|trans }}
                     </button>
                 </td>

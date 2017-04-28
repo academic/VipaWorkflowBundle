@@ -3,7 +3,7 @@
     <div class="well">
         {{ include('::flashbag.html.twig') }}
         {{ form(form) }}
-        <button class="btn btn-success" onclick="OjsWorkflow.postSpecificDialog(this)">{{ (actionAlias~'.create.button')|trans }}</button>
+        <button class="btn btn-success" onclick="VipaWorkflow.postSpecificDialog(this)">{{ (actionAlias~'.create.button')|trans }}</button>
     </div>
     <style>
         .select2-dropdown {
@@ -23,13 +23,13 @@
         {{ include('::flashbag.html.twig') }}
         {{ form_start(form) }}
         <div class="btn-group pull-right" role="group">
-            <button class="btn btn-primary btn-xs browse-users-button" onclick="OjsWorkflow.browseSectionEditorUsers();" type="button">
+            <button class="btn btn-primary btn-xs browse-users-button" onclick="VipaWorkflow.browseSectionEditorUsers();" type="button">
                 {{ 'browse.review.users'|trans }}
             </button>
         </div>
         {{ form_row(form.users) }}
         {{ form_end(form) }}
-        <button class="btn btn-success" onclick="OjsWorkflow.postSpecificDialog(this)">
+        <button class="btn btn-success" onclick="VipaWorkflow.postSpecificDialog(this)">
             {{ (actionAlias~'.create.button')|trans }}
         </button>
     </div>
@@ -48,7 +48,7 @@
     <div class="well">
         {{ include('::flashbag.html.twig') }}
         {{ form(form) }}
-        <button class="btn btn-success" onclick="OjsWorkflow.postBasicDialog(this)">{{ (actionAlias~'.create.button')|trans }}</button>
+        <button class="btn btn-success" onclick="VipaWorkflow.postBasicDialog(this)">{{ (actionAlias~'.create.button')|trans }}</button>
     </div>
     <style>
         .select2-dropdown {
@@ -72,13 +72,13 @@
             </div>
             <br>
             <div class="btn-group pull-right" role="group">
-                <button class="btn btn-primary btn-xs browse-users-button" onclick="OjsWorkflow.browseReviewerUsers();" type="button">
+                <button class="btn btn-primary btn-xs browse-users-button" onclick="VipaWorkflow.browseReviewerUsers();" type="button">
                     {{ 'browse.review.users'|trans }}
                 </button>
             </div>
             {{ form_row(form.users) }}
         {{ form_end(form) }}
-        <button class="btn btn-success" onclick="OjsWorkflow.postAssignReviewerDialog(this)">
+        <button class="btn btn-success" onclick="VipaWorkflow.postAssignReviewerDialog(this)">
             {{ (actionAlias~'.create.button')|trans }}
         </button>
     </div>
@@ -104,7 +104,7 @@
         </div>
         <br>
         {{ form_end(form) }}
-        <button class="btn btn-success" onclick="OjsWorkflow.postAssignAuthorDialog(this)">
+        <button class="btn btn-success" onclick="VipaWorkflow.postAssignAuthorDialog(this)">
             {{ (actionAlias~'.create.button')|trans }}
         </button>
     </div>

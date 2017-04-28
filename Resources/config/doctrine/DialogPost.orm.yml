@@ -1,7 +1,7 @@
-Ojs\WorkflowBundle\Entity\DialogPost:
+Vipa\WorkflowBundle\Entity\DialogPost:
   type: entity
   table: bc_wf_dialog_post
-  repositoryClass: Ojs\WorkflowBundle\Entity\DialogPostRepository
+  repositoryClass: Vipa\WorkflowBundle\Entity\DialogPostRepository
   type: entity
   id:
     id:
@@ -33,24 +33,24 @@ Ojs\WorkflowBundle\Entity\DialogPost:
       nullable: true
   manyToOne:
     dialog:
-      targetEntity: Ojs\WorkflowBundle\Entity\StepDialog
+      targetEntity: Vipa\WorkflowBundle\Entity\StepDialog
       joinColumn:
         name: dialog_id
         referencedColumnName: id
     relatedPost:
-      targetEntity: Ojs\WorkflowBundle\Entity\DialogPost
+      targetEntity: Vipa\WorkflowBundle\Entity\DialogPost
       joinColumn:
         nullable: true
         name: related_post_id
         referencedColumnName: id
     reviewForm:
-      targetEntity: Ojs\WorkflowBundle\Entity\StepReviewForm
+      targetEntity: Vipa\WorkflowBundle\Entity\StepReviewForm
       joinColumn:
         name: review_form_id
         referencedColumnName: id
         nullable: true
     sendedBy:
-      targetEntity: Ojs\UserBundle\Entity\User
+      targetEntity: Vipa\UserBundle\Entity\User
       joinColumn:
         name: user_id
         referencedColumnName: id

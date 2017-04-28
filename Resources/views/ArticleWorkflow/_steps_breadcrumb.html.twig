@@ -1,11 +1,11 @@
 <div class="row col-lg-12 text-center">
     <div class="col-lg-10">
         <div class="btn-group btn-breadcrumb">
-            <a href="{{ path('ojs_workflow_flow_active', {
+            <a href="{{ path('vipa_workflow_flow_active', {
                 'journalId': timeline.journal.id
             }) }}" class="btn btn-default" data-toggle="tooltip" title="{{ 'workflow.actives'|trans }}"><i class="glyphicon glyphicon-flag"></i></a>
             {% for step in timeline.steps %}
-                <a onclick="OjsWorkflow.loadStep({{ step.order }})" class="btn btn-default" id="workflow-step-{{ step.order }}">
+                <a onclick="VipaWorkflow.loadStep({{ step.order }})" class="btn btn-default" id="workflow-step-{{ step.order }}">
                     {{ ('wf.step.'~journalStepAlias(step.order))|trans }}
                 </a>
             {% endfor %}
@@ -25,7 +25,7 @@
             <ul class="dropdown-menu step-actions-menu">
                 {% if permissionCheck().isHaveEditorRole() %}
                     <li>
-                        <a onclick="OjsWorkflow.showHistoryLog(this)"
+                        <a onclick="VipaWorkflow.showHistoryLog(this)"
                            data-toggle="tooltip"
                            title="{{ 'browse.workflow.history'|trans }}">
                             {{ 'workflow.history'|trans }}
@@ -33,14 +33,14 @@
                     </li>
                 {% endif %}
                 <li>
-                    <a onclick="OjsWorkflow.showPermissionTable(this)"
+                    <a onclick="VipaWorkflow.showPermissionTable(this)"
                        data-toggle="tooltip"
                        title="{{ 'browse.permission.table'|trans }}">
                         {{ 'permission.table'|trans }}
                     </a>
                 </li>
                 <li>
-                    <a onclick="OjsWorkflow.showSubmissionDetail(this)">
+                    <a onclick="VipaWorkflow.showSubmissionDetail(this)">
                         {{ 'submission.detail'|trans }}
                     </a>
                 </li>

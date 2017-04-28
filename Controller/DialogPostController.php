@@ -1,13 +1,13 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Controller;
+namespace Vipa\WorkflowBundle\Controller;
 
-use Ojs\WorkflowBundle\Entity\DialogPost;
-use Ojs\WorkflowBundle\Entity\StepDialog;
-use Ojs\WorkflowBundle\Event\WorkflowEvent;
-use Ojs\WorkflowBundle\Event\WorkflowEvents;
-use Ojs\WorkflowBundle\Params\DialogPostTypes;
-use Ojs\CoreBundle\Controller\OjsController as Controller;
+use Vipa\WorkflowBundle\Entity\DialogPost;
+use Vipa\WorkflowBundle\Entity\StepDialog;
+use Vipa\WorkflowBundle\Event\WorkflowEvent;
+use Vipa\WorkflowBundle\Event\WorkflowEvents;
+use Vipa\WorkflowBundle\Params\DialogPostTypes;
+use Vipa\CoreBundle\Controller\VipaController as Controller;
 use Pagerfanta\Exception\LogicException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,7 +35,7 @@ class DialogPostController extends Controller
             'id' => 'ASC',
         ]);
 
-        return $this->render('OjsWorkflowBundle:DialogPost:_dialog_posts.html.twig', [
+        return $this->render('VipaWorkflowBundle:DialogPost:_dialog_posts.html.twig', [
             'posts' => $posts,
         ]);
     }
@@ -98,7 +98,7 @@ class DialogPostController extends Controller
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $dialog = $em->getRepository(StepDialog::class)->find($dialogId);
 
-        return $this->render('OjsWorkflowBundle:DialogPost:_browse_files.html.twig', [
+        return $this->render('VipaWorkflowBundle:DialogPost:_browse_files.html.twig', [
             'files' => $workflowService->getUserRelatedFiles($workflow, $dialog),
             'dialogId' => $dialogId,
         ]);

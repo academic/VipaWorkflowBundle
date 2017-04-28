@@ -1,9 +1,9 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Vipa\WorkflowBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Ojs\JournalBundle\Entity\Journal;
+use Vipa\JournalBundle\Entity\Journal;
 
 trait WorkflowJournalTrait
 {

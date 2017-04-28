@@ -25,7 +25,7 @@
 </div>
 {% if workflow.status == workflowStatus('ACTIVE') and permissionCheck().isHaveEditorRole() %}
     <button class="btn btn-primary"
-            onclick="OjsWorkflow.setupWorkflowGrantedUsers()">
+            onclick="VipaWorkflow.setupWorkflowGrantedUsers()">
         {{ 'add.article.editor'|trans }}
     </button>
 {% endif %}

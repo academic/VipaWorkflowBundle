@@ -1,19 +1,19 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Controller;
+namespace Vipa\WorkflowBundle\Controller;
 
 use APY\DataGridBundle\Grid\Action\MassAction;
 use APY\DataGridBundle\Grid\Column\ActionsColumn;
 use APY\DataGridBundle\Grid\Source\Entity;
 use Doctrine\ORM\QueryBuilder;
-use Ojs\CoreBundle\Controller\OjsController as Controller;
-use Ojs\WorkflowBundle\Entity\DialogPost;
-use Ojs\WorkflowBundle\Params\DialogPostTypes;
+use Vipa\CoreBundle\Controller\VipaController as Controller;
+use Vipa\WorkflowBundle\Entity\DialogPost;
+use Vipa\WorkflowBundle\Params\DialogPostTypes;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ExportReviewFormController
- * @package Ojs\WorkflowBundle\Controller
+ * @package Vipa\WorkflowBundle\Controller
  */
 class ExportReviewFormController extends Controller
 {
@@ -25,7 +25,7 @@ class ExportReviewFormController extends Controller
         $translator = $this->get('translator');
         $grid = $this->get('grid');
         $currentUser = $this->getUser();
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $permissionService = $this->get('dp.workflow_permission_service');
         $isEditor = false;
         if($permissionService->isHaveEditorRole()){
@@ -69,7 +69,7 @@ class ExportReviewFormController extends Controller
         $actionColumn->setRowActions($rowAction);
         $grid->addColumn($actionColumn);
 
-        return $grid->getGridResponse('OjsWorkflowBundle:ExportReviewForm:index.html.twig', [
+        return $grid->getGridResponse('VipaWorkflowBundle:ExportReviewForm:index.html.twig', [
             'grid'      => $grid,
             'journal'   => $journal,
         ]);
@@ -81,7 +81,7 @@ class ExportReviewFormController extends Controller
      */
     public function massFormResponsePrint($primaryKeys)
     {
-        $journalService = $this->get('ojs.journal_service');
+        $journalService = $this->get('vipa.journal_service');
         $journal = $journalService->getSelectedJournal();
         if(count($primaryKeys) < 1){
             $this->errorFlashBag('you.must.select.one.least.element');
@@ -93,7 +93,7 @@ class ExportReviewFormController extends Controller
         $dialogPostRepo = $em->getRepository(DialogPost::class);
         $formResponses = $dialogPostRepo->findById($primaryKeys);
 
-        return $this->render('OjsWorkflowBundle:ExportReviewForm:print_or_save.html.twig', [
+        return $this->render('VipaWorkflowBundle:ExportReviewForm:print_or_save.html.twig', [
             'formResponses' => $formResponses,
             'journal' => $journal,
         ]);
@@ -105,10 +105,10 @@ class ExportReviewFormController extends Controller
      */
     public function singlePrintAction(DialogPost $dialogPost)
     {
-        $journalService = $this->get('ojs.journal_service');
+        $journalService = $this->get('vipa.journal_service');
         $journal = $journalService->getSelectedJournal();
 
-        return $this->render('OjsWorkflowBundle:ExportReviewForm:print_or_save.html.twig', [
+        return $this->render('VipaWorkflowBundle:ExportReviewForm:print_or_save.html.twig', [
             'formResponses' => [$dialogPost],
             'journal' => $journal,
         ]);

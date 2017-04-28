@@ -7,7 +7,7 @@
 {% block send_invitation_editor %}
     <div class="alert alert-warning text-center">
         {{ 'invite.reviewer'|trans }}
-        <button class="btn btn-warning" onclick="OjsWorkflow.inviteReviewer({{ dialog.id }})">
+        <button class="btn btn-warning" onclick="VipaWorkflow.inviteReviewer({{ dialog.id }})">
             {{ 'reviewer.invite'|trans }}
         </button>
     </div>
@@ -29,10 +29,10 @@
     <div class="alert alert-warning text-center">
         {{ 'editor.sended.you.invitation.for.rewiew.you.can.accept.or.reject'|trans({'%leftDay%': leftDay, '%fromDay%': fromDay}) }}
         <br>
-        <button class="btn btn-success btn-sm" onclick="OjsWorkflow.acceptReviewRequest({{ dialog.id }})">
+        <button class="btn btn-success btn-sm" onclick="VipaWorkflow.acceptReviewRequest({{ dialog.id }})">
             {{ 'accept.review'|trans }}
         </button>
-        <button class="btn btn-danger btn-sm" onclick="OjsWorkflow.rejectReviewRequest({{ dialog.id }})">
+        <button class="btn btn-danger btn-sm" onclick="VipaWorkflow.rejectReviewRequest({{ dialog.id }})">
             {{ 'reject.review'|trans }}
         </button>
     </div>
@@ -53,7 +53,7 @@
 {% block send_remind_editor %}
     <div class="alert alert-warning text-center">
         {{ 'finished.invitation.date.you.can.send.remind.mail'|trans }}
-        <button class="btn btn-warning" onclick="OjsWorkflow.remindReviewer({{ dialog.id }})">
+        <button class="btn btn-warning" onclick="VipaWorkflow.remindReviewer({{ dialog.id }})">
             {{ 'reviewer.remind'|trans }}
         </button>
     </div>
@@ -63,10 +63,10 @@
     <div class="alert alert-warning text-center">
         {{ 'editor.sended.you.remind.rewiew.request.you.can.accept.or.reject'|trans({'%leftDay%': leftDay, '%fromDay%': fromDay}) }}
         <br>
-        <button class="btn btn-success" onclick="OjsWorkflow.acceptReviewRequest({{ dialog.id }})">
+        <button class="btn btn-success" onclick="VipaWorkflow.acceptReviewRequest({{ dialog.id }})">
             {{ 'accept.review'|trans }}
         </button>
-        <button class="btn btn-danger" onclick="OjsWorkflow.rejectReviewRequest({{ dialog.id }})">
+        <button class="btn btn-danger" onclick="VipaWorkflow.rejectReviewRequest({{ dialog.id }})">
             {{ 'reject.review'|trans }}
         </button>
     </div>

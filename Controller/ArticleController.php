@@ -1,9 +1,9 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Controller;
+namespace Vipa\WorkflowBundle\Controller;
 
-use Ojs\WorkflowBundle\Form\Type\ArticleMetadataEditType;
-use Ojs\CoreBundle\Controller\OjsController as Controller;
+use Vipa\WorkflowBundle\Form\Type\ArticleMetadataEditType;
+use Vipa\CoreBundle\Controller\VipaController as Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,7 +20,7 @@ class ArticleController extends Controller
      */
     public function editMetadataAction(Request $request, $workflowId)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
@@ -28,7 +28,7 @@ class ArticleController extends Controller
         $article = $workflow->getArticle();
 
         $form = $this->createForm(new ArticleMetadataEditType(), $article, [
-            'action' => $this->generateUrl('ojs_workflow_edit_article_metadata', [
+            'action' => $this->generateUrl('vipa_workflow_edit_article_metadata', [
                 'journalId' => $journal->getId(),
                 'workflowId' => $workflow->getId(),
             ])
@@ -41,7 +41,7 @@ class ArticleController extends Controller
             $this->successFlashBag('successful.update');
         }
 
-        return $this->render('OjsWorkflowBundle:Article:_edit_metadata.html.twig', [
+        return $this->render('VipaWorkflowBundle:Article:_edit_metadata.html.twig', [
             'form' => $form->createView(),
         ]);
     }

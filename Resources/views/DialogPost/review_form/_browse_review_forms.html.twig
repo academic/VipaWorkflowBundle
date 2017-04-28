@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th colspan="4">
-                <button class="btn btn-xs btn-success pull-left" onclick="OjsWorkflow.syncStepReviewForms(this, {{ dialogId }})">
+                <button class="btn btn-xs btn-success pull-left" onclick="VipaWorkflow.syncStepReviewForms(this, {{ dialogId }})">
                     <i class="fa fa-refresh"></i>
                     {{ 'sync.forms'|trans }}
                 </button>
@@ -52,11 +52,11 @@
     </tbody>
 </table>
 {% if forms|length > 0 %}
-    <button class="btn btn-primary" onclick="OjsWorkflow.sendSelectedReviewForms({{ dialogId }})">
+    <button class="btn btn-primary" onclick="VipaWorkflow.sendSelectedReviewForms({{ dialogId }})">
         {{ 'send.selected.forms'|trans }}
     </button>
 {% endif %}
 
 <script>
-    OjsWorkflow.refreshAgoPlugin();
+    VipaWorkflow.refreshAgoPlugin();
 </script>

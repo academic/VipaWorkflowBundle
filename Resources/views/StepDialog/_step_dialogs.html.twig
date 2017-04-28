@@ -1,10 +1,10 @@
 {% for dialog in dialogs %}
     {% if dialog.dialogType == actionType('ASSIGN_REVIEWER') %}
-        {% include 'OjsWorkflowBundle:StepDialog/dialog:_assign_reviewer.html.twig' %}
+        {% include 'VipaWorkflowBundle:StepDialog/dialog:_assign_reviewer.html.twig' %}
     {% else %}
-        {% include 'OjsWorkflowBundle:StepDialog/dialog:_general_dialog.html.twig' %}
+        {% include 'VipaWorkflowBundle:StepDialog/dialog:_general_dialog.html.twig' %}
     {% endif %}
 {% endfor %}
 <script>
-    OjsWorkflow.refreshTooltip();
+    VipaWorkflow.refreshTooltip();
 </script>

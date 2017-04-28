@@ -1,10 +1,10 @@
 {% set hideleft = true %}
-{% extends '::ojsbase.html.twig' %}
+{% extends '::vipabase.html.twig' %}
 {% block title %}{{ 'title.review_form_show'|trans }} {{ parent() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets '@OjsWorkflowBundle/Resources/public/css/review-form/*'  output="assets/prod/css/review_form.css" %}
+    {% stylesheets '@VipaWorkflowBundle/Resources/public/css/review-form/*'  output="assets/prod/css/review_form.css" %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
     <style>
@@ -33,7 +33,7 @@
                     <div class="render-wrap"></div>
                 </form>
             </div>
-            <button class="btn btn-primary pull-right" onclick="OjsWorkflow.submitReviewForm({{ dialogId }}, {{ reviewForm.id }})">{{ 'submit.review'|trans }}</button>
+            <button class="btn btn-primary pull-right" onclick="VipaWorkflow.submitReviewForm({{ dialogId }}, {{ reviewForm.id }})">{{ 'submit.review'|trans }}</button>
         </div>
     </div>
 {% endblock %}
@@ -46,7 +46,7 @@
         var stepOrder = {{ reviewForm.step.order }};
     </script>
     <script src="{{ url('bazinga_jstranslation_js') }}"></script>
-    {% javascripts '@OjsWorkflowBundle/Resources/public/js/workflow/*' output="assets/prod/js/article_workflow.js" %}
+    {% javascripts '@VipaWorkflowBundle/Resources/public/js/workflow/*' output="assets/prod/js/article_workflow.js" %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script>

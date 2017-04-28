@@ -1,30 +1,30 @@
 dp_workflow_review_form:
     path:     /
-    defaults: { _controller: "OjsWorkflowBundle:JournalReviewForm:index" }
+    defaults: { _controller: "VipaWorkflowBundle:JournalReviewForm:index" }
 
 dp_workflow_review_form_show:
     path:     /{id}/show
-    defaults: { _controller: "OjsWorkflowBundle:JournalReviewForm:show" }
+    defaults: { _controller: "VipaWorkflowBundle:JournalReviewForm:show" }
 
 dp_workflow_review_form_new:
     path:     /new
-    defaults: { _controller: "OjsWorkflowBundle:JournalReviewForm:new" }
+    defaults: { _controller: "VipaWorkflowBundle:JournalReviewForm:new" }
 
 dp_workflow_review_form_create:
     path:     /create
-    defaults: { _controller: "OjsWorkflowBundle:JournalReviewForm:create" }
+    defaults: { _controller: "VipaWorkflowBundle:JournalReviewForm:create" }
     methods: [POST]
 
 dp_workflow_review_form_edit:
     path:     /{id}/edit
-    defaults: { _controller: "OjsWorkflowBundle:JournalReviewForm:edit" }
+    defaults: { _controller: "VipaWorkflowBundle:JournalReviewForm:edit" }
 
 dp_workflow_review_form_update:
     path:     /{id}/update
-    defaults: { _controller: "OjsWorkflowBundle:JournalReviewForm:update" }
+    defaults: { _controller: "VipaWorkflowBundle:JournalReviewForm:update" }
     methods:  [PUT]
 
 dp_workflow_review_form_delete:
     path:     /{id}/delete
-    defaults: { _controller: "OjsWorkflowBundle:JournalReviewForm:delete" }
+    defaults: { _controller: "VipaWorkflowBundle:JournalReviewForm:delete" }
     methods:  [DELETE]

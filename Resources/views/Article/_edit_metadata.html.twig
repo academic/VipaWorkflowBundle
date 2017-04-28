@@ -7,12 +7,12 @@
 <div class="well">
     {{ include('::flashbag.html.twig') }}
     {{ form(form) }}
-    <button class="btn btn-success" onclick="OjsWorkflow.updateArticleMetadata(this)">{{ 'update'|trans }}</button>
+    <button class="btn btn-success" onclick="VipaWorkflow.updateArticleMetadata(this)">{{ 'update'|trans }}</button>
 </div>
 
 <script>
     $(document).ready(function () {
-        OjsWorkflow.refreshRichTextEditorPlugin();
-        OjsWorkflow.refreshTagsInputPlugin();
+        VipaWorkflow.refreshRichTextEditorPlugin();
+        VipaWorkflow.refreshTagsInputPlugin();
     });
 </script>

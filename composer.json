@@ -1,7 +1,7 @@
 {
-  "name": "ojs/workflow-bundle",
+  "name": "vipa/workflow-bundle",
   "description": "Workflow bundle for OJS",
-  "type": "ojs-bundle",
+  "type": "vipa-bundle",
   "authors": [
     {
       "name": "Behram ÇELEN",
@@ -9,7 +9,7 @@
     }
   ],
   "keywords": [
-    "ojs workflow bundle"
+    "vipa workflow bundle"
   ],
   "license": [
     "MIT"
@@ -21,7 +21,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Ojs\\WorkflowBundle\\": ""
+      "Vipa\\WorkflowBundle\\": ""
     }
   },
   "extra": {

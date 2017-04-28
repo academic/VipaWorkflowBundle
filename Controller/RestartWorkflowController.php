@@ -1,12 +1,12 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Controller;
+namespace Vipa\WorkflowBundle\Controller;
 
-use Ojs\WorkflowBundle\Entity\ArticleWorkflow;
-use Ojs\WorkflowBundle\Params\ArticleWorkflowStatus;
-use Ojs\CoreBundle\Controller\OjsController as Controller;
-use Ojs\CoreBundle\Params\ArticleStatuses;
-use Ojs\JournalBundle\Entity\Article;
+use Vipa\WorkflowBundle\Entity\ArticleWorkflow;
+use Vipa\WorkflowBundle\Params\ArticleWorkflowStatus;
+use Vipa\CoreBundle\Controller\VipaController as Controller;
+use Vipa\CoreBundle\Params\ArticleStatuses;
+use Vipa\JournalBundle\Entity\Article;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +21,7 @@ class RestartWorkflowController extends Controller
      */
     public function restartAction(Request $request, Article $article)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         if (!$this->isGranted('VIEW', $journal, 'articles')) {
             throw new AccessDeniedException("You not authorized for this page!");
         }
@@ -39,7 +39,7 @@ class RestartWorkflowController extends Controller
                 '%status%' => $translator->trans($article->getStatusText())
             ]));
 
-            return $this->redirectToRoute('ojs_journal_article_index', array('journalId' => $journal->getId()));
+            return $this->redirectToRoute('vipa_journal_article_index', array('journalId' => $journal->getId()));
         }
 
         $currentFlow = $em->getRepository(ArticleWorkflow::class)->findOneBy(
@@ -52,7 +52,7 @@ class RestartWorkflowController extends Controller
             $workflow = $workflowService->prepareArticleWorkflow($article);
 
             return $this->redirectToRoute(
-                'ojs_workflow_article_workflow',
+                'vipa_workflow_article_workflow',
                 [
                     'journalId' => $journal->getId(),
                     'workflowId' => $workflow->getId(),
@@ -81,7 +81,7 @@ class RestartWorkflowController extends Controller
             $workflow = $workflowService->prepareArticleWorkflow($article);
 
             return $this->redirectToRoute(
-                'ojs_workflow_article_workflow',
+                'vipa_workflow_article_workflow',
                 [
                     'journalId' => $journal->getId(),
                     'workflowId' => $workflow->getId(),
@@ -90,7 +90,7 @@ class RestartWorkflowController extends Controller
         }
 
         return $this->render(
-            'OjsWorkflowBundle:RestartWorkflow:_confirm_restart.html.twig',
+            'VipaWorkflowBundle:RestartWorkflow:_confirm_restart.html.twig',
             [
                 'article' => $article,
                 'currentWorkflow' => $currentFlow,

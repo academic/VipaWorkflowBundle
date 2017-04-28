@@ -1,11 +1,11 @@
 <?php
 
-namespace Ojs\WorkflowBundle\EventListener;
+namespace Vipa\WorkflowBundle\EventListener;
 
-use Ojs\WorkflowBundle\Service\WorkflowService;
-use Ojs\JournalBundle\Entity\Article;
-use Ojs\JournalBundle\Event\Article\ArticleEvents;
-use Ojs\JournalBundle\Event\JournalItemEvent;
+use Vipa\WorkflowBundle\Service\WorkflowService;
+use Vipa\JournalBundle\Entity\Article;
+use Vipa\JournalBundle\Event\Article\ArticleEvents;
+use Vipa\JournalBundle\Event\JournalItemEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ArticleSubmitEventListener implements EventSubscriberInterface

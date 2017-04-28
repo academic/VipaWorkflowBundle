@@ -1,13 +1,13 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Vipa\WorkflowBundle\Entity;
 
 use APY\DataGridBundle\Grid\Mapping as GRID;
-use Ojs\CoreBundle\Entity\DisplayTrait;
+use Vipa\CoreBundle\Entity\DisplayTrait;
 
 /**
  * Class JournalReviewForm
- * @package Ojs\WorkflowBundle\Entity
+ * @package Vipa\WorkflowBundle\Entity
  * @GRID\Source(columns="id,name,active")
  */
 class JournalReviewForm

@@ -1,8 +1,8 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Entity;
+namespace Vipa\WorkflowBundle\Entity;
 
-use Ojs\JournalBundle\Entity\JournalTrait;
+use Vipa\JournalBundle\Entity\JournalTrait;
 
 /**
  * JournalWorkflowSetting

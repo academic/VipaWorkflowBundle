@@ -1,12 +1,12 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Command;
+namespace Vipa\WorkflowBundle\Command;
 
-use Ojs\WorkflowBundle\Entity\JournalWorkflowSetting;
-use Ojs\WorkflowBundle\Entity\JournalWorkflowStep;
+use Vipa\WorkflowBundle\Entity\JournalWorkflowSetting;
+use Vipa\WorkflowBundle\Entity\JournalWorkflowStep;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
-use Ojs\JournalBundle\Entity\Journal;
+use Vipa\JournalBundle\Entity\Journal;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class NormalizeJournalWorkflowCommand
- * @package Ojs\WorkflowBundle\Command
+ * @package Vipa\WorkflowBundle\Command
  */
 class NormalizeJournalWorkflowCommand extends ContainerAwareCommand
 {
@@ -45,7 +45,7 @@ class NormalizeJournalWorkflowCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('ojs:normalize:journal:workflow')
+            ->setName('vipa:normalize:journal:workflow')
             ->setDescription('Normalize journal workflows.')
         ;
     }
@@ -59,7 +59,7 @@ class NormalizeJournalWorkflowCommand extends ContainerAwareCommand
         $this->io               = new SymfonyStyle($input, $output);
         $this->container        = $this->getContainer();
         $this->em               = $this->container->get('doctrine')->getManager();
-        $this->allJournals      = $this->em->getRepository('OjsJournalBundle:Journal')->findAll();
+        $this->allJournals      = $this->em->getRepository('VipaJournalBundle:Journal')->findAll();
     }
 
     /**
@@ -137,12 +137,12 @@ class NormalizeJournalWorkflowCommand extends ContainerAwareCommand
 
     /**
      * @param Journal $journal
-     * @return \Ojs\UserBundle\Entity\User[]
+     * @return \Vipa\UserBundle\Entity\User[]
      */
     public function getJournalRelatedUsers(Journal $journal)
     {
         // collect editors and co-editors as journal granted users
-        return $this->em->getRepository('OjsUserBundle:User')->findUsersByJournalRole(
+        return $this->em->getRepository('VipaUserBundle:User')->findUsersByJournalRole(
             ['ROLE_EDITOR', 'ROLE_CO_EDITOR'],
             $journal
         );

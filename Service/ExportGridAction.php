@@ -1,13 +1,13 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Service;
+namespace Vipa\WorkflowBundle\Service;
 
 use APY\DataGridBundle\Grid\Action\RowAction;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class ExportGridAction
- * @package Ojs\WorkflowBundle\Service
+ * @package Vipa\WorkflowBundle\Service
  */
 class ExportGridAction
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Form\Type;
+namespace Vipa\WorkflowBundle\Form\Type;
 
-use Ojs\UserBundle\Entity\User;
+use Vipa\UserBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -21,8 +21,8 @@ class AddReviewerUserType extends AbstractType
                     'required' => true,
                     'label' => 'user',
                     'placeholder' => 'user',
-                    'class' => 'Ojs\UserBundle\Entity\User',
-                    'remote_route' => 'ojs_journal_user_search'
+                    'class' => 'Vipa\UserBundle\Entity\User',
+                    'remote_route' => 'vipa_journal_user_search'
                 ]
             );
     }

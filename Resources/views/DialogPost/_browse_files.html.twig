@@ -62,14 +62,14 @@
                         class="hidden" />
 
                 <button class="btn btn-default btn-sm"
-                        onclick="OjsWorkflow.uploadCustomFile()">
+                        onclick="VipaWorkflow.uploadCustomFile()">
                     {{ 'upload.file'|trans }}
                 </button>
             </th>
         </tr>
     </tbody>
 </table>
-<button class="btn btn-primary" onclick="OjsWorkflow.sendSelectedFiles({{ dialogId }})">
+<button class="btn btn-primary" onclick="VipaWorkflow.sendSelectedFiles({{ dialogId }})">
     {{ 'send.selected.files'|trans }}
 </button>
 
@@ -78,7 +78,7 @@
         $('#workflow-file-upload-hidden-input').fileupload({
             dataType: 'json',
             done: function (e, data) {
-                OjsWorkflow.exposeUploadedFile(data);
+                VipaWorkflow.exposeUploadedFile(data);
             }
         });
     });

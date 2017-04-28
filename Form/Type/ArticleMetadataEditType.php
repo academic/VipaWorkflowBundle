@@ -1,10 +1,10 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Form\Type;
+namespace Vipa\WorkflowBundle\Form\Type;
 
-use Ojs\WorkflowBundle\Entity\JournalWorkflowSetting;
-use Ojs\CoreBundle\Form\Type\JournalBasedTranslationsType;
-use Ojs\JournalBundle\Entity\Article;
+use Vipa\WorkflowBundle\Entity\JournalWorkflowSetting;
+use Vipa\CoreBundle\Form\Type\JournalBasedTranslationsType;
+use Vipa\JournalBundle\Entity\Article;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

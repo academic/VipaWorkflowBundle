@@ -1,8 +1,8 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Form\Type;
+namespace Vipa\WorkflowBundle\Form\Type;
 
-use Ojs\WorkflowBundle\Entity\JournalWorkflowSetting;
+use Vipa\WorkflowBundle\Entity\JournalWorkflowSetting;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

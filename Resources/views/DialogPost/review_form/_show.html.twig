@@ -1,10 +1,10 @@
 {% set hideleft = true %}
-{% extends '::ojsbase.html.twig' %}
+{% extends '::vipabase.html.twig' %}
 {% block title %}{{ 'title.review_form_show'|trans }} {{ parent() }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets '@OjsWorkflowBundle/Resources/public/css/review-form/*'  output="assets/prod/css/review_form.css" %}
+    {% stylesheets '@VipaWorkflowBundle/Resources/public/css/review-form/*'  output="assets/prod/css/review_form.css" %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
     <style>

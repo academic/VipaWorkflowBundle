@@ -48,11 +48,11 @@
     </tbody>
 </table>
 {% if formResponses|length > 0 %}
-    <button class="btn btn-primary" onclick="OjsWorkflow.sendSelectedReviewFormResponses({{ dialogId }})">
+    <button class="btn btn-primary" onclick="VipaWorkflow.sendSelectedReviewFormResponses({{ dialogId }})">
         {{ 'send.selected.form.responses'|trans }}
     </button>
 {% endif %}
 
 <script>
-    OjsWorkflow.refreshAgoPlugin();
+    VipaWorkflow.refreshAgoPlugin();
 </script>

@@ -1,15 +1,15 @@
 <?php
 
-namespace Ojs\WorkflowBundle\Controller;
+namespace Vipa\WorkflowBundle\Controller;
 
-use Ojs\WorkflowBundle\Event\WorkflowEvent;
-use Ojs\WorkflowBundle\Event\WorkflowEvents;
-use Ojs\WorkflowBundle\Form\Type\AddReviewerUserType;
-use Ojs\WorkflowBundle\Form\Type\ReviewerUserType;
-use Ojs\CoreBundle\Controller\OjsController as Controller;
-use Ojs\JournalBundle\Entity\JournalUser;
-use Ojs\UserBundle\Entity\Role;
-use Ojs\UserBundle\Entity\User;
+use Vipa\WorkflowBundle\Event\WorkflowEvent;
+use Vipa\WorkflowBundle\Event\WorkflowEvents;
+use Vipa\WorkflowBundle\Form\Type\AddReviewerUserType;
+use Vipa\WorkflowBundle\Form\Type\ReviewerUserType;
+use Vipa\CoreBundle\Controller\VipaController as Controller;
+use Vipa\JournalBundle\Entity\JournalUser;
+use Vipa\UserBundle\Entity\Role;
+use Vipa\UserBundle\Entity\User;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +24,7 @@ class UsersController extends Controller
     public function browseReviewersAction(Request $request, $workflowId)
     {
         $em = $this->getDoctrine()->getManager();
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $this->throw404IfNotFound($workflow);
@@ -37,7 +37,7 @@ class UsersController extends Controller
             $journal
         );
 
-        return $this->render('OjsWorkflowBundle:Users:_reviewers_browse.html.twig', [
+        return $this->render('VipaWorkflowBundle:Users:_reviewers_browse.html.twig', [
             'reviewerUsers' => $reviewerUsers,
             'reviewerStats' => $this->collectReviewerStats(),
         ]);
@@ -46,7 +46,7 @@ class UsersController extends Controller
     private function collectReviewerStats()
     {
         $em = $this->getDoctrine()->getManager();
-        $journalId = $this->get('ojs.journal_service')->getSelectedJournal()->getId();
+        $journalId = $this->get('vipa.journal_service')->getSelectedJournal()->getId();
 
         $sql = "SELECT DISTINCT
     users.id,
@@ -142,7 +142,7 @@ GROUP BY users.id;";
     public function browseSectionEditorsAction(Request $request, $workflowId)
     {
         $em = $this->getDoctrine()->getManager();
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
         $this->throw404IfNotFound($workflow);
@@ -150,11 +150,11 @@ GROUP BY users.id;";
             throw new AccessDeniedException;
         }
 
-        $sectionEditorUsers = $em->getRepository('OjsUserBundle:User')->findUsersByJournalRole(
+        $sectionEditorUsers = $em->getRepository('VipaUserBundle:User')->findUsersByJournalRole(
             ['ROLE_SECTION_EDITOR']
         );
 
-        return $this->render('OjsWorkflowBundle:Users:_section_editors_browse.html.twig', [
+        return $this->render('VipaWorkflowBundle:Users:_section_editors_browse.html.twig', [
             'sectionEditorUsers' => $sectionEditorUsers,
         ]);
     }
@@ -166,7 +166,7 @@ GROUP BY users.id;";
      */
     public function createReviewerUserAction(Request $request, $workflowId)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
@@ -182,7 +182,7 @@ GROUP BY users.id;";
         $reviewerUser->setEnabled(true);
 
         $form = $this->createForm(new ReviewerUserType(), $reviewerUser, [
-            'action' => $this->generateUrl('ojs_workflow_create_reviewer_user', [
+            'action' => $this->generateUrl('vipa_workflow_create_reviewer_user', [
                 'journalId' => $journal->getId(),
                 'workflowId' => $workflow->getId(),
             ])
@@ -210,7 +210,7 @@ GROUP BY users.id;";
             return $workflowService->getMessageBlock('successful_create_reviewer_user');
         }
 
-        return $this->render('OjsWorkflowBundle:Users:_create_reviewer.html.twig', [
+        return $this->render('VipaWorkflowBundle:Users:_create_reviewer.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -222,7 +222,7 @@ GROUP BY users.id;";
      */
     public function addReviewerUserAction(Request $request, $workflowId)
     {
-        $journal = $this->get('ojs.journal_service')->getSelectedJournal();
+        $journal = $this->get('vipa.journal_service')->getSelectedJournal();
         $this->throw404IfNotFound($journal);
         $workflowService = $this->get('dp.workflow_service');
         $workflow = $workflowService->getArticleWorkflow($workflowId);
@@ -234,7 +234,7 @@ GROUP BY users.id;";
         ]);
 
         $form = $this->createForm(new AddReviewerUserType(), null, [
-            'action' => $this->generateUrl('ojs_workflow_add_reviewer_user', [
+            'action' => $this->generateUrl('vipa_workflow_add_reviewer_user', [
                 'journalId' => $journal->getId(),
                 'workflowId' => $workflow->getId(),
             ])
@@ -266,7 +266,7 @@ GROUP BY users.id;";
             return $workflowService->getMessageBlock('successful_add_reviewer_user');
         }
 
-        return $this->render('OjsWorkflowBundle:Users:_add_reviewer.html.twig', [
+        return $this->render('VipaWorkflowBundle:Users:_add_reviewer.html.twig', [
             'form' => $form->createView(),
         ]);
     }
