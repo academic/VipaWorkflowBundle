@@ -16,7 +16,34 @@ services:
   - elasticsearch
   - memcached
 
-sudo: false
+sudo: true
 
 before_install:
   - npm install -g bower
+
+before_script:
+  - git clone git@github.com:academic/vipa.git
+  - cd vipa/
+  - phpenv config-add travis.php.ini
+  - phpenv config-rm xdebug.ini
+  - cp app/config/parameters.yml.dist app/config/parameters.yml
+  - composer install --no-interaction --prefer-dist
+  - php app/console vipa:install:package workflow
+  - bower install --force --silent
+  - php app/console assetic:dump --env=test
+  - chmod -R 777 app/cache app/logs
+  - php app/console vipa:install --no-interaction --env=test
+  - php app/console vipa:install:samples --env=test
+  - php app/console h4cc_alice_fixtures:load:sets --env=test
+  - php app/console vipa:normalize:translatable:objects --env=test
+  - php app/console vipa:mail:events:sync --env=test
+  - php app/console vipa:mail:events:sync --sync-desc --env=test
+  - php app/console vipa:normalize:journal:article:types --env=test
+  - php app/console fos:elastica:populate --env=test
+  - composer show
+
+script:
+  - ./etc/bin/parallel_phpunit.sh
+
+notifications:
+  slack: ideafield:8GtvUiq3935dZRc1SObHJVcR#ojs-log
