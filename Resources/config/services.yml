@@ -82,3 +82,9 @@ services:
     arguments: ["@doctrine.orm.entity_manager", "@dp.workflow_service"]
     tags:
       - { name: kernel.event_subscriber }
+
+  dp.worklfow.merge_user_listener:
+    class: Ojs\WorkflowBundle\EventListener\MergeUserListener
+    arguments: ["@doctrine.orm.entity_manager", "@dp.workflow_service"]
+    tags:
+      - { name: kernel.event_subscriber }
